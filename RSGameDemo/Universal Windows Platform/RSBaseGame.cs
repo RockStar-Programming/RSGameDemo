@@ -30,9 +30,11 @@ namespace Rockstar.BaseGame
     public class RSBaseGame
     {
         // ********************************************************************************************
-        // Brief Class Description
-        //
-        //
+        // Implements the basics of the game handler
+        // Main tasks
+        // - Control rendering
+        // - Update game
+        // - Render game 
 
         // ********************************************************************************************
         // Constructors
@@ -54,8 +56,8 @@ namespace Rockstar.BaseGame
             _scene = RSNodeScene.CreateWithSize(new Size((float)size.Width, (float)size.Height), RSSceneOrigin.LowerLeft);
 
             // Create and initialise the instance of the game running
-            _clock = RSGameClock.CreateWithScene(_scene);
-            _clock.Initialise();
+            _clockGame = RSGameClock.CreateWithScene(_scene);
+            _clockGame.Initialise();
         }
 
         // ********************************************************************************************
@@ -69,8 +71,7 @@ namespace Rockstar.BaseGame
 
         private RSBaseRenderer _renderer;
         private RSNodeScene _scene;
-
-        private RSGameClock _clock;
+        private RSGameClock _clockGame;
 
         // ********************************************************************************************
         // Methods
@@ -85,7 +86,7 @@ namespace Rockstar.BaseGame
             _renderer.BeginFrame();
 
             // game logic goes here
-            _clock.Update(_renderer.FrameInterval);
+            _clockGame.Update(_renderer.FrameInterval);
 
             // render
             _scene.Render(_renderer.Canvas);

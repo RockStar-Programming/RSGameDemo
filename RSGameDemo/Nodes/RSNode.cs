@@ -1,7 +1,8 @@
-﻿using Rockstar.BaseCanvas;
-using Rockstar.Types;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Numerics;
+
+using Rockstar.BaseCanvas;
+using Rockstar.Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -28,6 +29,12 @@ namespace Rockstar.Nodes
     {
         // ********************************************************************************************
         // RSNode encapsulates an invisible node
+        //
+        // The main responsibilies for the node, is to
+        // - Do the basic transformations
+        // - Handle child nodes
+        //
+        // The node is not responsible for rendering its children
 
         // ********************************************************************************************
         // Constructors
@@ -102,10 +109,11 @@ namespace Rockstar.Nodes
 
         // Override Render to draw the visual content of a node
         // IMPORTANT:
-        // Always call base.Render, to ensure transformations are done
+        // When sub-classing, always call "base.Render", to ensure transformations are done
+        //
         public virtual void Render(RSBaseCanvas canvas)
         {
-            canvas.AddTransformation(_transformation.CreateTransformationMatrix());
+            canvas.AddTransformation(_transformation.Matrix);
 
             // RSNode has no visible representation
 

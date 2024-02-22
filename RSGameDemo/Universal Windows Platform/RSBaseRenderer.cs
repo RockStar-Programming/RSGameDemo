@@ -1,9 +1,10 @@
-using Rockstar.BaseCanvas;
-using Rockstar.FrameTimer;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 
+using Rockstar.BaseCanvas;
+using Rockstar.FrameTimer;
+            
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -28,9 +29,9 @@ namespace Rockstar.BaseRenderer
     public class RSBaseRenderer
     {
         // ********************************************************************************************
-        // Brief Class Description
+        // The Base Renderer for now only sets up a canvas for screen rendering
         //
-        //
+        // This class will be changed at a later stage
 
         // ********************************************************************************************
         // Constructors
@@ -91,7 +92,7 @@ namespace Rockstar.BaseRenderer
         // ********************************************************************************************
         // Internal Methods
 
-        public void RenderDebugInformation()
+        private void RenderDebugInformation()
         {
             string message = string.Format("{0:0.0}fps @{1:00}x{2:00} -", _timer.FPS, _size.Width, _size.Height);
             _canvas.RenderDebugString(message);

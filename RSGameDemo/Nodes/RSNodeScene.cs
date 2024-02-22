@@ -1,7 +1,8 @@
-﻿using Rockstar.BaseCanvas;
-using Rockstar.Types;
-using System.Numerics;
+﻿using System.Numerics;
 using Windows.Foundation;
+
+using Rockstar.BaseCanvas;
+using Rockstar.Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -27,8 +28,10 @@ namespace Rockstar.Nodes
     public class RSNodeScene : RSNode
     {
         // ********************************************************************************************
-        // RSNodeScene is the top level node for a scene
+        // RSNodeScene is the top level node for node trees
         // 
+        // The scene controls the render origin (only LowerLeft has been testet)
+        // The entire node tree is rendered from here
 
         // ********************************************************************************************
         // Constructors
@@ -64,19 +67,22 @@ namespace Rockstar.Nodes
             _transformation.Position = (_origin == RSSceneOrigin.UpperLeft) ? new Vector2(0, 0) : new Vector2(0, (float)-_transformation.Size.Height);
             RSTransformation.Origin = _origin;
 
+            // create a copy of the scene matrix, as it might be needed repeatetly
+            Matrix3x2 sceneMatrix = _transformation.Matrix;
+
             // RSNodeScene has no visible representation
 
             // render all children
             foreach (RSNode node in _children)
             {
                 // Apply the scene transformation
-                canvas.InitialiseTransformation(_transformation.CreateTransformationMatrix());
+                canvas.InitialiseTransformation(sceneMatrix);
 
                 RenderAllNodes(node, canvas);
             }
 
             // reset transformation
-            canvas.InitialiseTransformation(_transformation.CreateTransformationMatrix());
+            canvas.InitialiseTransformation(sceneMatrix);
         }
 
         // ********************************************************************************************

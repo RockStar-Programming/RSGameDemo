@@ -30,7 +30,7 @@ namespace Rockstar.FrameTimer
         // To do so, call BeginFrame once at the start of each game loop
         //
         // It also calculates FPS over a specified milli seconds update interval
-        // Dips in FPS can be emphasised by setting FPS_ADJUST_FOR_DEVIATION = true
+        // Drops in FPS can be emphasised by setting FPS_ADJUST_FOR_DEVIATION = true
 
         // ********************************************************************************************
         // Constructors

@@ -27,6 +27,7 @@ namespace Rockstar.Types
         // ********************************************************************************************
         // Vector2 Extensions
 
+        // Rotations are clock-wise
         public static Vector2 Rotate(this Vector2 vector, float angle)
         {
             float phi = -angle * (float)Math.PI / 180.0f;

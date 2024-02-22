@@ -1,5 +1,6 @@
-﻿using Rockstar.BaseWindow;
-using Windows.ApplicationModel.Core;
+﻿using Windows.ApplicationModel.Core;
+
+using Rockstar.BaseWindow;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

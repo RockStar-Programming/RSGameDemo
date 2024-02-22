@@ -36,6 +36,8 @@ namespace Rockstar.Types
         // RSTransformation handles data and transformations 
         //
         // See _readme.txt
+        // NOTE:
+        // 
 
         // ********************************************************************************************
         // Constructors
@@ -45,6 +47,10 @@ namespace Rockstar.Types
             RSTransformation result = new RSTransformation();
             result.InitWithData(data);
             return result;
+        }
+
+        private RSTransformation()
+        {
         }
 
         private void InitWithData(params object[] data)
@@ -63,7 +69,6 @@ namespace Rockstar.Types
                 Anchor = (data.Length > 4) && (data[4] is Vector2 anchor) ? anchor : DEFAULT_ANCHOR;
                 Color = (data.Length > 5) && (data[5] is Color color) ? color : Colors.White;
             }
-            _matrix = Matrix3x2.Identity;
         }
 
         // ********************************************************************************************
@@ -90,7 +95,7 @@ namespace Rockstar.Types
         public float Rotation { get; set; }
         public Vector2 Scale { get; set; }
         public Color Color { get; set; }
-        public Matrix3x2 Matrix { get { return _matrix; } }
+        public Matrix3x2 Matrix { get { return CalculateMatrix(); } }
 
         // ********************************************************************************************
         // Internal Data
@@ -100,7 +105,22 @@ namespace Rockstar.Types
         // ********************************************************************************************
         // Methods
 
-        public Matrix3x2 CreateTransformationMatrix()
+        // ********************************************************************************************
+        // Event Handlers
+
+        // ********************************************************************************************
+        // Internal Methods
+
+        private void CopyFrom(RSTransformation transformation)
+        {
+            Position = transformation.Position;
+            Size = transformation.Size;
+            Scale = transformation.Scale;
+            Rotation = transformation.Rotation;
+            Anchor = transformation.Anchor;
+        }
+
+        private Matrix3x2 CalculateMatrix()
         {
             Vector2 pos = Position;
             float rotation = Rotation;
@@ -110,25 +130,6 @@ namespace Rockstar.Types
             _matrix = Matrix3x2.CreateTranslation(pos.X, pos.Y) * _matrix;
             _matrix = Matrix3x2.CreateScale(Scale.X, Scale.Y) * _matrix;
             return _matrix;
-        }
-
-        // ********************************************************************************************
-        // Event Handlers
-
-        // ********************************************************************************************
-        // Internal Methods
-
-        private RSTransformation()
-        {
-        }
-
-        private void CopyFrom(RSTransformation transformation)
-        {
-            Position = transformation.Position;
-            Size = transformation.Size;
-            Scale = transformation.Scale;
-            Rotation = transformation.Rotation;
-            Anchor = transformation.Anchor;
         }
 
         // ********************************************************************************************

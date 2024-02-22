@@ -191,7 +191,7 @@ namespace Rockstar.GameClock
             Radius = 240,
             HourRadius = 200,
             SecondRadius = 228,
-            SecondMarkerCount = 60,
+            SecondMarkerCount = 120,
             Color = Color.FromArgb(32, 128, 150, 235)
         };
 
@@ -514,7 +514,7 @@ namespace Rockstar.GameClock
             double anglePrMilliSecond = anglePrSecond / MILLISECONDS_PR_SECOND;
             double anglePrBeat = anglePrSecond / beatPrSecond;
 
-            if (hour > HOURS_PR_ROTATION) hour -= HOURS_PR_ROTATION;
+            while (hour > HOURS_PR_ROTATION) hour -= HOURS_PR_ROTATION;
             double hourAngle = hour * anglePrHour;
             hourAngle += anglePrHour * (minute / MINUTES_PR_HOUR);
             hourAngle += anglePrSecond * (second / (SECONDS_PR_MINUTE * HOURS_PR_ROTATION));

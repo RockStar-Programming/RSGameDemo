@@ -1,7 +1,8 @@
-﻿using Rockstar.BaseCanvas;
-using System.Numerics;
+﻿using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
+
+using Rockstar.BaseCanvas;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -28,6 +29,8 @@ namespace Rockstar.Nodes
     {
         // ********************************************************************************************
         // Simple colored solids
+        //
+        // Inherits RSNode, and implements rendering of solid objects
 
         // ********************************************************************************************
         // Constructors

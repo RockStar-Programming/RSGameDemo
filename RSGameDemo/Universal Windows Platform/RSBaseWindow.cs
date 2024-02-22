@@ -31,9 +31,7 @@ namespace Rockstar.BaseWindow
     public class RSBaseWindow : IFrameworkView, IFrameworkViewSource
     {
         // ********************************************************************************************
-        // Brief Class Description
-        //
-        //
+        // Responsible for setting up main window and running the game
 
         // ****************************************
         // Constructors

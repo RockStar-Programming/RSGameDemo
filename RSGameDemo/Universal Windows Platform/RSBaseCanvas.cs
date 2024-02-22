@@ -1,12 +1,14 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Text;
-using Rockstar.Types;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Text;
+
+using Rockstar.Types;
+using System;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -87,6 +89,9 @@ namespace Rockstar.BaseCanvas
             _swapChain.ResizeBuffers((float)_size.Width, (float)_size.Height, dpi);
         }
 
+        // ********************************************************************************************
+        // Canvas transformation
+
         public void InitialiseTransformation(Matrix3x2 transformation)
         {
             _session.Transform = transformation;
@@ -118,6 +123,7 @@ namespace Rockstar.BaseCanvas
         }
 
         // ********************************************************************************************
+        // Misc methods
 
         public Size CalculateStringSize(string text, RSFont font)
         {

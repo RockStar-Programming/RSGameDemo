@@ -1,7 +1,7 @@
-﻿
+﻿using System.Numerics;
+
 using Rockstar.BaseCanvas;
 using Rockstar.Types;
-using System.Numerics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -28,6 +28,7 @@ namespace Rockstar.Nodes
     {
         // ********************************************************************************************
         // Implementation of node based string
+        //
         // IMPORTANT:
         // The Transformation.Size of the node is ALWAYS set to the actual render size, when the node is rendered 
 
@@ -56,7 +57,8 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Properties
 
-        public RSFont Font { get; }
+        public string Text { get { return _text; } }
+        public RSFont Font { get { return _font; } }
 
         // ********************************************************************************************
         // Internal Data
