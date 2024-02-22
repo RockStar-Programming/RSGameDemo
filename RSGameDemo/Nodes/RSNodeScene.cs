@@ -1,7 +1,7 @@
-﻿using Rockstar.Transformation;
+﻿using System.Numerics;
+
 using Rockstar.Types;
 using Rockstar.UWPCanvas;
-using System.Numerics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

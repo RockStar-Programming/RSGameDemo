@@ -1,6 +1,5 @@
-﻿using Rockstar.Nodes;
-using System;
-using Windows.Media.Core;
+﻿
+using Rockstar.Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

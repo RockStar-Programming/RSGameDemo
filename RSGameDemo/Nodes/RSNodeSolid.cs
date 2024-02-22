@@ -1,6 +1,7 @@
-﻿using Rockstar.Types;
+﻿using Windows.UI;
+
+using Rockstar.Types;
 using Rockstar.UWPCanvas;
-using Windows.UI;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

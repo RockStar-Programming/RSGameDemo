@@ -1,9 +1,7 @@
-﻿using Microsoft.Graphics.Canvas;
-using Rockstar.Transformation;
+﻿using System.Collections.Generic;
+
 using Rockstar.Types;
 using Rockstar.UWPCanvas;
-using System.Collections.Generic;
-using Windows.Foundation;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

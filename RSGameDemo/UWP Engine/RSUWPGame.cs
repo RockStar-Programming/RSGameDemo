@@ -1,12 +1,8 @@
 ﻿using Windows.UI.Core;
-using System.Diagnostics;
 using Windows.Foundation;
-using System.Reflection;
-using System;
-using Windows.Foundation.Collections;
+
 using Rockstar.UWPRenderer;
 using Rockstar.Types;
-using Rockstar.Transformation;
 using Rockstar.GameClock;
 using Rockstar.Nodes;
 

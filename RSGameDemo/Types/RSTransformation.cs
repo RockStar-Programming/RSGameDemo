@@ -1,7 +1,8 @@
-﻿using Rockstar.Types;
-using System;
+﻿using System;
 using System.Numerics;
 using Windows.UI;
+
+using Rockstar.Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -22,7 +23,7 @@ using Windows.UI;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Transformation
+namespace Rockstar.Types
 {
     public enum RSSceneOrigin
     {
@@ -34,8 +35,6 @@ namespace Rockstar.Transformation
     {
         // ********************************************************************************************
         // RSTransformation handles data and transformations 
-        //
-        //
 
         // ********************************************************************************************
         // Constructors
@@ -47,7 +46,7 @@ namespace Rockstar.Transformation
             return result;
         }
 
-        protected void InitWithData(params object[] data)
+        private void InitWithData(params object[] data)
         {
             if ((data.Length > 0) && (data[0] is RSTransformation transformation))
             {
@@ -67,19 +66,22 @@ namespace Rockstar.Transformation
         }
 
         // ********************************************************************************************
-        // Properties
-
-        public const string POSITION = "Transformation.Position";
-        public const string SIZE = "Transformation.Size";
-        public const string ANCHOR = "Transformation.Anchor";
-        public const string ROTATION = "Transformation.Rotation";
-        public const string SCALE = "Transformation.Scale";
+        // Class Properties
 
         public static RSSceneOrigin Origin = RSSceneOrigin.UpperLeft;
 
-        public readonly RSSize DEFAULT_SIZE = new RSSize(100, 100);
-        public readonly RSVector2 DEFAULT_SCALE = new RSVector2(1.0f, 1.0f);
-        public readonly RSVector2 DEFAULT_ANCHOR = new RSVector2(0.5f, 0.5f);
+        public static string POSITION = "Transformation.Position";
+        public static string SIZE = "Transformation.Size";
+        public static string ANCHOR = "Transformation.Anchor";
+        public static string ROTATION = "Transformation.Rotation";
+        public static string SCALE = "Transformation.Scale";
+
+        public static RSSize DEFAULT_SIZE = new RSSize(100, 100);
+        public static RSVector2 DEFAULT_SCALE = new RSVector2(1.0f, 1.0f);
+        public static RSVector2 DEFAULT_ANCHOR = new RSVector2(0.5f, 0.5f);
+
+        // ********************************************************************************************
+        // Properties
 
         public RSVector2 Position { get; set; }
         public RSSize Size { get; set; }
@@ -96,24 +98,6 @@ namespace Rockstar.Transformation
 
         // ********************************************************************************************
         // Methods
-
-        public void CopyFrom(RSTransformation transformation)
-        { 
-            Position = transformation.Position;
-            Size = transformation.Size;
-            Scale = transformation.Scale;
-            Rotation = transformation.Rotation;
-            Anchor = transformation.Anchor;
-        }
-
-        public void CopyTo(RSTransformation transformation)
-        {
-            transformation.Position = Position;
-            transformation.Size = Size;
-            transformation.Scale = Scale;
-            transformation.Rotation = Rotation;
-            transformation.Anchor = Anchor;
-        }
 
         public Matrix3x2 GetTransform()
         {
@@ -135,6 +119,15 @@ namespace Rockstar.Transformation
 
         private RSTransformation()
         { 
+        }
+
+        private void CopyFrom(RSTransformation transformation)
+        {
+            Position = transformation.Position;
+            Size = transformation.Size;
+            Scale = transformation.Scale;
+            Rotation = transformation.Rotation;
+            Anchor = transformation.Anchor;
         }
 
         // ********************************************************************************************

@@ -24,7 +24,8 @@ using Windows.Foundation;
 namespace Rockstar.Types
 {
     // ********************************************************************************************
-    // Defines some basic class types for use with the Core
+    // Defines some basic assignable types
+    //
     // IMPORTANT:
     // These MUST all be structs, so that direct assignment is possible
 

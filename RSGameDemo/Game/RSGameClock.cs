@@ -1,11 +1,9 @@
-﻿using Rockstar.Game;
+﻿using System;
+using Windows.UI;
+
+using Rockstar.Game;
 using Rockstar.Nodes;
 using Rockstar.Types;
-using System;
-using System.Diagnostics;
-using System.Reflection;
-using Windows.Graphics.Display;
-using Windows.UI;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

@@ -127,7 +127,7 @@
     <Compile Include="RSGameDemo\Game\RSGame.cs" />
     <Compile Include="RSGameDemo\Game\RSGameClock.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNode.cs" />
-    <Compile Include="RSGameDemo\Classes\RSTransformation.cs" />
+    <Compile Include="RSGameDemo\Types\RSTransformation.cs" />
     <Compile Include="RSGameDemo\Types\RSTypes.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNodeSolid.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNodeScene.cs" />
@@ -137,6 +137,7 @@
   <ItemGroup>
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Properties\RuntimeDirectives.rd.xml" />
+    <Content Include="RSGameDemo\Types\_readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">

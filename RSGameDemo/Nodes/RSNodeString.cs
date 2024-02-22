@@ -1,10 +1,6 @@
-﻿using Rockstar.Types;
+﻿
+using Rockstar.Types;
 using Rockstar.UWPCanvas;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

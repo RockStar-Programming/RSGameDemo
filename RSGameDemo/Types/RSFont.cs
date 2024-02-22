@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml.Linq;
-
+﻿
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -26,12 +20,10 @@ using System.Xml.Linq;
 
 namespace Rockstar.Types
 {
-    public struct RSFont
+    public class RSFont
     {
         // ********************************************************************************************
         // Basic font class
-        // IMPORTANT:
-        // RSFont MUST be a struct, so that direct assignment is possible
 
         // ********************************************************************************************
         // Constructors
