@@ -23,7 +23,7 @@ using System.Diagnostics;
 
 namespace Rockstar.FrameTimer
 {
-    public class RSFrameTimer
+    public sealed class RSFrameTimer
     {
         // ********************************************************************************************
         // RSGameTimer calculates the interval in milli seconds between frames
@@ -51,6 +51,16 @@ namespace Rockstar.FrameTimer
         }
 
         // ********************************************************************************************
+        // Class Properties
+
+        // interval in mS at which FPS is updated
+        public static long FPS_UPDATE_INTERVAL = 500;
+
+        // if true, changes (drops) to FPS will be emphasised
+        // this makes it easier to visually spot frame stutter
+        public static bool FPS_ADJUST_FOR_DEVIATION = true;
+
+        // ********************************************************************************************
         // Properties
 
         public long Interval { get { return _interval; } }
@@ -58,13 +68,6 @@ namespace Rockstar.FrameTimer
 
         // ********************************************************************************************
         // Internal Data
-
-        // interval in mS at which FPS is updated
-        private const long FPS_UPDATE_INTERVAL = 500;
-
-        // if true, changes (drops) to FPS will be emphasised
-        // this makes it easier to visually spot frame stutter
-        private const bool FPS_ADJUST_FOR_DEVIATION = true;
 
         private Stopwatch _timer;
         private long _lastElapsed;

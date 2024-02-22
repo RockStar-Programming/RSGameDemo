@@ -1,7 +1,7 @@
-﻿using Windows.UI;
-
-using Rockstar.Types;
-using Rockstar.UWPCanvas;
+﻿using Rockstar.EngineCanvas;
+using System.Numerics;
+using Windows.Foundation;
+using Windows.UI;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -32,7 +32,7 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSolid CreateRectangle(RSVector2 position, RSSize size, Color color)
+        public static RSNodeSolid CreateRectangle(Vector2 position, Size size, Color color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Rectangle);
             result.InitWithData(position, size);
@@ -40,7 +40,7 @@ namespace Rockstar.Nodes
             return result;
         }
 
-        public static RSNodeSolid CreateEllipse(RSVector2 position, RSSize size, Color color)
+        public static RSNodeSolid CreateEllipse(Vector2 position, Size size, Color color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Ellipse);
             result.InitWithData(position, size);
@@ -48,10 +48,13 @@ namespace Rockstar.Nodes
             return result;
         }
 
-        private RSNodeSolid(SolidType type) 
+        private RSNodeSolid(SolidType type)
         {
             _type = type;
         }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
@@ -70,18 +73,20 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Methods
 
-        public override void Render(RSUWPCanvas canvas)
+        public override void Render(RSEngineCanvas canvas)
         {
             base.Render(canvas);
 
             switch (_type)
             {
                 case SolidType.Rectangle:
-                    RSVector2 upperLeft = new RSVector2(-_transformation.Size.Width * _transformation.Anchor.X, -_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
-                    canvas.RenderRectangle(upperLeft.X, upperLeft.Y, _transformation.Size.Width, _transformation.Size.Height, _transformation.Color);
+                    Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+                    canvas.RenderRectangle(upperLeft.X, upperLeft.Y, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
                     break;
                 case SolidType.Ellipse:
-                    canvas.RenderEllipse(0, 0, _transformation.Size.Width, _transformation.Size.Height, _transformation.Color);
+                    // NOTE:
+                    // Anchor for ellipses not yet implemented
+                    canvas.RenderEllipse(0, 0, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
                     break;
                 default:
                     break;

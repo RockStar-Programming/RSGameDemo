@@ -1,4 +1,7 @@
-﻿// ****************************************************************************************************
+﻿using System;
+using System.Numerics;
+
+// ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy of this software
@@ -17,36 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Template
+namespace Rockstar.Types
 {
-    public class RSTemplate
+    public static class RSExtensions
     {
         // ********************************************************************************************
-        // Brief Class Description
-        //
-        //
+        // Vector2 Extensions
 
-        // ********************************************************************************************
-        // Constructors
+        public static Vector2 Rotate(this Vector2 vector, float angle)
+        {
+            float phi = -angle * (float)MathF.PI / 180.0f;
+            float x = ((float)Math.Cos(phi) * vector.X) - ((float)Math.Sin(phi) * vector.Y);
+            float y = ((float)Math.Sin(phi) * vector.X) + ((float)Math.Cos(phi) * vector.Y);
+            return new Vector2(x, y);
+        }
 
-        // ********************************************************************************************
-        // Class Properties
-
-        // ********************************************************************************************
-        // Properties
-
-        // ********************************************************************************************
-        // Internal Data
-
-        // ********************************************************************************************
-        // Methods
-
-        // ********************************************************************************************
-        // Event Handlers
-
-        // ********************************************************************************************
-        // Internal Methods
-
-        // ********************************************************************************************
     }
 }

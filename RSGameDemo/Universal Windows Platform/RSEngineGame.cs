@@ -1,5 +1,9 @@
-﻿
+﻿using Rockstar.EngineRenderer;
+using Rockstar.GameClock;
 using Rockstar.Nodes;
+using Rockstar.Types;
+using Windows.Foundation;
+using Windows.UI.Core;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -20,9 +24,9 @@ using Rockstar.Nodes;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Game
+namespace Rockstar.EngineGame
 {
-    public class RSGame
+    public class RSEngineGame
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -32,10 +36,29 @@ namespace Rockstar.Game
         // ********************************************************************************************
         // Constructors
 
-        protected RSGame(RSNodeScene scene) 
+        public static RSEngineGame CreateWithWindowAndSize(CoreWindow window, Size size)
         {
-            _scene = scene;
+            return new RSEngineGame(window, size);
         }
+
+        private RSEngineGame(CoreWindow window, Size size)
+        {
+            // Create the basic renderer
+            _renderer = RSEngineRenderer.CreateWithWindowAndSize(window, size);
+
+            // Create the main scene
+            // Default (0, 0) is in upper left corner
+            // By settting scene origin to LowerLeft, (0, 0) is moved to lower left corner
+            // This is often much more intuitive for games
+            _scene = RSNodeScene.CreateWithSize(new Size((float)size.Width, (float)size.Height), RSSceneOrigin.LowerLeft);
+
+            // Create and initialise the instance of the game running
+            _clock = RSGameClock.CreateWithScene(_scene);
+            _clock.Initialise();
+        }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
@@ -43,19 +66,31 @@ namespace Rockstar.Game
         // ********************************************************************************************
         // Internal Data
 
-        protected RSNodeScene _scene;
+        private RSEngineRenderer _renderer;
+        private RSNodeScene _scene;
+
+        private RSGameClock _clock;
 
         // ********************************************************************************************
         // Methods
 
-        public virtual void Initialise()
-        { 
-        
+        public void Resize(Size size)
+        {
+            _renderer.Resize(size);
         }
 
-        public virtual void Update(long interval) 
-        { 
-        
+        public void Run()
+        {
+            _renderer.BeginFrame();
+
+            // game logic goes here
+            _clock.Update(_renderer.FrameInterval);
+
+            // render
+            _scene.Render(_renderer.Canvas);
+
+            // end frame
+            _renderer.EndFrame();
         }
 
         // ********************************************************************************************
@@ -66,4 +101,8 @@ namespace Rockstar.Game
 
         // ********************************************************************************************
     }
+
 }
+
+
+

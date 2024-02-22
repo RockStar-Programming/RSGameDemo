@@ -1,9 +1,10 @@
-﻿using System;
-using Windows.UI;
-
-using Rockstar.Game;
+﻿using Rockstar.IGame;
 using Rockstar.Nodes;
 using Rockstar.Types;
+using System;
+using System.Numerics;
+using Windows.Foundation;
+using Windows.UI;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -26,7 +27,7 @@ using Rockstar.Types;
 
 namespace Rockstar.GameClock
 {
-    public class RSGameClock : RSGame
+    public class RSGameClock : IRSGame
     {
         // ********************************************************************************************
         // RSGameClock implements a simple clock, capable of simulating three different watch types
@@ -48,9 +49,13 @@ namespace Rockstar.GameClock
             return new RSGameClock(scene);
         }
 
-        private RSGameClock(RSNodeScene scene) : base(scene)
-        { 
+        private RSGameClock(RSNodeScene scene)
+        {
+            _scene = scene;
         }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
@@ -65,6 +70,31 @@ namespace Rockstar.GameClock
         // ********************************************************************************************
         // Internal Data
 
+        private RSNodeScene _scene;
+
+        private RSNode _clock;
+        private RSNode _clockFace;
+        private RSNode _hourHand;
+        private RSNode _minuteHand;
+        private RSNode _secondHand;
+
+        // ********************************************************************************************
+        // Constants (do not alter for now)
+        // Used in accurate angle calculations, so made doubles to avoid a lot of casting
+
+        private const double FULL_ROTATION = 360;
+        private const double HOURS_PR_ROTATION = 12;
+        private const double MINUTES_PR_HOUR = 60;
+        private const double SECONDS_PR_MINUTE = 60;
+        private const double MILLISECONDS_PR_SECOND = 1000;
+
+        // ********************************************************************************************
+        // Simplest form of Data Driven Programming
+        // Data can be changed to alter the apperance and functionality of the clock
+
+        // The following structs are only intended for holding setupo data
+        // This is done to improve readability
+        //
         private enum BPH
         {
             // Mechanical clocks only
@@ -81,7 +111,7 @@ namespace Rockstar.GameClock
             Jumping
         }
 
-        private enum DotType
+        private enum HourMarkerType
         {
             None,
             Circle,
@@ -89,149 +119,200 @@ namespace Rockstar.GameClock
             DoubleRectangle
         }
 
-        private RSNode _clockNode;
-        private RSNode _clockFace;
-        private RSNode _hourHandNode;
-        private RSNode _minuteHandNode;
-        private RSNode _secondHandNode;
+        private struct ClockFace
+        {
+            public float Radius;
+            public float HourRadius;
+            public float SecondRadius;
+            public Color Color;
+            public float SecondMarkerCount;
+        }
+
+        private struct ClockMarker
+        {
+            public Size Size;
+            public bool Circular;
+            public Color Color;
+            public float Offset;
+        }
+
+        private struct ClockText
+        {
+            public string Name;
+            public string Font;
+            public float FontSize;
+            public bool Bold;
+            public Color Color;
+            public Vector2 Position;
+        }
+
+        private struct ClockHand
+        {
+            public float Length;
+            public float Width;
+            public float BaseDiameter;
+            public Color Color;
+            public float TailWidth;
+            public float TailLength;
+        }
 
         // ********************************************************************************************
-        // Constants (do not alter for now)
-        // Used in accurate angle calculations, so made doubles to avoid a lot of casting
-
-        private const double FULL_ROTATION = 360;
-        private const double HOURS_PR_ROTATION = 12;
-        private const double MINUTES_PR_HOUR = 60;
-        private const double SECONDS_PR_MINUTE = 60;
-        private const double MILLISECONDS_PR_SECOND = 1000;
-
-        // ********************************************************************************************
-        // Simplest form of Data Driven Programming
-        // Data can be changed to alter the apperance and functionality of the clock
+        // These are all the data defining the functionality and design of the clock
+        // 
 
         // defining the "mechanics" of the watch
+        //
         private ClockType CLOCK_TYPE = ClockType.Mechanical;
         private BPH BEATS_PR_HOUR = BPH.VintageHamilton;
         private MinuteHand MINUTE_HAND_JUMPING = MinuteHand.NonJumping;
 
         // defining the clock face,
         // clock dots start at 12 o'clock
-        private readonly DotType[] DOT_TYPES = 
+        //
+        private readonly HourMarkerType[] DOT_TYPES =
         {
-            DotType.DoubleRectangle,
-            DotType.Circle,
-            DotType.Circle,
-            DotType.Rectangle,
-            DotType.Circle,
-            DotType.Circle,
-            DotType.Rectangle,
-            DotType.Circle,
-            DotType.Circle,
-            DotType.Rectangle,
-            DotType.Circle,
-            DotType.Circle
+            HourMarkerType.DoubleRectangle,
+            HourMarkerType.Circle,
+            HourMarkerType.Circle,
+            HourMarkerType.Rectangle,
+            HourMarkerType.Circle,
+            HourMarkerType.Circle,
+            HourMarkerType.Rectangle,
+            HourMarkerType.Circle,
+            HourMarkerType.Circle,
+            HourMarkerType.Rectangle,
+            HourMarkerType.Circle,
+            HourMarkerType.Circle
         };
 
-        private const float FACE_RADIUS = 240;
-        private readonly Color FACE_COLOR = Color.FromArgb(32, 128, 150, 235);
-        private const float FACE_HOUR_MARKER_RADIUS = 200;
-        private readonly Color HOUR_MARKER_COLOR = Colors.DarkGray;
+        private static ClockFace CLOCK_FACE = new ClockFace()
+        {
+            Radius = 240,
+            HourRadius = 200,
+            SecondRadius = 228,
+            SecondMarkerCount = 60,
+            Color = Color.FromArgb(32, 128, 150, 235)
+        };
 
-        private const float FACE_SECOND_MARKER_RADIUS = 228;
-        private const float SECOND_MARKER_COUNT = 60;
-        private readonly Color SECOND_MARKER_COLOR = Colors.LightGray;
+        private static ClockMarker SECOND_MARKER = new ClockMarker()
+        {
+            Size = new Size(2, 12),
+            Circular = false,
+            Color = Colors.LightGray
+        };
 
-        private const float HOUR_MARKER_DOT_DIAMETER = 20;
-        private const float HOUR_MARKER_RECTANGLE_WIDTH = 14;
-        private const float HOUR_MARKER_RECTANGLE_HEIGHT = 28;
-        private const float HOUR_MARKER_RECTANGLE_OFFSET = 10;
+        private static ClockMarker HOUR_DOT_MARKER = new ClockMarker()
+        {
+            Size = new Size(20, 20),
+            Circular = true,
+            Color = Colors.DarkGray
+        };
 
-        private const float SECOND_MARKER_RECTANGLE_WIDTH = 2;
-        private const float SECOND_MARKER_RECTANGLE_HEIGHT = 12;
+        private static ClockMarker HOUR_RECTANGLE_MARKER = new ClockMarker()
+        {
+            Size = new Size(14, 28),
+            Circular = false,
+            Color = Colors.DarkGray
+        };
 
-        private const string MANUFACTURER_NAME = "RockstaR";
-        private const string MANUFACTURER_FONT = "Arial Rounded MT";
-        private readonly Color MANUFACTURER_COLOR = Colors.White;
-        private const float MANUFACTURER_POSITION = 100;
-        private const float MANUFACTURER_FONT_SIZE = 24;
+        private static ClockMarker HOUR_DOUBLE_RECTANGLE_MARKER = new ClockMarker()
+        {
+            Size = new Size(14, 28),
+            Circular = false,
+            Color = Colors.DarkGray,
+            Offset = 10
+        };
 
-        private const string MODEL_NAME = "PROGRAMMER";
-        private const string MODEL_FONT = "Sans Serif Collection";
-        private readonly Color MODEL_COLOR = Colors.White;
-        private const float MODEL_POSITION = -75;
-        private const float MODEL_FONT_SIZE = 16;
+        // defining the text on the face
+        //
+        private static ClockText MANUFACTURER_STRING = new ClockText()
+        {
+            Position = new Vector2(0, 100),
+            Name = "RockstaR",
+            Font = "Arial Rounded MT",
+            FontSize = 24,
+            Color = Colors.White,
+            Bold = false
+        };
 
-        private const string TYPE_NAME_QUARTS = " QUARTZ ";
-        private const string TYPE_NAME_MECHANICAL = "CERTIFIED {0} BPH";
-        private const string TYPE_NAME_SPRING_DRIVE = "SPRING DRIVE";
-        private const string TYPE_FONT = "Sans Serif Collection";
-        private readonly Color TYPE_COLOR = Colors.Red;
-        private const float TYPE_POSITION = -90;
-        private const float TYPE_FONT_SIZE = 10;
+        private static ClockText MODEL_STRING = new ClockText()
+        {
+            Position = new Vector2(0, -75),
+            Name = "PROGRAMMER",
+            Font = "Sans Serif Collection",
+            FontSize = 16,
+            Color = Colors.White,
+            Bold = false
+        };
 
-        // defining the hands
-        private const float HOUR_HAND_WIDTH = 24;
-        private const float HOUR_HAND_LENGTH = 130;
-        private const float HOUR_HAND_BASE = 40;
-        private readonly Color HOUR_HAND_COLOR = Colors.DarkGray;
+        private static ClockText TYPE_STRING = new ClockText()
+        {
+            Position = new Vector2(0, -90),
+            Name = "QUARTZ,CERTIFIED {0} BPH,SPRING DRIVE",
+            Font = "Sans Serif Collection",
+            FontSize = 10,
+            Color = Colors.Red,
+            Bold = true
+        };
 
-        private const float MINUTE_HAND_WIDTH = 16;
-        private const float MINUTE_HAND_LENGTH = 200;
-        private const float MINUTE_HAND_BASE = 32;
-        private readonly Color MINUTE_HAND_COLOR = Colors.LightGray;
+        // defining the clock hands
+        //
+        private static ClockHand HOUR_HAND = new ClockHand()
+        {
+            Length = 130,
+            Width = 24,
+            BaseDiameter = 40,
+            Color = Colors.DarkGray
+        };
 
-        private const float SECOND_HAND_WIDTH = 4;
-        private const float SECOND_HAND_LENGTH = 218;
-        private const float SECOND_HAND_BASE = 18;
-        private readonly Color SECOND_HAND_COLOR = Colors.Red;
+        private static ClockHand MINUTE_HAND = new ClockHand()
+        {
+            Length = 200,
+            Width = 16,
+            BaseDiameter = 32,
+            Color = Colors.LightGray
+        };
 
-        private const float SECOND_TAIL_WIDTH = 8;
-        private const float SECOND_TAIL_LENGTH = 32;
-
-        private const float SECOND_DOT_WIDTH = 10;
-        private readonly Color SECOND_DOT_COLOR = Color.FromArgb(255, 48, 48, 48);
+        private static ClockHand SECOND_HAND = new ClockHand()
+        {
+            Length = 218,
+            Width = 4,
+            BaseDiameter = 18,
+            Color = Colors.Red,
+            TailWidth = 8,
+            TailLength = 32
+        };
 
         // ********************************************************************************************
         // Methods
 
-        public override void Initialise()
+        // Builds the clock
+        //
+        public void Initialise()
         {
-            base.Initialise();
-
             // base node
-            _clockNode = RSNode.CreateWithPosition(new RSVector2(400, 300));
-            _scene.AddChild(_clockNode);
+            _clock = RSNode.CreateWithPosition(new Vector2(400, 300));
+            _scene.AddChild(_clock);
 
             // clock face
-            _clockFace = CreateClockFaceNode();
-            _clockNode.AddChild(_clockFace);
+            _clockFace = CreateClockFace();
+            _clock.AddChild(_clockFace);
 
             // hands
-            _hourHandNode = CreateHandNode(HOUR_HAND_WIDTH, HOUR_HAND_LENGTH, HOUR_HAND_BASE, HOUR_HAND_COLOR);
-            _clockNode.AddChild(_hourHandNode);
+            _hourHand = CreateClockHand(HOUR_HAND);
+            _clock.AddChild(_hourHand);
 
-            _minuteHandNode = CreateHandNode(MINUTE_HAND_WIDTH, MINUTE_HAND_LENGTH, MINUTE_HAND_BASE, MINUTE_HAND_COLOR);
-            _clockNode.AddChild(_minuteHandNode);
+            _minuteHand = CreateClockHand(MINUTE_HAND);
+            _clock.AddChild(_minuteHand);
 
-            _secondHandNode = CreateHandNode(SECOND_HAND_WIDTH, SECOND_HAND_LENGTH, SECOND_HAND_BASE, SECOND_HAND_COLOR);
-            _clockNode.AddChild(_secondHandNode);
-
-            // manually add a tail to the second hand
-            RSNodeSolid tail = RSNodeSolid.CreateRectangle(new RSVector2(0, 0), new RSSize(SECOND_TAIL_WIDTH, SECOND_TAIL_LENGTH), SECOND_HAND_COLOR);
-            tail.Transformation.Anchor = new RSVector2(0.5f, 1.0f);
-            _secondHandNode.AddChild(tail);
-
-            // manually add dark center dot to second hand
-            RSNodeSolid center = RSNodeSolid.CreateEllipse(new RSVector2(0, 0), new RSSize(SECOND_DOT_WIDTH, SECOND_DOT_WIDTH), SECOND_DOT_COLOR);
-            _secondHandNode.AddChild(center);
+            _secondHand = CreateClockHand(SECOND_HAND);
+            _clock.AddChild(_secondHand);
 
             UpdateHands();
         }
 
-        public override void Update(long interval)
+        public void Update(long interval)
         {
-            base.Update(interval);
-
             UpdateHands();
         }
 
@@ -241,32 +322,9 @@ namespace Rockstar.GameClock
         // ********************************************************************************************
         // Internal Methods
 
-        private RSNode CreateHandNode(float width, float length, float center, Color color)
-        {
-            // create the base node to place hand elements on
-            RSNode result = RSNode.Create();
-
-            // create the hand base with requested size and color
-            // hand will rotate around anchor point, so this is placed center bottom
-            //
-            RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new RSVector2(0, 0), new RSSize(width, length), color);
-            handBody.Transformation.Anchor = new RSVector2(0.5f, 0.0f);
-            result.AddChild(handBody);
-
-            // create a top rounded point and add it to the hand base at the top
-            //
-            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new RSVector2(0, length), new RSSize(width, width), color);
-            result.AddChild(handTop);
-
-            // create a round base, and add it to the hand base at the bottom
-            //
-            RSNodeSolid handBase = RSNodeSolid.CreateEllipse(new RSVector2(0, 0), new RSSize(center, center), color);
-            result.AddChild(handBase);
-
-            return result;
-        }
-
-        private RSNode CreateClockFaceNode()
+        // Creates the clocks basic face
+        //
+        private RSNode CreateClockFace()
         {
             // create the base node to place hand elements on
             //
@@ -274,107 +332,172 @@ namespace Rockstar.GameClock
 
             // create face
             //
-            RSNodeSolid face = RSNodeSolid.CreateEllipse(new RSVector2(), new RSSize(FACE_RADIUS * 2, FACE_RADIUS * 2), FACE_COLOR);
+            RSNodeSolid face = RSNodeSolid.CreateEllipse(new Vector2(), new Size(CLOCK_FACE.Radius * 2, CLOCK_FACE.Radius * 2), CLOCK_FACE.Color);
             result.AddChild(face);
-
-            double rotation = 0;
-            double rotationStep = FULL_ROTATION / DOT_TYPES.Length;
-            RSSize size;
 
             // create hour markers
             //
-            foreach (DotType type in DOT_TYPES) 
+            double rotation = 0;
+            double rotationStep = FULL_ROTATION / DOT_TYPES.Length;
+            foreach (HourMarkerType type in DOT_TYPES)
             {
-                RSVector2 position = new RSVector2(0, FACE_HOUR_MARKER_RADIUS).Rotate((float)rotation);
-                switch (type)
-                {
-                    case DotType.None:
-                        break;
-                    case DotType.Rectangle:
-                        size = new RSSize(HOUR_MARKER_RECTANGLE_WIDTH, HOUR_MARKER_RECTANGLE_HEIGHT);
-                        
-                        RSNodeSolid rectangle = RSNodeSolid.CreateRectangle(position, size, HOUR_MARKER_COLOR);
-                        rectangle.Transformation.Rotation = (float)rotation;
-                        result.AddChild(rectangle);
-                        
-                        break;
-                    case DotType.DoubleRectangle:
-                        size = new RSSize(HOUR_MARKER_RECTANGLE_WIDTH, HOUR_MARKER_RECTANGLE_HEIGHT);
-                        
-                        RSVector2 positionLeft = new RSVector2(-HOUR_MARKER_RECTANGLE_OFFSET, FACE_HOUR_MARKER_RADIUS).Rotate((float)rotation);
-                        RSNodeSolid rectangleLeft = RSNodeSolid.CreateRectangle(positionLeft, size, HOUR_MARKER_COLOR);
-                        rectangleLeft.Transformation.Rotation = (float)rotation;
-                        result.AddChild(rectangleLeft);
-
-                        RSVector2 positionRight = new RSVector2(HOUR_MARKER_RECTANGLE_OFFSET, FACE_HOUR_MARKER_RADIUS).Rotate((float)rotation);
-                        RSNodeSolid rectangleRight = RSNodeSolid.CreateRectangle(positionRight, size, HOUR_MARKER_COLOR);
-                        rectangleRight.Transformation.Rotation = (float)rotation;
-                        result.AddChild(rectangleRight);
-
-                        break;
-                    case DotType.Circle:
-                    default:
-                        RSNodeSolid dot = RSNodeSolid.CreateEllipse(position, new RSSize(HOUR_MARKER_DOT_DIAMETER), HOUR_MARKER_COLOR);
-                        dot.Transformation.Rotation = (float)rotation;
-                        result.AddChild(dot);
-                        
-                        break;
-                }
+                result.AddChild(CreateHourClockMarker(type, new Vector2(0, CLOCK_FACE.HourRadius), rotation));
                 rotation += rotationStep;
             }
 
             // create second markers
             //
             rotation = 0;
-            rotationStep = FULL_ROTATION / SECOND_MARKER_COUNT;
-            size = new RSSize(SECOND_MARKER_RECTANGLE_WIDTH, SECOND_MARKER_RECTANGLE_HEIGHT);
-            for (int index = 0; index < SECOND_MARKER_COUNT; index++)
+            rotationStep = FULL_ROTATION / CLOCK_FACE.SecondMarkerCount;
+            for (int index = 0; index < CLOCK_FACE.SecondMarkerCount; index++)
             {
-                RSVector2 position = new RSVector2(0, FACE_SECOND_MARKER_RADIUS).Rotate((float)rotation);
-
-                RSNodeSolid rectangle = RSNodeSolid.CreateRectangle(position, size, SECOND_MARKER_COLOR);
-                rectangle.Transformation.Rotation = (float)rotation;
-                result.AddChild(rectangle);
-
+                result.AddChild(CreateGenericClockMarker(SECOND_MARKER, new Vector2(0, CLOCK_FACE.SecondRadius), rotation));
                 rotation += rotationStep;
             }
 
-            // create face label
-            RSFont font = new RSFont(MANUFACTURER_FONT, MANUFACTURER_FONT_SIZE);
-            font.Bold = true;
-            RSNodeString label = RSNodeString.CreateString(MANUFACTURER_NAME, new RSVector2(0, MANUFACTURER_POSITION), font);
-            label.Transformation.Color = MANUFACTURER_COLOR;
-            result.AddChild(label);
-
-            font = new RSFont(MODEL_FONT, MODEL_FONT_SIZE);
-            label = RSNodeString.CreateString(MODEL_NAME, new RSVector2(0, MODEL_POSITION), font);
-            label.Transformation.Color = MODEL_COLOR;
-            result.AddChild(label);
-
-            font = new RSFont(TYPE_FONT, TYPE_FONT_SIZE);
-            font.Bold= true;
-            string text = "";
-            switch (CLOCK_TYPE)
-            {
-                case ClockType.Quartz: 
-                    text = TYPE_NAME_QUARTS; 
-                    break;
-                case ClockType.Mechanical:
-                    text = string.Format(TYPE_NAME_MECHANICAL, (int)BEATS_PR_HOUR);
-                    break;
-                case ClockType.SpringDrive:
-                    text = TYPE_NAME_SPRING_DRIVE;
-                    break;
-            }
-            label = RSNodeString.CreateString(text, new RSVector2(0, TYPE_POSITION), font);
-            label.Transformation.Color = TYPE_COLOR;
-            result.AddChild(label);
-
+            // create face labels
+            //
+            result.AddChild(CreateText(MANUFACTURER_STRING));
+            result.AddChild(CreateText(MODEL_STRING));
+            result.AddChild(CreateText(TYPE_STRING));
 
             return result;
         }
 
-        private void UpdateHands() 
+        // Creates an hour marker
+        //
+        private RSNode CreateHourClockMarker(HourMarkerType type, Vector2 position, double rotation)
+        {
+            RSNode result;
+
+            switch (type)
+            {
+                case HourMarkerType.None:
+                    result = RSNode.Create();
+                    break;
+                case HourMarkerType.Rectangle:
+                    result = CreateGenericClockMarker(HOUR_RECTANGLE_MARKER, position, rotation);
+                    break;
+                case HourMarkerType.DoubleRectangle:
+                    result = CreateGenericClockMarker(HOUR_DOUBLE_RECTANGLE_MARKER, position, rotation);
+                    break;
+                case HourMarkerType.Circle:
+                default:
+                    result = CreateGenericClockMarker(HOUR_DOT_MARKER, position, rotation);
+                    break;
+            }
+
+            return result;
+        }
+
+        // Creates a generic marker
+        //
+        private RSNode CreateGenericClockMarker(ClockMarker marker, Vector2 position, double rotation)
+        {
+            RSNode result = RSNode.Create();
+
+            RSNode node;
+            Vector2 nodePosition = new Vector2(position.X - marker.Offset, position.Y).Rotate((float)rotation);
+            if (marker.Circular == true)
+            {
+                node = RSNodeSolid.CreateEllipse(nodePosition, marker.Size, marker.Color);
+            }
+            else
+            {
+                node = RSNodeSolid.CreateRectangle(nodePosition, marker.Size, marker.Color);
+            }
+            node.Transformation.Rotation = (float)rotation;
+            result.AddChild(node);
+
+            if (marker.Offset > 0)
+            {
+                nodePosition = new Vector2(position.X + marker.Offset, position.Y).Rotate((float)rotation);
+                if (marker.Circular == true)
+                {
+                    node = RSNodeSolid.CreateEllipse(nodePosition, marker.Size, marker.Color);
+                }
+                else
+                {
+                    node = RSNodeSolid.CreateRectangle(nodePosition, marker.Size, marker.Color);
+                }
+                node.Transformation.Rotation = (float)rotation;
+                result.AddChild(node);
+            }
+
+            return result;
+        }
+
+        // Creates a clock hand
+        //
+        private RSNode CreateClockHand(ClockHand hand)
+        {
+            // create the base node to place hand elements on
+            RSNode result = RSNode.Create();
+
+            // create the hand base with requested size and color
+            // hand will rotate around anchor point, so this is placed center bottom
+            //
+            RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new Size(hand.Width, hand.Length), hand.Color);
+            handBody.Transformation.Anchor = new Vector2(0.5f, 0.0f);
+            result.AddChild(handBody);
+
+            // create a top rounded point and add it to the hand base at the top
+            //
+            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new Vector2(0, hand.Length), new Size(hand.Width, hand.Width), hand.Color);
+            result.AddChild(handTop);
+
+            // create a tail if any defined
+            // 
+            if (hand.TailWidth > 0)
+            {
+                RSNodeSolid tail = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new Size(hand.TailWidth, hand.TailLength), hand.Color);
+                tail.Transformation.Anchor = new Vector2(0.5f, 1.0f);
+                result.AddChild(tail);
+            }
+
+            // create a round base, and add it to the hand base at the bottom
+            //
+            RSNodeSolid handBase = RSNodeSolid.CreateEllipse(new Vector2(0, 0), new Size(hand.BaseDiameter, hand.BaseDiameter), hand.Color);
+            result.AddChild(handBase);
+
+            return result;
+        }
+
+        // Creates a clock text
+        private RSNodeString CreateText(ClockText setup)
+        {
+            RSFont font = RSFont.CreateWithName(setup.Font, setup.FontSize);
+            font.Bold = setup.Bold;
+
+            string name = GetTypeName(setup.Name);
+            RSNodeString result = RSNodeString.CreateString(name, setup.Position, font);
+            result.Transformation.Color = setup.Color;
+
+            return result;
+        }
+
+        // Gets the type name in a comma separated string
+        // 
+        private string GetTypeName(string name)
+        {
+            string[] nameList = name.Split(',');
+            // if name splits into at least 3, set name according to clock type
+            if (nameList.Length >= 3)
+            {
+                switch (CLOCK_TYPE)
+                {
+                    case ClockType.Quartz: return nameList[0];
+                    case ClockType.Mechanical: return string.Format(nameList[1], (int)BEATS_PR_HOUR);
+                    case ClockType.SpringDrive: return nameList[2];
+                }
+            }
+            return name;
+        }
+
+        // ********************************************************************************************
+        // Updates the hands of the clock
+        //
+        private void UpdateHands()
         {
             DateTime now = DateTime.Now;
 
@@ -419,9 +542,9 @@ namespace Rockstar.GameClock
                     break;
             }
 
-            _minuteHandNode.Transformation.Rotation = (float)minuteAngle;
-            _hourHandNode.Transformation.Rotation = (float)hourAngle;
-            _secondHandNode.Transformation.Rotation = (float)secondAngle;
+            _minuteHand.Transformation.Rotation = (float)minuteAngle;
+            _hourHand.Transformation.Rotation = (float)hourAngle;
+            _secondHand.Transformation.Rotation = (float)secondAngle;
         }
 
         // ********************************************************************************************

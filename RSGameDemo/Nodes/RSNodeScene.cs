@@ -1,7 +1,7 @@
-﻿using System.Numerics;
-
+﻿using Rockstar.EngineCanvas;
 using Rockstar.Types;
-using Rockstar.UWPCanvas;
+using System.Numerics;
+using Windows.Foundation;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -27,21 +27,25 @@ namespace Rockstar.Nodes
     public class RSNodeScene : RSNode
     {
         // ********************************************************************************************
-        // Brief Class Description
+        // RSNodeScene is the top level node for a scene
+        // 
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeScene CreateWithSize(RSSize size, RSSceneOrigin origin)
-        { 
-            return new RSNodeScene(size, origin); 
+        public static RSNodeScene CreateWithSize(Size size, RSSceneOrigin origin)
+        {
+            return new RSNodeScene(size, origin);
         }
 
-        private RSNodeScene(RSSize size, RSSceneOrigin origin) 
-        { 
-            InitWithData(new RSVector2(), size);
+        private RSNodeScene(Size size, RSSceneOrigin origin)
+        {
+            InitWithData(new Vector2(), size);
             _origin = origin;
         }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
@@ -54,10 +58,10 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Methods
 
-        public override void Render(RSUWPCanvas canvas)
+        public override void Render(RSEngineCanvas canvas)
         {
             // sets render origin for transformations
-            _transformation.Position = (_origin == RSSceneOrigin.UpperLeft) ? new RSVector2(0, 0) : new RSVector2(0, -_transformation.Size.Height);
+            _transformation.Position = (_origin == RSSceneOrigin.UpperLeft) ? new Vector2(0, 0) : new Vector2(0, (float)-_transformation.Size.Height);
             RSTransformation.Origin = _origin;
 
             // RSNodeScene has no visible representation
@@ -66,13 +70,13 @@ namespace Rockstar.Nodes
             foreach (RSNode node in _children)
             {
                 // Apply the scene transformation
-                canvas.InitialiseTransformation(_transformation.GetTransform());
+                canvas.InitialiseTransformation(_transformation.CreateTransformationMatrix());
 
                 RenderAllNodes(node, canvas);
             }
 
             // reset transformation
-            canvas.InitialiseTransformation(_transformation.GetTransform());
+            canvas.InitialiseTransformation(_transformation.CreateTransformationMatrix());
         }
 
         // ********************************************************************************************
@@ -81,7 +85,7 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Internal Methods
 
-        private void RenderAllNodes(RSNode node, RSUWPCanvas canvas)
+        private void RenderAllNodes(RSNode node, RSEngineCanvas canvas)
         {
             // render node
             node.Render(canvas);

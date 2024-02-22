@@ -1,6 +1,7 @@
 ﻿
+using Rockstar.EngineCanvas;
 using Rockstar.Types;
-using Rockstar.UWPCanvas;
+using System.Numerics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -28,26 +29,29 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Implementation of node based string
         // IMPORTANT:
-        // The Transformation.Size of the node is ALWAYS adjusted when the node is rendered 
+        // The Transformation.Size of the node is ALWAYS set to the actual render size, when the node is rendered 
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeString CreateString(string text, RSVector2 position, RSFont font)
+        public static RSNodeString CreateString(string text, Vector2 position, RSFont font)
         {
             return new RSNodeString(text, position, font);
         }
 
-        private RSNodeString() 
-        { 
+        private RSNodeString()
+        {
         }
 
-        protected RSNodeString(string text, RSVector2 position, RSFont font)
-        { 
+        protected RSNodeString(string text, Vector2 position, RSFont font)
+        {
             _text = text;
             _font = font;
-            InitWithData(position);        
+            InitWithData(position);
         }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
@@ -63,14 +67,14 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Methods
 
-        public override void Render(RSUWPCanvas canvas)
+        public override void Render(RSEngineCanvas canvas)
         {
             // NOTE: Size must be set prior to doing transformations in base node
             Transformation.Size = canvas.CalculateStringSize(_text, _font);
 
             base.Render(canvas);
 
-            RSVector2 upperLeft = new RSVector2(-_transformation.Size.Width * _transformation.Anchor.X, -_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
             canvas.RenderText(upperLeft.X, upperLeft.Y, _text, _font, Transformation.Color);
         }
 

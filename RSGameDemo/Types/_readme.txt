@@ -17,4 +17,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-All nodes should inherit from RSNode, and override Render(...) to draw itself to a canvas
+Some classes are so generic, that they almost work as types. 
+This means that they can basically be used everwhere.
+
+These classes should still obey the Lego Principle, but there are certain restrictions
+
+1)
+These classes should NEVER use other classes other than basic API classes
+
+2)
+Changes to these classes should be kept at an abolute minimum, as many other classes will depend on them.
+In case added functionality is required, either
+- Create an extension
+- Subclass it
+
+When creating a Lego Principle diagram, these classes can be omitted for clarity
+

@@ -20,26 +20,28 @@
 
 namespace Rockstar.Types
 {
-    public class RSFont
+    public sealed class RSFont
     {
         // ********************************************************************************************
         // Basic font class
+        //
+        // See _readme.txt
 
         // ********************************************************************************************
         // Constructors
 
         public static RSFont Create()
         {
-            return new RSFont(FONT_NAME, FONT_SIZE);
+            return new RSFont(DEFAULT_FONT_NAME, DEFAULT_FONT_SIZE);
         }
 
-        public static RSFont Create(string name, float size)
-        { 
+        public static RSFont CreateWithName(string name, float size)
+        {
             return new RSFont(name, size);
         }
 
-        public RSFont(string name, float size)
-        { 
+        private RSFont(string name, float size)
+        {
             Name = name;
             Size = size;
             Bold = false;
@@ -47,10 +49,13 @@ namespace Rockstar.Types
         }
 
         // ********************************************************************************************
-        // Properties
+        // Class Properties
 
-        public const string FONT_NAME = "Verdana";
-        public const float FONT_SIZE = 16;
+        public static string DEFAULT_FONT_NAME = "Verdana";
+        public static float DEFAULT_FONT_SIZE = 16;
+
+        // ********************************************************************************************
+        // Properties
 
         public string Name { get; set; }
         public float Size { get; set; }
@@ -59,7 +64,6 @@ namespace Rockstar.Types
 
         // ********************************************************************************************
         // Internal Data
-
 
         // ********************************************************************************************
         // Methods

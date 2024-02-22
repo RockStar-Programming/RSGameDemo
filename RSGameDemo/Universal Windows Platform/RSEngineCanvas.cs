@@ -1,14 +1,12 @@
 ﻿using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Text;
+using Rockstar.Types;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.Graphics.Display;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Text;
-
-using Rockstar.Nodes;
-using Rockstar.Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -29,29 +27,32 @@ using Rockstar.Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.UWPCanvas
+namespace Rockstar.EngineCanvas
 {
-    public class RSUWPCanvas
+    public class RSEngineCanvas
     {
         // ********************************************************************************************
-        // CoreCanvas encapsulates a drawing canvas
+        // RSEngineCanvas encapsulates a drawing canvas
         // All RSNode based classes uses this for rendering
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSUWPCanvas Create(CoreWindow window, Size size, Color color)
-        { 
-            return new RSUWPCanvas(window, size, color);
+        public static RSEngineCanvas Create(CoreWindow window, Size size, Color color)
+        {
+            return new RSEngineCanvas(window, size, color);
         }
 
-        private RSUWPCanvas(CoreWindow window, Size size, Color color) 
+        private RSEngineCanvas(CoreWindow window, Size size, Color color)
         {
             _size = size;
             _color = color;
             float dpi = DisplayInformation.GetForCurrentView().LogicalDpi;
             _swapChain = CanvasSwapChain.CreateForCoreWindow(new CanvasDevice(), window, dpi);
         }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
@@ -72,11 +73,6 @@ namespace Rockstar.UWPCanvas
         public void BeginFrame()
         {
             _session = _swapChain.CreateDrawingSession(_color);
-        }
-
-        public void RenderScene(RSNodeScene scene) 
-        {
-            scene.Render(this);
         }
 
         public void EndFrame()
@@ -123,14 +119,12 @@ namespace Rockstar.UWPCanvas
 
         // ********************************************************************************************
 
-        public RSSize CalculateStringSize(string text, RSFont font) 
+        public Size CalculateStringSize(string text, RSFont font)
         {
             CanvasTextFormat format = CreateCanvasTextFormat(text, font);
             CanvasTextLayout textLayout = new CanvasTextLayout(_session, text, format, 0.0f, 0.0f);
-            return new RSSize(textLayout.DrawBounds.Width,textLayout.DrawBounds.Height); 
+            return new Size(textLayout.DrawBounds.Width, textLayout.DrawBounds.Height);
         }
-
-        // ********************************************************************************************
 
         public void RenderDebugString(string message)
         {
@@ -157,8 +151,8 @@ namespace Rockstar.UWPCanvas
             CanvasTextFormat result = new CanvasTextFormat();
 
             // as font is a struct, member might be null
-            if (font.Name == null) font.Name = RSFont.FONT_NAME;
-            if (font.Size == 0) font.Size = RSFont.FONT_SIZE; ;
+            if (font.Name == null) font.Name = RSFont.DEFAULT_FONT_NAME;
+            if (font.Size == 0) font.Size = RSFont.DEFAULT_FONT_SIZE; ;
 
             result.FontSize = font.Size;
             result.FontWeight = (font.Bold == true) ? FontWeights.Bold : FontWeights.Normal;

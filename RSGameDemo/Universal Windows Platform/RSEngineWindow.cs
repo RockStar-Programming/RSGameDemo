@@ -1,10 +1,10 @@
-﻿using Rockstar.UWPGame;
+﻿using Rockstar.EngineGame;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
+using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
-using Size = Windows.Foundation.Size;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,22 +25,30 @@ using Size = Windows.Foundation.Size;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.UWPWindow
+namespace Rockstar.EngineWindow
 {
-    public class RSUWPWindow : IFrameworkView, IFrameworkViewSource
+    public class RSEngineWindow : IFrameworkView, IFrameworkViewSource
     {
         // ****************************************
+        // Constructors
 
-        public static RSUWPWindow Create()
-        { 
-            return new RSUWPWindow(); 
+        public static RSEngineWindow Create()
+        {
+            return new RSEngineWindow();
         }
 
-        private RSUWPWindow() 
+        private RSEngineWindow()
         {
         }
 
+        // ********************************************************************************************
+        // Class Properties
+
+        // ********************************************************************************************
+        //  Properties
+
         // ****************************************
+        // Internal Data
 
         private readonly string CAPTION = "Rockstar Clock";
         private readonly Color CAPTION_BACKGOUND_COLOR = Color.FromArgb(255, 128, 150, 235);
@@ -50,7 +58,7 @@ namespace Rockstar.UWPWindow
 
         private CoreWindow _window;
         private ApplicationView _view;
-        private RSUWPGame _game;
+        private RSEngineGame _game;
 
         // ****************************************
         // IFrameworkViewSource implementation
@@ -91,7 +99,7 @@ namespace Rockstar.UWPWindow
 
             _view.TryResizeView(size);
 
-             _game = RSUWPGame.CreateWithWindowAndSize(_window, size);
+            _game = RSEngineGame.CreateWithWindowAndSize(_window, size);
         }
 
         public void Run()

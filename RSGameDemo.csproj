@@ -29,6 +29,8 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -117,18 +119,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RSGameDemo\Types\RSExtensions.cs" />
     <Compile Include="RSGameDemo\Types\RSFont.cs" />
-    <Compile Include="RSGameDemo\UWP Engine\RSUWPCanvas.cs" />
-    <Compile Include="RSGameDemo\UWP Engine\Program.cs" />
-    <Compile Include="RSGameDemo\UWP Engine\RSUWPRenderer.cs" />
-    <Compile Include="RSGameDemo\UWP Engine\RSUWPGame.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineCanvas.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\Program.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineRenderer.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineGame.cs" />
     <Compile Include="RSGameDemo\Classes\RSFrameTimer.cs" />
-    <Compile Include="RSGameDemo\UWP Engine\RSUWPWindow.cs" />
-    <Compile Include="RSGameDemo\Game\RSGame.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineWindow.cs" />
+    <Compile Include="RSGameDemo\Game\IRSGame.cs" />
     <Compile Include="RSGameDemo\Game\RSGameClock.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNode.cs" />
     <Compile Include="RSGameDemo\Types\RSTransformation.cs" />
-    <Compile Include="RSGameDemo\Types\RSTypes.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNodeSolid.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNodeScene.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNodeString.cs" />
@@ -156,7 +158,7 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <None Include="RSGameDemo\_Lego Principle\RSCoreGame.drawio" />
+    <None Include="RSGameDemo\_Lego Principle\RSGameClock.drawio" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

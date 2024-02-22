@@ -1,10 +1,8 @@
-﻿using Windows.UI.Core;
+using Rockstar.EngineCanvas;
+using Rockstar.FrameTimer;
 using Windows.Foundation;
-
-using Rockstar.UWPRenderer;
-using Rockstar.Types;
-using Rockstar.GameClock;
-using Rockstar.Nodes;
+using Windows.UI;
+using Windows.UI.Core;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,9 +23,9 @@ using Rockstar.Nodes;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.UWPGame
+namespace Rockstar.EngineRenderer
 {
-    public class RSUWPGame
+    public class RSEngineRenderer
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -37,58 +35,54 @@ namespace Rockstar.UWPGame
         // ********************************************************************************************
         // Constructors
 
-        public static RSUWPGame CreateWithWindowAndSize(CoreWindow window, Size size) 
+        public static RSEngineRenderer CreateWithWindowAndSize(CoreWindow window, Size size)
         {
-            return new RSUWPGame(window, size);
+            return new RSEngineRenderer(window, size);
         }
 
-        private RSUWPGame(CoreWindow window, Size size) 
+        private RSEngineRenderer(CoreWindow window, Size size)
         {
-            // Create the basic renderer
-            _renderer = RSUWPRenderer.CreateWithWindowAndSize(window, size);
-
-            // Create the main scene
-            // Default (0, 0) is in upper left corner
-            // By settting scene origin to LowerLeft, (0, 0) is moved to lower left corner
-            // This is often much more intuitive for games
-            _mainScene = RSNodeScene.CreateWithSize(new RSSize((float)size.Width, (float)size.Height), RSSceneOrigin.LowerLeft);
-
-            // Create and initialise the instance of the game running
-            _clock = RSGameClock.CreateWithScene(_mainScene);
-            _clock.Initialise();
+            _size = size;
+            _timer = RSFrameTimer.Create();
+            _canvas = RSEngineCanvas.Create(window, size, Colors.Black);
+            Resize(_size);
         }
+
+        // ********************************************************************************************
+        // Class Properties
 
         // ********************************************************************************************
         // Properties
 
+        public long FrameInterval { get { return _timer.Interval; } }
+        public Size Size { get { return _size; } }
+        public RSEngineCanvas Canvas { get { return _canvas; } }
+
         // ********************************************************************************************
         // Internal Data
 
-        private RSUWPRenderer _renderer;
-        private RSNodeScene _mainScene;
+        private Size _size;
+        private RSFrameTimer _timer;
+        private RSEngineCanvas _canvas;
 
-        private RSGameClock _clock;
-        
         // ********************************************************************************************
         // Methods
 
-        public void Resize(Size size)
+        public void BeginFrame()
         {
-            _renderer.Resize(size);
+            _timer.BeginFrame();
+            _canvas.BeginFrame();
         }
 
-        public void Run()
+        public void EndFrame()
         {
-            _renderer.BeginFrame();
+            RenderDebugInformation();
+            _canvas.EndFrame();
+        }
 
-            // game logic goes here
-            _clock.Update(_renderer.FrameInterval);
-
-            // render
-            _renderer.RenderScene(_mainScene);
-
-            // end frame
-           _renderer.EndFrame();
+        public void Resize(Size size)
+        {
+            _canvas.Resize(size);
         }
 
         // ********************************************************************************************
@@ -97,10 +91,12 @@ namespace Rockstar.UWPGame
         // ********************************************************************************************
         // Internal Methods
 
+        public void RenderDebugInformation()
+        {
+            string message = string.Format("{0:0.0}fps @{1:00}x{2:00} -", _timer.FPS, _size.Width, _size.Height);
+            _canvas.RenderDebugString(message);
+        }
+
         // ********************************************************************************************
     }
-
 }
-
-
-

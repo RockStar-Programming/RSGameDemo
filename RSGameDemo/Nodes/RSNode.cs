@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
+﻿using Rockstar.EngineCanvas;
 using Rockstar.Types;
-using Rockstar.UWPCanvas;
+using System.Collections.Generic;
+using System.Numerics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -27,7 +27,7 @@ namespace Rockstar.Nodes
     public class RSNode
     {
         // ********************************************************************************************
-        // RSNode encapsulates the simplest visual screen object which is a colored rectangle
+        // RSNode encapsulates an invisible node
 
         // ********************************************************************************************
         // Constructors
@@ -39,7 +39,7 @@ namespace Rockstar.Nodes
             return result;
         }
 
-        public static RSNode CreateWithPosition(RSVector2 position)
+        public static RSNode CreateWithPosition(Vector2 position)
         {
             RSNode result = new RSNode();
             result.InitWithData(position);
@@ -54,7 +54,7 @@ namespace Rockstar.Nodes
         }
 
         protected RSNode()
-        { 
+        {
         }
 
         protected void InitWithNode(RSNode node)
@@ -79,6 +79,9 @@ namespace Rockstar.Nodes
         }
 
         // ********************************************************************************************
+        // Class Properties
+
+        // ********************************************************************************************
         // Properties
 
         public RSTransformation Transformation { get { return _transformation; } }
@@ -98,17 +101,22 @@ namespace Rockstar.Nodes
         // Methods
 
         // Override Render to draw the visual content of a node
-        public virtual void Render(RSUWPCanvas canvas)
+        // IMPORTANT:
+        // Always call base.Render, to ensure transformations are done
+        public virtual void Render(RSEngineCanvas canvas)
         {
-            canvas.AddTransformation(_transformation.GetTransform());
+            canvas.AddTransformation(_transformation.CreateTransformationMatrix());
 
             // RSNode has no visible representation
 
         }
 
+        // ********************************************************************************************
+        // Handling Children
+
         public void AddChild(RSNode node)
         {
-            if (_children.Contains(node) == false) 
+            if (_children.Contains(node) == false)
             {
                 node._parent = this;
                 _children.Add(node);
