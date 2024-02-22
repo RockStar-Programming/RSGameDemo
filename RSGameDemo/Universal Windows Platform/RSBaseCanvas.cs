@@ -27,23 +27,23 @@ using Windows.UI.Text;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.EngineCanvas
+namespace Rockstar.BaseCanvas
 {
-    public class RSEngineCanvas
+    public class RSBaseCanvas
     {
         // ********************************************************************************************
-        // RSEngineCanvas encapsulates a drawing canvas
+        // RSBaseCanvas encapsulates a drawing canvas
         // All RSNode based classes uses this for rendering
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSEngineCanvas Create(CoreWindow window, Size size, Color color)
+        public static RSBaseCanvas Create(CoreWindow window, Size size, Color color)
         {
-            return new RSEngineCanvas(window, size, color);
+            return new RSBaseCanvas(window, size, color);
         }
 
-        private RSEngineCanvas(CoreWindow window, Size size, Color color)
+        private RSBaseCanvas(CoreWindow window, Size size, Color color)
         {
             _size = size;
             _color = color;

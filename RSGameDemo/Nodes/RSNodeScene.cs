@@ -1,4 +1,4 @@
-﻿using Rockstar.EngineCanvas;
+﻿using Rockstar.BaseCanvas;
 using Rockstar.Types;
 using System.Numerics;
 using Windows.Foundation;
@@ -58,7 +58,7 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Methods
 
-        public override void Render(RSEngineCanvas canvas)
+        public override void Render(RSBaseCanvas canvas)
         {
             // sets render origin for transformations
             _transformation.Position = (_origin == RSSceneOrigin.UpperLeft) ? new Vector2(0, 0) : new Vector2(0, (float)-_transformation.Size.Height);
@@ -85,7 +85,7 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Internal Methods
 
-        private void RenderAllNodes(RSNode node, RSEngineCanvas canvas)
+        private void RenderAllNodes(RSNode node, RSBaseCanvas canvas)
         {
             // render node
             node.Render(canvas);

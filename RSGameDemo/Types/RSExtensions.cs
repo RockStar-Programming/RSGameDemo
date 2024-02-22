@@ -29,7 +29,7 @@ namespace Rockstar.Types
 
         public static Vector2 Rotate(this Vector2 vector, float angle)
         {
-            float phi = -angle * (float)MathF.PI / 180.0f;
+            float phi = -angle * (float)Math.PI / 180.0f;
             float x = ((float)Math.Cos(phi) * vector.X) - ((float)Math.Sin(phi) * vector.Y);
             float y = ((float)Math.Sin(phi) * vector.X) + ((float)Math.Cos(phi) * vector.Y);
             return new Vector2(x, y);

@@ -1,4 +1,4 @@
-using Rockstar.EngineCanvas;
+using Rockstar.BaseCanvas;
 using Rockstar.FrameTimer;
 using Windows.Foundation;
 using Windows.UI;
@@ -23,9 +23,9 @@ using Windows.UI.Core;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.EngineRenderer
+namespace Rockstar.BaseRenderer
 {
-    public class RSEngineRenderer
+    public class RSBaseRenderer
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -35,16 +35,16 @@ namespace Rockstar.EngineRenderer
         // ********************************************************************************************
         // Constructors
 
-        public static RSEngineRenderer CreateWithWindowAndSize(CoreWindow window, Size size)
+        public static RSBaseRenderer CreateWithWindowAndSize(CoreWindow window, Size size)
         {
-            return new RSEngineRenderer(window, size);
+            return new RSBaseRenderer(window, size);
         }
 
-        private RSEngineRenderer(CoreWindow window, Size size)
+        private RSBaseRenderer(CoreWindow window, Size size)
         {
             _size = size;
             _timer = RSFrameTimer.Create();
-            _canvas = RSEngineCanvas.Create(window, size, Colors.Black);
+            _canvas = RSBaseCanvas.Create(window, size, Colors.Black);
             Resize(_size);
         }
 
@@ -56,14 +56,14 @@ namespace Rockstar.EngineRenderer
 
         public long FrameInterval { get { return _timer.Interval; } }
         public Size Size { get { return _size; } }
-        public RSEngineCanvas Canvas { get { return _canvas; } }
+        public RSBaseCanvas Canvas { get { return _canvas; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private Size _size;
         private RSFrameTimer _timer;
-        private RSEngineCanvas _canvas;
+        private RSBaseCanvas _canvas;
 
         // ********************************************************************************************
         // Methods

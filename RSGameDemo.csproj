@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.22000.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -121,13 +121,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RSGameDemo\Types\RSExtensions.cs" />
     <Compile Include="RSGameDemo\Types\RSFont.cs" />
-    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineCanvas.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSBaseCanvas.cs" />
     <Compile Include="RSGameDemo\Universal Windows Platform\Program.cs" />
-    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineRenderer.cs" />
-    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineGame.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSBaseRenderer.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSBaseGame.cs" />
     <Compile Include="RSGameDemo\Classes\RSFrameTimer.cs" />
-    <Compile Include="RSGameDemo\Universal Windows Platform\RSEngineWindow.cs" />
-    <Compile Include="RSGameDemo\Game\IRSGame.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSBaseWindow.cs" />
+    <Compile Include="RSGameDemo\Interfaces\IRSGame.cs" />
     <Compile Include="RSGameDemo\Game\RSGameClock.cs" />
     <Compile Include="RSGameDemo\Nodes\RSNode.cs" />
     <Compile Include="RSGameDemo\Types\RSTransformation.cs" />

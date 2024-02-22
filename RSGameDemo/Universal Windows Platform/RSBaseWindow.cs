@@ -1,10 +1,11 @@
-﻿using Rockstar.EngineGame;
-using Windows.ApplicationModel.Activation;
+﻿using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
+
+using Rockstar.BaseGame;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,19 +26,24 @@ using Windows.UI.ViewManagement;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.EngineWindow
+namespace Rockstar.BaseWindow
 {
-    public class RSEngineWindow : IFrameworkView, IFrameworkViewSource
+    public class RSBaseWindow : IFrameworkView, IFrameworkViewSource
     {
+        // ********************************************************************************************
+        // Brief Class Description
+        //
+        //
+
         // ****************************************
         // Constructors
 
-        public static RSEngineWindow Create()
+        public static RSBaseWindow Create()
         {
-            return new RSEngineWindow();
+            return new RSBaseWindow();
         }
 
-        private RSEngineWindow()
+        private RSBaseWindow()
         {
         }
 
@@ -58,7 +64,7 @@ namespace Rockstar.EngineWindow
 
         private CoreWindow _window;
         private ApplicationView _view;
-        private RSEngineGame _game;
+        private RSBaseGame _game;
 
         // ****************************************
         // IFrameworkViewSource implementation
@@ -99,7 +105,7 @@ namespace Rockstar.EngineWindow
 
             _view.TryResizeView(size);
 
-            _game = RSEngineGame.CreateWithWindowAndSize(_window, size);
+            _game = RSBaseGame.CreateWithWindowAndSize(_window, size);
         }
 
         public void Run()

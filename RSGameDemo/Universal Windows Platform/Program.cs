@@ -1,4 +1,4 @@
-﻿using Rockstar.EngineWindow;
+﻿using Rockstar.BaseWindow;
 using Windows.ApplicationModel.Core;
 
 // ****************************************************************************************************
@@ -29,7 +29,7 @@ namespace Rockstar.Program
 
         static void Main(string[] args)
         {
-            CoreApplication.Run(RSEngineWindow.Create());
+            CoreApplication.Run(RSBaseWindow.Create());
         }
 
         // ********************************************************************************************

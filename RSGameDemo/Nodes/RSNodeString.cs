@@ -1,5 +1,5 @@
 ﻿
-using Rockstar.EngineCanvas;
+using Rockstar.BaseCanvas;
 using Rockstar.Types;
 using System.Numerics;
 
@@ -67,7 +67,7 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Methods
 
-        public override void Render(RSEngineCanvas canvas)
+        public override void Render(RSBaseCanvas canvas)
         {
             // NOTE: Size must be set prior to doing transformations in base node
             Transformation.Size = canvas.CalculateStringSize(_text, _font);

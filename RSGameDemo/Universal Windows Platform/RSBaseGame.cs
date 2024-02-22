@@ -1,9 +1,10 @@
-﻿using Rockstar.EngineRenderer;
+﻿using Windows.Foundation;
+using Windows.UI.Core;
+
+using Rockstar.BaseRenderer;
 using Rockstar.GameClock;
 using Rockstar.Nodes;
 using Rockstar.Types;
-using Windows.Foundation;
-using Windows.UI.Core;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -24,9 +25,9 @@ using Windows.UI.Core;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.EngineGame
+namespace Rockstar.BaseGame
 {
-    public class RSEngineGame
+    public class RSBaseGame
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -36,15 +37,15 @@ namespace Rockstar.EngineGame
         // ********************************************************************************************
         // Constructors
 
-        public static RSEngineGame CreateWithWindowAndSize(CoreWindow window, Size size)
+        public static RSBaseGame CreateWithWindowAndSize(CoreWindow window, Size size)
         {
-            return new RSEngineGame(window, size);
+            return new RSBaseGame(window, size);
         }
 
-        private RSEngineGame(CoreWindow window, Size size)
+        private RSBaseGame(CoreWindow window, Size size)
         {
             // Create the basic renderer
-            _renderer = RSEngineRenderer.CreateWithWindowAndSize(window, size);
+            _renderer = RSBaseRenderer.CreateWithWindowAndSize(window, size);
 
             // Create the main scene
             // Default (0, 0) is in upper left corner
@@ -66,7 +67,7 @@ namespace Rockstar.EngineGame
         // ********************************************************************************************
         // Internal Data
 
-        private RSEngineRenderer _renderer;
+        private RSBaseRenderer _renderer;
         private RSNodeScene _scene;
 
         private RSGameClock _clock;

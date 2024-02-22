@@ -1,4 +1,4 @@
-﻿using Rockstar.EngineCanvas;
+﻿using Rockstar.BaseCanvas;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
@@ -73,7 +73,7 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Methods
 
-        public override void Render(RSEngineCanvas canvas)
+        public override void Render(RSBaseCanvas canvas)
         {
             base.Render(canvas);
 

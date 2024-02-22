@@ -1,4 +1,4 @@
-﻿using Rockstar.EngineCanvas;
+﻿using Rockstar.BaseCanvas;
 using Rockstar.Types;
 using System.Collections.Generic;
 using System.Numerics;
@@ -103,7 +103,7 @@ namespace Rockstar.Nodes
         // Override Render to draw the visual content of a node
         // IMPORTANT:
         // Always call base.Render, to ensure transformations are done
-        public virtual void Render(RSEngineCanvas canvas)
+        public virtual void Render(RSBaseCanvas canvas)
         {
             canvas.AddTransformation(_transformation.CreateTransformationMatrix());
 
