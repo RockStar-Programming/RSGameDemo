@@ -31,6 +31,8 @@
     <Prefer32Bit>true</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
+    <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -119,6 +121,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RSGameDemo\Classes\RSArray.cs" />
+    <Compile Include="RSGameDemo\Classes\RSCodecJson.cs" />
+    <Compile Include="RSGameDemo\Classes\RSDictionary.cs" />
+    <Compile Include="RSGameDemo\Universal Windows Platform\RSBaseFile.cs" />
     <Compile Include="RSGameDemo\Types\RSExtensions.cs" />
     <Compile Include="RSGameDemo\Types\RSFont.cs" />
     <Compile Include="RSGameDemo\Universal Windows Platform\RSBaseCanvas.cs" />
@@ -145,19 +151,23 @@
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
       <Version>6.2.14</Version>
     </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>13.0.3</Version>
+    </PackageReference>
     <PackageReference Include="Win2D.uwp">
       <Version>1.27.1</Version>
     </PackageReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <AppxManifest Include="Properties\Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\clock.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="RSGameDemo\_Lego Principle\RSGameClock.drawio" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

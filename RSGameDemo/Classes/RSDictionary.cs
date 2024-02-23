@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
+using Rockstar._Array;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -20,103 +23,137 @@ using System.Collections.Generic;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Dictionary
+namespace Rockstar._Dictionary
 {
-    public class RSDictionary
+    // ********************************************************************************************
+    // DSDictionary wraps a Dictionary<string, object>
+    // Keys are NOT case sensitive and always stored as lower case
+    // 
+    // Main functionality is to:
+    // - Predictable operation and no crashes
+    // - Implement meaningful constructors
+    // - Implement convenience getters
+    //
+    // Adds support for folder approach in keys, and for fallbacks
+    // - GetString("data\\setup\\name", fallback);
+    // - Here "data" and "setup" are sub dictionaries
+
+    public partial class RSDictionary
     {
-        // ********************************************************************************************
-        // Brief Class Description
-        //
-        //
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSDictionary CreateWithJSON(string filePath = null)
+        public static RSDictionary Create()
         {
-            RSDictionary result = new RSDictionary();
-            // read the JSON from file into _dictionary
+            return new RSDictionary();
+        }
 
-            return result;
+        public static RSDictionary CreateWithDictionary(Dictionary<string, object> dictionary)
+        {
+            return new RSDictionary(dictionary);
+        }
+
+        public static RSDictionary CreateWithDictionary(RSDictionary dictionary)
+        {
+            return new RSDictionary(dictionary.Content);
+        }
+
+        public static RSDictionary CreateWithObject(object value)
+        {
+            if (value is RSDictionary result) return CreateWithDictionary(result);
+            return RSDictionary.Create(); ;
+        }
+
+        private RSDictionary(Dictionary<string, object> value = null)
+        {
+            _content = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            // the Dictionary to create from, is manually copied into _content
+            // This preserves StringComparer.OrdinalIgnoreCase
+            //
+            if (value != null ) 
+            {
+                foreach (string key in value.Keys) 
+                {
+                    _content[key] = value[key];
+                }
+            }
         }
 
         // ********************************************************************************************
+        // Class Properties
+
+        // ********************************************************************************************
         // Properties
-        public bool Empty { get { return _dictionary.Count == 0; } }
+
+        public Dictionary<string, object> Content { get { return _content; } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private Dictionary<string, object> _dictionary;
+        private Dictionary<string, object> _content;
 
         // ********************************************************************************************
-        // Methods (Read)
+        // Methods
 
-        public bool ReadAsBool(string key, bool fallback = false)
+        public bool ValidKey(string key)
         {
-            return Convert.ToBoolean(ReadAsObject(key, fallback));
+            return (GetEntry(key) != null);
         }
 
-        public int ReadAsInt(string key, int fallback = default(int))
+        // Adds an RSDictionary to the content, overwriting existing keys
+        public void Merge(RSDictionary dictionary)
         {
-            return Convert.ToInt32(ReadAsObject(key, fallback));
-        }
-
-        public double ReadAsDouble(string key, double fallback = default(double))
-        {
-            return Convert.ToDouble(ReadAsObject(key, fallback));
-        }
-
-        public string ReadAsString(string key, string fallback = null)
-        {
-            object result = ReadAsObject(key, fallback);
-            if (result is string) return (string)result;
-
-            if (fallback != null) return fallback;
-            return string.Empty;
-        }
-
-        public RSDictionary ReadAsDictionary(string key, RSDictionary fallback = null)
-        {
-            object result = ReadAsObject(key, fallback);
-            if (result is RSDictionary) return (RSDictionary)result;
-
-            if (fallback != null) return fallback;
-            return new RSDictionary();
-        }
-
-        // ********************************************************************************************
-        // Methods (Write)
-
-        public void WriteAsBool(string key, bool value)
-        {
-            WriteAsObject(key, value);
-        }
-
-        public void WriteAsInt(string key, int value)
-        {
-            WriteAsObject(key, value);
-        }
-
-        public void WriteAsDouble(string key, double value)
-        {
-            WriteAsObject(key, value);
-        }
-
-        public void WriteAsString(string key, string value)
-        {
-            if (value is string)
+            foreach (string key in dictionary.Content.Keys)
             {
-                WriteAsObject(key, value);
+                _content[key] = dictionary.Content[key];
             }
         }
 
-        public void WriteAsDictionary(string key, RSDictionary value)
+        // Adds a dictionary the the content, but leaves existing keys
+        public void Supplement(RSDictionary dictionary)
         {
-            if (value is RSDictionary)
+            foreach (string key in dictionary.Content.Keys)
             {
-                WriteAsObject(key, value);
+                if (ValidKey(key) == false)
+                {
+                    _content[key] = dictionary.Content[key];
+                }
             }
+        }
+
+        // ********************************************************************************************
+        // Methods Getters (convenience wrappers)
+
+        public object GetObject(string key, object fallback = null)
+        {
+            if (GetEntry(key) is object result) return result;
+            return fallback;
+        }
+
+        public bool GetBool(string key, bool fallback)
+        {
+            if (GetEntry(key) is bool result) return result;
+            return fallback;
+        }
+
+
+        public long GetLong(string key, long fallback)
+        {
+            if (GetEntry(key) is long result) return result;
+            return fallback;
+        }
+
+        public double GetDouble(string key, double fallback)
+        {
+            if (GetEntry(key) is double result) return result;
+            return fallback;
+        }
+
+        public string GetString(string key, string fallback)
+        {
+            if (GetEntry(key) is string result) return result;
+            return fallback;
         }
 
         // ********************************************************************************************
@@ -125,43 +162,45 @@ namespace Rockstar.Dictionary
         // ********************************************************************************************
         // Internal Methods
 
-        private RSDictionary()
+        // GetEntry is the only methods used to retrieve data from the RSDictionary
+        // If nested keys is supported here, all getters will automatically support it
+        // Nested keys MUST be RSDictionaries, otherwise it does not make sense
+        //
+        // Ex key = "clock/hands/width"
+        // Will load the RSDictionary "clock", then the RSDictionary "hands", then return the object for "width"
+        private object GetEntry(string key)
         {
-            _dictionary = new Dictionary<string, object>();
-        }
-
-        private object ReadAsObject(string key, object fallback)
-        {
-            object result = null;
+            if (key == null) return null;
 
             try
             {
-                // no exceptions for missing key
-                if (_dictionary.ContainsKey(key) == true)
+                // set source dictionary
+                Dictionary<string, object> source = _content;
+
+                // allow for "/"
+                key = key.Replace("/", "\\");
+                string[] keyList = key.Split('\\');
+
+                // as long as there are path components in the keyList
+                while (keyList.Length > 1)
                 {
-                    result = _dictionary[key];
+                    // get next source dictionary
+                    source = ((RSDictionary)source[keyList[0]]).Content;
+                    // remove first entry
+                    keyList = keyList.Skip(1).ToArray();
                 }
+
+                // fetch the final value
+                return source[keyList[0]];
             }
-            catch
+            catch (Exception)
             {
             }
 
-            if (result == null) result = fallback;
-            return result;
-        }
-
-        private void WriteAsObject(string key, object value)
-        {
-            try
-            {
-                _dictionary[key] = value;
-            }
-            catch
-            {
-            }
+            // if application gets here, an exception was thrown
+            return null;
         }
 
         // ********************************************************************************************
     }
 }
-

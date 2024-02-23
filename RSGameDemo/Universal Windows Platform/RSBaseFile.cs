@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
+using Windows.Storage;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,14 +22,12 @@ using System.Threading.Tasks;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.FileSystem
+namespace Rockstar.BaseFile
 {
-    internal class RSFolder
+    public static class RSBaseFile
     {
         // ********************************************************************************************
-        // Brief Class Description
-        //
-        //
+        // File encapsulates normal file handling, and removes exception handling
 
         // ********************************************************************************************
         // Constructors
@@ -47,11 +44,45 @@ namespace Rockstar.FileSystem
         // ********************************************************************************************
         // Methods
 
+        public static string ReadAsString(params string[] pathList)
+        {
+            try
+            {
+               return File.ReadAllText(GetStoragePath(pathList));
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+        }
+
+        public static string[] ReadAsLines(params string[] pathList)
+        {
+            try
+            {
+                return File.ReadAllLines(GetStoragePath(pathList));
+            }
+            catch (Exception)
+            {
+                return new string[0];
+            }
+        }
+
         // ********************************************************************************************
         // Event Handlers
 
         // ********************************************************************************************
         // Internal Methods
+
+        private static string GetStoragePath(string[] pathList) 
+        {
+            string filePath = Path.Combine(pathList);
+            // allow for "/" 
+            filePath = filePath.Replace("/", "\\");
+            StorageFolder InstallationFolder = Windows.ApplicationModel.Package.Current.InstalledLocation;
+            StorageFile file = InstallationFolder.GetFileAsync(filePath).GetAwaiter().GetResult();
+            return file.Path;
+        }
 
         // ********************************************************************************************
     }

@@ -1,6 +1,6 @@
 ﻿{
   "clock": {
-    "type": "Mechanical",
+    "type": "Mechanical\"",
     "beats_pr_hour": 14400,
     "jumping_minute": false 
   },
