@@ -4,7 +4,8 @@
   xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
   xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest"
   xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
-  IgnorableNamespaces="uap mp">
+  xmlns:iot="http://schemas.microsoft.com/appx/manifest/iot/windows10"
+  IgnorableNamespaces="uap mp iot">
 
   <Identity
     Name="64b6fbc4-46ab-41bf-8bcf-270d0af40db4"
@@ -37,11 +38,14 @@
         Square44x44Logo="Assets\Square44x44Logo.png"
         Description="RSGameDemo"
 	BackgroundColor="transparent">
+        <uap:DefaultTile/>
       </uap:VisualElements>
     </Application>
   </Applications>
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <uap:Capability Name="removableStorage"/>
+    <iot:Capability Name="systemManagement"/>
   </Capabilities>
 </Package>

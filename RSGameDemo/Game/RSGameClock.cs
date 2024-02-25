@@ -6,6 +6,9 @@ using Windows.UI;
 using Rockstar.IGame;
 using Rockstar.Nodes;
 using Rockstar.Types;
+using Windows.Storage;
+using Rockstar.FileSystem;
+using RockStar.JSON;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -53,6 +56,12 @@ namespace Rockstar.GameClock
         private RSGameClock(RSNodeScene scene)
         {
             _scene = scene;
+
+            string path = RSFolder.ExecutionPath("assets", "clock.json");
+
+            RSFile file = RSFile.CreateWithFilePath(path);
+
+            new RSJsonString(file.ReadAsLines());
         }
 
         // ********************************************************************************************
