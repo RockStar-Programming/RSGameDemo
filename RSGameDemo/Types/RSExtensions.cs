@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Rockstar._Dictionary;
+using Rockstar._Array;
+using System;
 using System.Numerics;
 
 // ****************************************************************************************************
@@ -35,6 +37,8 @@ namespace Rockstar.Types
             float y = ((float)Math.Sin(phi) * vector.X) + ((float)Math.Cos(phi) * vector.Y);
             return new Vector2(x, y);
         }
+
+        // ********************************************************************************************
 
     }
 }

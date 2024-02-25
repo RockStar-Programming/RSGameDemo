@@ -6,9 +6,11 @@ using Windows.UI;
 using Rockstar.IGame;
 using Rockstar.Nodes;
 using Rockstar.Types;
-using Windows.Storage;
-using Rockstar.FileSystem;
-using RockStar.JSON;
+using Rockstar._Dictionary;
+using System.Collections.Generic;
+using Rockstar._Array;
+using Rockstar._CodecJson;
+using System.Diagnostics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -34,7 +36,7 @@ namespace Rockstar.GameClock
     public class RSGameClock : IRSGame
     {
         // ********************************************************************************************
-        // RSGameClock implements a simple clock, capable of simulating three different watch types
+        // RSGameClock implements a simple watch, capable of simulating three different watch types
         //
         // Quartz: The second hand ticks once every second
         // Mechanical: The second hand ticks with the internal beat of the watch (known as BPH) 
@@ -57,11 +59,31 @@ namespace Rockstar.GameClock
         {
             _scene = scene;
 
-            string path = RSFolder.ExecutionPath("assets", "clock.json");
+            RSDictionary dir;
+            RSArray array;
 
-            RSFile file = RSFile.CreateWithFilePath(path);
+            // test of RSDictionary and RSArray
 
-            new RSJsonString(file.ReadAsLines());
+            dir = RSCodecJson.CreateDictionaryWithFilePath("Assets/clock.json");
+            dir = RSCodecJson.CreateDictionaryWithFilePath("Assets\\clock.json");
+
+            dir = RSDictionary.CreateWithObject(dir.GetObject("clock"));
+
+            array = RSArray.CreateWithObject(dir.GetObject("array"));
+
+            array = RSArray.CreateWithObject(array.GetObject(0));
+            array = RSArray.CreateWithObject(array.GetObject(1));
+
+            dir = RSDictionary.CreateWithObject(dir.GetObject("invalid"));
+
+            string type = dir.GetString("clock/type", "oops");
+            long length = dir.GetLong("clock/hand/length", -1);
+
+            type = dir.GetString("clock/type/bad", "oops");
+            length = dir.GetLong("", -1);
+            length = dir.GetLong(null, -1);
+
+            ;
         }
 
         // ********************************************************************************************

@@ -1,15 +1,40 @@
 ﻿{
   "clock": {
-    "type": "Mechanical\"",
+    "type": "Mechanical",
     "beats_pr_hour": 14400,
-    "jumping_minute": false 
+    "jumping_minute": false,
+    "hand": {
+      "length": 12,
+      "width": 12
+    }
   },
   "face": {
 
 
 
   },
-  "hands": {
+  "hands": { /* comment */
 
-  }
+  },
+  "array": [ // comment
+    {
+      "type": {
+        "name": "lars",
+        "age": 56,
+        "number":  12.5
+      }
+    },
+    [
+      "tree",
+      "cat"
+    ],
+    {
+      "name": "lars",
+      "address": "1"
+    },
+    {
+      "name": "per",
+      "addess":  "2"
+    }
+  ]
 }
