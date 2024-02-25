@@ -56,12 +56,6 @@ namespace Rockstar.GameClock
         private RSGameClock(RSNodeScene scene)
         {
             _scene = scene;
-
-            string path = RSFolder.ExecutionPath("assets", "clock.json");
-
-            RSFile file = RSFile.CreateWithFilePath(path);
-
-            new RSJsonString(file.ReadAsLines());
         }
 
         // ********************************************************************************************
