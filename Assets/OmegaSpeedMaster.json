@@ -1,0 +1,86 @@
+﻿{
+  "clock": {
+    "type": "Mechanical",
+    "beats_pr_hour": 21600,
+    "jumping_minute": "NonJumping"
+  },
+  "face": {
+    "radius": 240,
+    "color": [ 36 ]
+  },
+  "dial": {
+    "radius": 220,
+    "color": [ 0 ],
+    "hourmarkers": {
+      "radius": 194,
+      "count": 12,
+      "type": [
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle"
+      ],
+      "rectangle_size": [ 14, 48 ],
+      "ellipse_size": [ 20 ],
+      "offset": 10,
+      "color": [ 196 ]
+    },
+    "secondmarkers": {
+      "radius": 228,
+      "count": 180,
+      "type": [ "Rectangle" ],
+      "rectangle_size": [ 2, 12 ],
+      "ellipse_size": [ 3 ],
+      "offset": 4,
+      "color": [ 196 ]
+    },
+    "labels": [
+      {
+        "text": "OMEGA",
+        "position": [ 0, 100 ],
+        "font": [ "Sans Serif Collection", 24, false, false ],
+        "color": [ 255 ]
+      },
+      {
+        "text": "Speedmaster",
+        "position": [ 0, 75 ],
+        "font": [ "Sans Serif Collection", 16, false, true ],
+        "color": [ 255, 0, 0 ]
+      },
+      {
+        "text": "RockstaR",
+        "position": [ 0, -140 ],
+        "font": [ "Arial Rounded MT", 10, true, false ],
+        "color": [ 255 ]
+      }
+    ]
+  },
+  "hands": {
+    "hour": {
+      "size": [ 16, 140 ],
+      "base": 32,
+      "color": [ 190 ],
+      "tail": [ 0 ]
+    },
+    "minute": {
+      "size": [ 16, 210 ],
+      "base": 20,
+      "color": [ 210 ],
+      "tail": [ 0 ]
+    },
+    "second": {
+      "size": [ 4, 225 ],
+      "base": 12,
+      "color": [ 230 ],
+      "tail": [ 8, 52 ]
+    }
+  }
+}

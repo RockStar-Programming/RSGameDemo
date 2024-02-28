@@ -1,6 +1,6 @@
-﻿using System;
+﻿
+using System;
 using System.IO;
-using System.Threading.Tasks;
 using Windows.Storage;
 
 // ****************************************************************************************************
@@ -22,7 +22,7 @@ using Windows.Storage;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.BaseFile
+namespace Rockstar._BaseFile
 {
     public static class RSBaseFile
     {

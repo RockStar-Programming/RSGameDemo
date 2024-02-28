@@ -1,0 +1,86 @@
+﻿{
+  "clock": {
+    "type": "Mechanical",
+    "beats_pr_hour": 14400,
+    "jumping_minute": "NonJumping"
+  },
+  "face": {
+    "radius": 245,
+    "color": [ 184, 139, 22 ]
+  },
+  "dial": {
+    "radius": 230,
+    "color": [ 212, 202, 176 ],
+    "hourmarkers": {
+      "radius": 200,
+      "count": 12,
+      "type": [
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle"
+      ],
+      "rectangle_size": [ 5, 48 ],
+      "ellipse_size": [ 20 ],
+      "offset": 4,
+      "color": [ 184, 139, 22 ]
+    },
+    "secondmarkers": {
+      "radius": 220,
+      "count": 60,
+      "type": [ "Rectangle" ],
+      "rectangle_size": [ 3, 10 ],
+      "ellipse_size": [ 3 ],
+      "offset": 4,
+      "color": [ 184, 139, 22 ]
+    },
+    "labels": [
+      {
+        "text": "HAMILTON",
+        "position": [ 0, 100 ],
+        "font": [ "Sans Serif Collection", 24, false, true ],
+        "color": [ 184, 139, 22 ]
+      },
+      {
+        "text": "RockstaR",
+        "position": [ 0, -75 ],
+        "font": [ "Arial Rounded MT", 16, false, false ],
+        "color": [ 184, 139, 22 ]
+      },
+      {
+        "text": "CERTIFIED 14400 BPH",
+        "position": [ 0, -90 ],
+        "font": [ "Sans Serif Collection", 10, true, false ],
+        "color": [ 184, 139, 22 ]
+      }
+    ]
+  },
+  "hands": {
+    "hour": {
+      "size": [ 8, 140 ],
+      "base": 20,
+      "color": [ 176, 134, 26 ],
+      "tail": [ 0 ]
+    },
+    "minute": {
+      "size": [ 8, 200 ],
+      "base": 0,
+      "color": [ 176, 134, 26 ],
+      "tail": [ 0 ]
+    },
+    "second": {
+      "size": [ 3, 218 ],
+      "base": 0,
+      "color": [ 176, 134, 26 ],
+      "tail": [ 5, 32 ]
+    }
+  }
+}

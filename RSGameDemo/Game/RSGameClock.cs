@@ -1,14 +1,12 @@
-﻿using System;
+﻿
+using System;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 
-using Rockstar.IGame;
-using Rockstar.Nodes;
-using Rockstar.Types;
-using Windows.Storage;
-using Rockstar.FileSystem;
-using RockStar.JSON;
+using Rockstar._IRSGame;
+using Rockstar._Nodes;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -29,7 +27,7 @@ using RockStar.JSON;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.GameClock
+namespace Rockstar._GameClock
 {
     public class RSGameClock : IRSGame
     {

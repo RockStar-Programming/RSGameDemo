@@ -1,0 +1,86 @@
+﻿{
+  "clock": {
+    "type": "Mechanical",
+    "beats_pr_hour": 28800,
+    "jumping_minute": "NonJumping"
+  },
+  "face": {
+    "radius": 220,
+    "color": [ 196 ]
+  },
+  "dial": {
+    "radius": 200,
+    "color": [ 0 ],
+    "hourmarkers": {
+      "radius": 170,
+      "count": 12,
+      "type": [
+        "Rectangle",
+        "Ellipse",
+        "Ellipse",
+        "Rectangle",
+        "Ellipse",
+        "Ellipse",
+        "Rectangle",
+        "Ellipse",
+        "Ellipse",
+        "Rectangle",
+        "Ellipse",
+        "Ellipse"
+      ],
+      "rectangle_size": [ 16, 40 ],
+      "ellipse_size": [ 20 ],
+      "offset": 10,
+      "color": [ 212, 202, 176 ]
+    },
+    "secondmarkers": {
+      "radius": 196,
+      "count": 60,
+      "type": [ "Rectangle" ],
+      "rectangle_size": [ 2, 12 ],
+      "ellipse_size": [ 3 ],
+      "offset": 4,
+      "color": [ 196 ]
+    },
+    "labels": [
+      {
+        "text": "ROLEX",
+        "position": [ 0, 100 ],
+        "font": [ "Sans Serif Collection", 28, false, false ],
+        "color": [ 255 ]
+      },
+      {
+        "text": "RockstaR",
+        "position": [ 0, -75 ],
+        "font": [ "Arial Rounded MT", 16, false, false ],
+        "color": [ 255 ]
+      },
+      {
+        "text": "SUBMARINER",
+        "position": [ 0, -90 ],
+        "font": [ "Sans Serif Collection", 10, true, false ],
+        "color": [ 255 ]
+      }
+    ]
+  },
+  "hands": {
+    "hour": {
+      "size": [ 10, 125 ],
+      "base": 26,
+      "color": [ 48 ],
+      "tail": [ 0 ]
+    },
+    "minute": {
+      "size": [ 10, 180 ],
+      "base": 18,
+      "color": [ 72 ],
+      "tail": [ 0 ]
+    },
+    "second": {
+      "size": [ 4, 198 ],
+      "base": 18,
+      "color": [ 24 ],
+      "tail": [ 4, 48 ]
+    }
+  }
+}

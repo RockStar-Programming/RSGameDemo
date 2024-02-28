@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿
+using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 
-using Rockstar.BaseCanvas;
+using Rockstar._BaseCanvas;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,7 +24,7 @@ using Rockstar.BaseCanvas;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Nodes
+namespace Rockstar._Nodes
 {
     public class RSNodeSolid : RSNode
     {

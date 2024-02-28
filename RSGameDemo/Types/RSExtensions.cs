@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Numerics;
 
 // ****************************************************************************************************
@@ -20,7 +21,7 @@ using System.Numerics;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Types
+namespace Rockstar._Types
 {
     public static class RSExtensions
     {
@@ -36,5 +37,19 @@ namespace Rockstar.Types
             return new Vector2(x, y);
         }
 
+        // ********************************************************************************************
+        // object Extensions
+
+        public static TEnum ToEnum<TEnum>(this object value) where TEnum : struct, Enum
+        {
+            if (value is string)
+            {
+                if (Enum.TryParse(value.ToString(), true, out TEnum result) == true) return result;
+            }
+            // Return the first defined enum value as default
+            return (TEnum)Enum.GetValues(typeof(TEnum)).GetValue(0);
+        }
+
+        // ********************************************************************************************
     }
 }

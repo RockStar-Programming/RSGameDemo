@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
@@ -22,7 +23,7 @@ using Windows.UI;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Types
+namespace Rockstar._Types
 {
     public enum RSSceneOrigin
     {

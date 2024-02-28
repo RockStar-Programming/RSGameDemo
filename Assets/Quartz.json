@@ -1,0 +1,86 @@
+﻿{
+  "clock": {
+    "type": "Quartz",
+    "beats_pr_hour": 14400,
+    "jumping_minute": "NonJumping"
+  },
+  "face": {
+    "radius": 245,
+    "color": [ 230 ]
+  },
+  "dial": {
+    "radius": 230,
+    "color": [ 32, 64, 128 ],
+    "hourmarkers": {
+      "radius": 185,
+      "count": 12,
+      "type": [
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle"
+      ],
+      "rectangle_size": [ 8, 44 ],
+      "ellipse_size": [ 20 ],
+      "offset": 4,
+      "color": [ 230 ]
+    },
+    "secondmarkers": {
+      "radius": 216,
+      "count": 60,
+      "type": [ "Ellipse", "Rectangle", "Rectangle", "Rectangle", "Rectangle" ],
+      "rectangle_size": [ 3, 10 ],
+      "ellipse_size": [ 8 ],
+      "offset": 4,
+      "color": [ 230 ]
+    },
+    "labels": [
+      {
+        "text": "INEX",
+        "position": [ 0, 100 ],
+        "font": [ "Sans Serif Collection", 32, false, false ],
+        "color": [ 230 ]
+      },
+      {
+        "text": "SAPPHIRE",
+        "position": [ 0, -60 ],
+        "font": [ "Sans Serif Collection", 20, false, false ],
+        "color": [ 230 ]
+      },
+      {
+        "text": "RockstaR",
+        "position": [ 0, -90 ],
+        "font": [ "Arial Rounded MT", 12, false, false ],
+        "color": [ 230 ]
+      }
+    ]
+  },
+  "hands": {
+    "hour": {
+      "size": [ 14, 130 ],
+      "base": 20,
+      "color": [ 210 ],
+      "tail": [ 0 ]
+    },
+    "minute": {
+      "size": [ 14, 175 ],
+      "base": 0,
+      "color": [ 220 ],
+      "tail": [ 0 ]
+    },
+    "second": {
+      "size": [ 3, 185 ],
+      "base": 0,
+      "color": [ 230 ],
+      "tail": [ 5, 32 ]
+    }
+  }
+}

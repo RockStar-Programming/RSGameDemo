@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿
+using System.Numerics;
 using Windows.Foundation;
 
-using Rockstar.BaseCanvas;
-using Rockstar.Types;
+using Rockstar._BaseCanvas;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,7 +24,7 @@ using Rockstar.Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Nodes
+namespace Rockstar._Nodes
 {
     public class RSNodeScene : RSNode
     {
@@ -44,6 +45,7 @@ namespace Rockstar.Nodes
         private RSNodeScene(Size size, RSSceneOrigin origin)
         {
             InitWithData(new Vector2(), size);
+            _size = size;
             _origin = origin;
         }
 
@@ -53,13 +55,25 @@ namespace Rockstar.Nodes
         // ********************************************************************************************
         // Properties
 
+        public Size Size { get { return _size; } }
+
         // ********************************************************************************************
         // Internal Data
 
+        private Size _size;
         private RSSceneOrigin _origin;
 
         // ********************************************************************************************
         // Methods
+
+        public override void Update(long interval)
+        {
+            // update all children
+            foreach (RSNode node in _children)
+            {
+                UpdateAllNodes(node, interval);
+            }
+        }
 
         public override void Render(RSBaseCanvas canvas)
         {
@@ -104,6 +118,18 @@ namespace Rockstar.Nodes
                 RenderAllNodes(child, canvas);
 
                 canvas.InitialiseTransformation(transform);
+            }
+        }
+
+        private void UpdateAllNodes(RSNode node, long interval)
+        {
+            // update node
+            node.Update(interval);
+
+            // update all node children
+            foreach (RSNode child in node.Children)
+            {
+                UpdateAllNodes(child, interval);
             }
         }
 

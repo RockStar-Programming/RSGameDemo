@@ -1,14 +1,14 @@
-﻿using Microsoft.Graphics.Canvas;
+﻿
+using Microsoft.Graphics.Canvas;
 using Microsoft.Graphics.Canvas.Text;
 using System.Numerics;
 using Windows.Foundation;
-using Windows.Graphics.Display;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.Graphics.Display;
 using Windows.UI.Text;
 
-using Rockstar.Types;
-using System;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -29,7 +29,7 @@ using System;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.BaseCanvas
+namespace Rockstar._BaseCanvas
 {
     public class RSBaseCanvas
     {
@@ -60,6 +60,7 @@ namespace Rockstar.BaseCanvas
         // Properties
 
         public Matrix3x2 Transformation { get { return _session.Transform; } }
+        public long NodeCount { get { return _nodeCount; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -68,6 +69,7 @@ namespace Rockstar.BaseCanvas
         private Color _color;
         private CanvasSwapChain _swapChain;
         private CanvasDrawingSession _session;
+        private long _nodeCount;
 
         // ********************************************************************************************
         // Methods
@@ -75,6 +77,7 @@ namespace Rockstar.BaseCanvas
         public void BeginFrame()
         {
             _session = _swapChain.CreateDrawingSession(_color);
+            _nodeCount = 0;
         }
 
         public void EndFrame()
@@ -108,11 +111,13 @@ namespace Rockstar.BaseCanvas
         public void RenderRectangle(float x, float y, float width, float height, Color color)
         {
             _session.FillRectangle(x, y, width, height, color);
+            _nodeCount++;
         }
 
         public void RenderEllipse(float x, float y, float width, float height, Color color)
         {
             _session.FillEllipse(x, y, width / 2, height / 2, color);
+            _nodeCount++;
         }
 
         public void RenderText(float x, float y, string text, RSFont font, Color color)
@@ -120,6 +125,7 @@ namespace Rockstar.BaseCanvas
             CanvasTextFormat format = CreateCanvasTextFormat(text, font);
 
             _session.DrawText(text, x, y, color, format);
+            _nodeCount++;
         }
 
         // ********************************************************************************************

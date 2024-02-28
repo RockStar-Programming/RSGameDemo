@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -140,13 +141,21 @@ namespace Rockstar._Dictionary
 
         public long GetLong(string key, long fallback)
         {
-            if (GetEntry(key) is long result) return result;
+            object result = GetEntry(key);
+            if (result is long) return (long)result;
             return fallback;
+        }
+
+        public float GetFloat(string key, float fallback)
+        {
+            return (float)GetDouble(key, fallback);
         }
 
         public double GetDouble(string key, double fallback)
         {
-            if (GetEntry(key) is double result) return result;
+            object result = GetEntry(key);
+            if (result is long) return (long)result;
+            if (result is double) return (double)result;
             return fallback;
         }
 
@@ -156,14 +165,21 @@ namespace Rockstar._Dictionary
             return fallback;
         }
 
+        public RSArray GetArray(string key, RSArray fallback = null)
+        {
+            if (GetEntry(key) is RSArray result) return result;
+            if (fallback == null) return RSArray.Create();
+            return fallback;
+        }
+
         // ********************************************************************************************
         // Event Handlers
 
         // ********************************************************************************************
         // Internal Methods
 
-        // GetEntry is the only methods used to retrieve data from the RSDictionary
-        // If nested keys is supported here, all getters will automatically support it
+        // GetEntry is the only methods used to retrieve data from the underlying _content
+        // If nested keys are supported here, all getters will automatically support it
         // Nested keys MUST be RSDictionaries, otherwise it does not make sense
         //
         // Ex key = "clock/hands/width"

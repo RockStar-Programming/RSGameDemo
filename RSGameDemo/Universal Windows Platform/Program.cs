@@ -1,6 +1,7 @@
-﻿using Windows.ApplicationModel.Core;
+﻿
+using Windows.ApplicationModel.Core;
 
-using Rockstar.BaseWindow;
+using Rockstar._BaseWindow;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -21,7 +22,7 @@ using Rockstar.BaseWindow;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Program
+namespace Rockstar._Program
 {
     class Program
     {

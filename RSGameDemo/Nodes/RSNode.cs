@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿
+using System;
+using System.Collections.Generic;
 using System.Numerics;
 
-using Rockstar.BaseCanvas;
-using Rockstar.Types;
+using Rockstar._BaseCanvas;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,7 +25,7 @@ using Rockstar.Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Nodes
+namespace Rockstar._Nodes
 {
     public class RSNode
     {
@@ -37,7 +39,7 @@ namespace Rockstar.Nodes
         // The node is not responsible for rendering its children
 
         // ********************************************************************************************
-        // Constructors
+        // Constructors & cleanup
 
         public static RSNode Create()
         {
@@ -83,6 +85,11 @@ namespace Rockstar.Nodes
 
             // data which always is reset
             _children = new List<RSNode>();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
         }
 
         // ********************************************************************************************
@@ -140,11 +147,12 @@ namespace Rockstar.Nodes
         // Override Update to perform visual updates to a node
         // IMPORTANT:
         // This is not intended for any kind of game mechanics
-        // Should be used only to update visual apperance of a node
+        // Should be used only to update visual apperance of a node descendant
         // Example could be for sprite animations, using a series of images
-        protected virtual void Update(long interval)
+        //
+        public virtual void Update(long interval)
         {
-
+            ;
         }
 
         // ********************************************************************************************

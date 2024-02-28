@@ -1,7 +1,8 @@
-﻿using System.Numerics;
+﻿
+using System.Numerics;
 
-using Rockstar.BaseCanvas;
-using Rockstar.Types;
+using Rockstar._BaseCanvas;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -22,7 +23,7 @@ using Rockstar.Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Nodes
+namespace Rockstar._Nodes
 {
     internal class RSNodeString : RSNode
     {

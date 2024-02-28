@@ -1,9 +1,10 @@
+
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 
-using Rockstar.BaseCanvas;
-using Rockstar.FrameTimer;
+using Rockstar._BaseCanvas;
+using Rockstar._FrameTimer;
             
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -24,7 +25,7 @@ using Rockstar.FrameTimer;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.BaseRenderer
+namespace Rockstar._BaseRenderer
 {
     public class RSBaseRenderer
     {
@@ -94,7 +95,7 @@ namespace Rockstar.BaseRenderer
 
         private void RenderDebugInformation()
         {
-            string message = string.Format("{0:0.0}fps @{1:00}x{2:00} -", _timer.FPS, _size.Width, _size.Height);
+            string message = string.Format("Nodes:{0} @{1:00}x{2:00} - {3:0.0}fps", _canvas.NodeCount, _size.Width, _size.Height, _timer.FPS);
             _canvas.RenderDebugString(message);
         }
 

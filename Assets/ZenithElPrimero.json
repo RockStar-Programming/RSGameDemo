@@ -1,0 +1,86 @@
+﻿{
+  "clock": {
+    "type": "Mechanical",
+    "beats_pr_hour": 36000,
+    "jumping_minute": "NonJumping"
+  },
+  "face": {
+    "radius": 240,
+    "color": [ 36 ]
+  },
+  "dial": {
+    "radius": 220,
+    "color": [ 220 ],
+    "hourmarkers": {
+      "radius": 194,
+      "count": 12,
+      "type": [
+        "DoubleRectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle",
+        "Rectangle"
+      ],
+      "rectangle_size": [ 14, 48 ],
+      "ellipse_size": [ 20 ],
+      "offset": 10,
+      "color": [ 196 ]
+    },
+    "secondmarkers": {
+      "radius": 228,
+      "count": 240,
+      "type": [ "Rectangle" ],
+      "rectangle_size": [ 2, 12 ],
+      "ellipse_size": [ 3 ],
+      "offset": 4,
+      "color": [ 196 ]
+    },
+    "labels": [
+      {
+        "text": "Zenith",
+        "position": [ 0, 100 ],
+        "font": [ "Sans Serif Collection", 24, false, false ],
+        "color": [ 0 ]
+      },
+      {
+        "text": "RockstaR",
+        "position": [ 0, -75 ],
+        "font": [ "Arial Rounded MT", 16, false, false ],
+        "color": [ 0 ]
+      },
+      {
+        "text": "El Primero",
+        "position": [ 0, -90 ],
+        "font": [ "Sans Serif Collection", 10, true, false ],
+        "color": [ 0, 0, 0 ]
+      }
+    ]
+  },
+  "hands": {
+    "hour": {
+      "size": [ 16, 160 ],
+      "base": 32,
+      "color": [ 160 ],
+      "tail": [ 0 ]
+    },
+    "minute": {
+      "size": [ 16, 200 ],
+      "base": 20,
+      "color": [ 170 ],
+      "tail": [ 0 ]
+    },
+    "second": {
+      "size": [ 4, 225 ],
+      "base": 12,
+      "color": [ 196 ],
+      "tail": [ 8, 32 ]
+    }
+  }
+}

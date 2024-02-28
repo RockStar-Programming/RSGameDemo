@@ -1,10 +1,11 @@
-﻿using Windows.Foundation;
+﻿
+using Windows.Foundation;
 using Windows.UI.Core;
 
-using Rockstar.BaseRenderer;
-using Rockstar.GameClock;
-using Rockstar.Nodes;
-using Rockstar.Types;
+using Rockstar._BaseRenderer;
+using Rockstar._Nodes;
+using Rockstar._Types;
+using Rockstar._GameClockDD;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,7 +26,7 @@ using Rockstar.Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.BaseGame
+namespace Rockstar._BaseGame
 {
     public class RSBaseGame
     {
@@ -56,7 +57,7 @@ namespace Rockstar.BaseGame
             _scene = RSNodeScene.CreateWithSize(new Size((float)size.Width, (float)size.Height), RSSceneOrigin.LowerLeft);
 
             // Create and initialise the instance of the game running
-            _clockGame = RSGameClock.CreateWithScene(_scene);
+            _clockGame = RSGameClockDD.CreateWithScene(_scene);
             _clockGame.Initialise();
         }
 
@@ -71,7 +72,7 @@ namespace Rockstar.BaseGame
 
         private RSBaseRenderer _renderer;
         private RSNodeScene _scene;
-        private RSGameClock _clockGame;
+        private RSGameClockDD _clockGame;
 
         // ********************************************************************************************
         // Methods
@@ -89,6 +90,7 @@ namespace Rockstar.BaseGame
             _clockGame.Update(_renderer.FrameInterval);
 
             // render
+            _scene.Update(_renderer.FrameInterval);
             _scene.Render(_renderer.Canvas);
 
             // end frame

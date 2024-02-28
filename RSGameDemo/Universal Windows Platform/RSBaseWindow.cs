@@ -1,11 +1,12 @@
-﻿using Windows.ApplicationModel.Activation;
+﻿
+using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 
-using Rockstar.BaseGame;
+using Rockstar._BaseGame;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -26,7 +27,7 @@ using Rockstar.BaseGame;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.BaseWindow
+namespace Rockstar._BaseWindow
 {
     public class RSBaseWindow : IFrameworkView, IFrameworkViewSource
     {
@@ -122,6 +123,19 @@ namespace Rockstar.BaseWindow
         private void OnActivated(CoreApplicationView sender, IActivatedEventArgs args)
         {
             _window.Activate();
+
+            //var picker = new Windows.Storage.Pickers.FileOpenPicker
+            //{
+            //    ViewMode = Windows.Storage.Pickers.PickerViewMode.Thumbnail,
+            //    // SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.PicturesLibrary
+            //};
+            //picker.FileTypeFilter.Add(".json");
+
+            //Windows.Storage.StorageFile file = await picker.PickSingleFileAsync();
+            //if (file != null)
+            //{
+            //    // Do something with the selected file
+            //}
         }
 
         private void OnSizeChanged(CoreWindow sender, WindowSizeChangedEventArgs args)

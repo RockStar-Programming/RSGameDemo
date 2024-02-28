@@ -1,9 +1,10 @@
-﻿using Newtonsoft.Json.Linq;
+﻿
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
-using Rockstar.BaseFile;
+using Rockstar._BaseFile;
 using Rockstar._Dictionary;
 using Rockstar._Array;
 
@@ -42,6 +43,7 @@ namespace Rockstar._CodecJson
         // ********************************************************************************************
         // Constructors
 
+        // top level object is a Dictionary<string, object>
         public static RSDictionary CreateDictionaryWithFilePath(string filePath)
         { 
             try
@@ -57,6 +59,7 @@ namespace Rockstar._CodecJson
             return RSDictionary.Create();
         }
 
+        // top level object is a List<object>
         public static RSArray CreateArrayWithFilePath(string filePath)
         {
             try
@@ -90,6 +93,10 @@ namespace Rockstar._CodecJson
         // ********************************************************************************************
         // Internal Methods
 
+        // Recursively deserialise an object
+        // object can either be value types (no conversion), or two Json object returned from JsonConvert
+        // JObject must hold a dictionary in the format <string, object>
+        // JArray most hold a list in the format <object>
         private static object Deserialize(object value)
         {
             object result = value;

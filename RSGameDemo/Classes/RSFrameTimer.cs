@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -21,7 +22,7 @@ using System.Diagnostics;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.FrameTimer
+namespace Rockstar._FrameTimer
 {
     public sealed class RSFrameTimer
     {
