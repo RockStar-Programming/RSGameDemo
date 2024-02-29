@@ -124,8 +124,17 @@ namespace Rockstar._BaseCanvas
         public void RenderText(float x, float y, string text, RSFont font, Color color)
         {
             CanvasTextFormat format = CreateCanvasTextFormat(text, font);
+            
+            CanvasTextLayout textLayout = new CanvasTextLayout(_session, text, format, 0.0f, 0.0f);
+            Rect fontMetrics = textLayout.DrawBounds;
+            _session.DrawTextLayout(textLayout, x - (float)fontMetrics.Left, y - (float)fontMetrics.Top, color);
 
-            _session.DrawText(text, x, y, color, format);
+            _nodeCount++;
+        }
+
+        public void RenderBox(float x, float y, float width, float height, Color color, float lineWidth)
+        {
+            _session.DrawRectangle(x, y, width, height, color, lineWidth);
             _nodeCount++;
         }
 
