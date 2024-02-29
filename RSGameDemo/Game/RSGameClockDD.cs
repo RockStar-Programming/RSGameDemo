@@ -14,6 +14,8 @@ using Rockstar._BaseGame;
 using Rockstar._Event;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Rockstar._BaseMouse;
+using Rockstar._BaseMouseButton;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -68,7 +70,7 @@ namespace Rockstar._GameClockDD
             // _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/ZenithElPrimero.json");
             _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
 
-            _mouse.AddHandler(_BaseMouse.RSMouseButton.Left, _BaseMouseButton.RSMouseButtonEvent.OnAll, OnLeftMouseHandler);
+            _mouse.AddHandler(RSMouseButton.Left, RSMouseButtonEvent.OnAll, OnLeftMouseHandler);
         }
 
         // ********************************************************************************************
@@ -180,9 +182,15 @@ namespace Rockstar._GameClockDD
         {
             if (args.Data is Vector2 position)
             {
-                List<RSNode> hitList = _clock.HitTest(position);
-
-                Debug.WriteLine("Nodes Hit : {0}", hitList.Count);
+                if (args.Type is RSMouseButtonEvent.OnReleased)
+                {
+                    _scene.ClearDebugNodes();
+                }
+                else 
+                {
+                    List<RSNode> hitList = _clock.GetHitList(position);
+                    _scene.AssignDebugNodes(hitList);
+                }
             }
         }
 

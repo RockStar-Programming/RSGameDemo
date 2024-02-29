@@ -94,6 +94,9 @@ namespace Rockstar._BaseGame
             _scene.Update(_renderer.FrameInterval);
             _scene.Render(_renderer.Canvas);
 
+            // render debug nodes
+            _scene.RenderDebugNodes(_renderer.Canvas);
+
             // end frame
             _renderer.EndFrame();
         }

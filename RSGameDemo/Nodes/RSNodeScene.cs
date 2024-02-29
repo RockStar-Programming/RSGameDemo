@@ -4,6 +4,7 @@ using Windows.Foundation;
 
 using Rockstar._BaseCanvas;
 using Rockstar._Types;
+using System.Collections.Generic;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -47,6 +48,7 @@ namespace Rockstar._Nodes
             InitWithData(new Vector2(), size);
             _size = size;
             _origin = origin;
+            _debugNodeList = null;
         }
 
         // ********************************************************************************************
@@ -62,6 +64,7 @@ namespace Rockstar._Nodes
 
         private Size _size;
         private RSSceneOrigin _origin;
+        private List<RSNode> _debugNodeList;
 
         // ********************************************************************************************
         // Methods
@@ -97,6 +100,26 @@ namespace Rockstar._Nodes
 
             // reset transformation
             canvas.InitialiseTransformation(sceneMatrix);
+        }
+
+        public void AssignDebugNodes(List<RSNode> nodeList)
+        {
+            _debugNodeList = new List<RSNode>(nodeList);
+        }
+
+        public void ClearDebugNodes() 
+        { 
+            _debugNodeList.Clear();
+            _debugNodeList = null;
+        }
+
+        public void RenderDebugNodes(RSBaseCanvas canvas)
+        {
+            if (_debugNodeList == null) return;
+            foreach (RSNode node in _debugNodeList)
+            { 
+                node.RenderDebug(canvas);
+            }
         }
 
         // ********************************************************************************************

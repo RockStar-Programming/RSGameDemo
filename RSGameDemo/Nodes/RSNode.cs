@@ -6,6 +6,7 @@ using System.Numerics;
 using Rockstar._Array;
 using Rockstar._BaseCanvas;
 using Rockstar._Types;
+using Windows.UI;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -108,6 +109,8 @@ namespace Rockstar._Nodes
 
         protected const int DATA_COUNT_MAX = 3;
         protected const float INVALID_POSITION = -9999;
+        protected readonly Color DEBUG_COLOR = Colors.Yellow;
+        protected const float DEBUG_LINEWIDTH = 2.0f;
 
         protected RSTransformation _transformation;
         protected RSNode _parent;
@@ -127,6 +130,15 @@ namespace Rockstar._Nodes
 
             // RSNode has no visible representation
 
+        }
+
+        // RenderDub can be called 
+        public void RenderDebug(RSBaseCanvas canvas)
+        {
+            canvas.InitialiseTransformation(_outputMatrix);
+
+            Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            canvas.RenderBox(upperLeft.X, upperLeft.Y, (float)_transformation.Size.Width, (float)_transformation.Size.Height, DEBUG_COLOR, DEBUG_LINEWIDTH);
         }
 
         // ********************************************************************************************
@@ -185,14 +197,14 @@ namespace Rockstar._Nodes
             return (value <= 1.0);
         }
 
-        public List<RSNode> HitTest(Vector2 screenPosition) 
+        public List<RSNode> GetHitList(Vector2 screenPosition) 
         {
             List<RSNode> hitList = new List<RSNode>();
 
             if (PointInsize(screenPosition) == true) hitList.Add(this);
             foreach (RSNode node in _children)
             {
-                hitList.AddRange(node.HitTest(screenPosition));
+                hitList.AddRange(node.GetHitList(screenPosition));
             }
 
             return hitList;
