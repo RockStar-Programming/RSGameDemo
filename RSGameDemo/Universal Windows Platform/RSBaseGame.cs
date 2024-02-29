@@ -5,7 +5,7 @@ using Windows.UI.Core;
 using Rockstar._BaseRenderer;
 using Rockstar._Nodes;
 using Rockstar._Types;
-using Rockstar._GameClockDD;
+using Rockstar._BaseMouse;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -28,7 +28,7 @@ using Rockstar._GameClockDD;
 
 namespace Rockstar._BaseGame
 {
-    public class RSBaseGame
+    public abstract class RSBaseGame
     {
         // ********************************************************************************************
         // Implements the basics of the game handler
@@ -40,25 +40,19 @@ namespace Rockstar._BaseGame
         // ********************************************************************************************
         // Constructors
 
-        public static RSBaseGame CreateWithWindowAndSize(CoreWindow window, Size size)
-        {
-            return new RSBaseGame(window, size);
-        }
-
-        private RSBaseGame(CoreWindow window, Size size)
+        protected RSBaseGame(CoreWindow window, Size size)
         {
             // Create the basic renderer
             _renderer = RSBaseRenderer.CreateWithWindowAndSize(window, size);
+
+            // Create mouse instance
+            _mouse = RSBaseMouse.CreateWithWindow(window);
 
             // Create the main scene
             // Default (0, 0) is in upper left corner
             // By settting scene origin to LowerLeft, (0, 0) is moved to lower left corner
             // This is often much more intuitive for games
             _scene = RSNodeScene.CreateWithSize(new Size((float)size.Width, (float)size.Height), RSSceneOrigin.LowerLeft);
-
-            // Create and initialise the instance of the game running
-            _clockGame = RSGameClockDD.CreateWithScene(_scene);
-            _clockGame.Initialise();
         }
 
         // ********************************************************************************************
@@ -70,9 +64,16 @@ namespace Rockstar._BaseGame
         // ********************************************************************************************
         // Internal Data
 
-        private RSBaseRenderer _renderer;
-        private RSNodeScene _scene;
-        private RSGameClockDD _clockGame;
+        protected RSBaseMouse _mouse;
+        protected RSBaseRenderer _renderer;
+        protected RSNodeScene _scene;
+
+        // ********************************************************************************************
+        // Abstract Methods to Implement in Game
+
+        public abstract void Initialise();
+
+        public abstract void Update(long interval);
 
         // ********************************************************************************************
         // Methods
@@ -87,7 +88,7 @@ namespace Rockstar._BaseGame
             _renderer.BeginFrame();
 
             // game logic goes here
-            _clockGame.Update(_renderer.FrameInterval);
+            Update(_renderer.FrameInterval);
 
             // render
             _scene.Update(_renderer.FrameInterval);

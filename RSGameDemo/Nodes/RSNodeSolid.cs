@@ -77,6 +77,19 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Methods
 
+        public override bool PointInsize(Vector2 screenPosition)
+        {
+            switch (_type)
+            {
+                case SolidType.Rectangle:
+                    return PointInsizeRectangle(screenPosition);
+                case SolidType.Ellipse:
+                    return PointInsizeEllipse(screenPosition);
+                default: 
+                    return false;
+            }
+        }
+
         public override void Render(RSBaseCanvas canvas)
         {
             base.Render(canvas);
@@ -88,9 +101,8 @@ namespace Rockstar._Nodes
                     canvas.RenderRectangle(upperLeft.X, upperLeft.Y, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
                     break;
                 case SolidType.Ellipse:
-                    // NOTE:
-                    // Anchor for ellipses not yet implemented
-                    canvas.RenderEllipse(0, 0, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
+                    Vector2 position = new Vector2((float)((0.5 - _transformation.Anchor.X) * _transformation.Size.Width), (float)((_transformation.Anchor.Y - 0.5) * _transformation.Size.Height));
+                    canvas.RenderEllipse(position.X, position.Y, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
                     break;
                 default:
                     break;

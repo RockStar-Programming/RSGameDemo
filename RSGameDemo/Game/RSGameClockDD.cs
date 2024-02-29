@@ -3,13 +3,17 @@ using System;
 using Windows.UI;
 using Windows.Foundation;
 using System.Numerics;
+using Windows.UI.Core;
 
-using Rockstar._IRSGame;
 using Rockstar._Nodes;
 using Rockstar._Types;
 using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;
+using Rockstar._BaseGame;
+using Rockstar._Event;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -32,7 +36,7 @@ using Rockstar._Array;
 
 namespace Rockstar._GameClockDD
 {
-    public class RSGameClockDD : IRSGame
+    public class RSGameClockDD : RSBaseGame
     {
         // ********************************************************************************************
         // RSGameClock implements a simple clock, capable of simulating three different watch types
@@ -48,15 +52,13 @@ namespace Rockstar._GameClockDD
         // ********************************************************************************************
         // Constructors
 
-        public static RSGameClockDD CreateWithScene(RSNodeScene scene)
+        public static RSGameClockDD CreateWithWindow(CoreWindow window, Size size)
         {
-            return new RSGameClockDD(scene);
+            return new RSGameClockDD(window, size);
         }
 
-        private RSGameClockDD(RSNodeScene scene)
+        private RSGameClockDD(CoreWindow window, Size size) : base(window, size)
         {
-            _scene = scene;
-
             // select which watch to load
             //
             // _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/Quartz.json");
@@ -65,6 +67,8 @@ namespace Rockstar._GameClockDD
             // _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/RolexSubmariner.json");
             // _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/ZenithElPrimero.json");
             _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
+
+            _mouse.AddHandler(_BaseMouse.RSMouseButton.Left, _BaseMouseButton.RSMouseButtonEvent.OnAll, OnLeftMouseHandler);
         }
 
         // ********************************************************************************************
@@ -76,7 +80,6 @@ namespace Rockstar._GameClockDD
         // ********************************************************************************************
         // Internal Data
 
-        private RSNodeScene _scene;
         private RSDictionary _setup;
 
         private ClockType _clockType;
@@ -133,7 +136,7 @@ namespace Rockstar._GameClockDD
 
         // Builds the clock
         //
-        public void Initialise()
+        public override void Initialise()
         {
             // load watch base "mechanics"
             _clockType = _setup.GetObject("clock/type", "Quartz").ToEnum<ClockType>();
@@ -165,13 +168,23 @@ namespace Rockstar._GameClockDD
             UpdateHands();
         }
 
-        public void Update(long interval)
+        public override void Update(long interval)
         {
             UpdateHands();
         }
 
         // ********************************************************************************************
         // Event Handlers
+
+        public void OnLeftMouseHandler(object sender, RSEventArgs args)
+        {
+            if (args.Data is Vector2 position)
+            {
+                List<RSNode> hitList = _clock.HitTest(position);
+
+                Debug.WriteLine("Nodes Hit : {0}", hitList.Count);
+            }
+        }
 
         // ********************************************************************************************
         // Internal Methods
@@ -404,8 +417,8 @@ namespace Rockstar._GameClockDD
                     break;
             }
 
-            _minuteHand.Transformation.Rotation = (float)minuteAngle;
             _hourHand.Transformation.Rotation = (float)hourAngle;
+            _minuteHand.Transformation.Rotation = (float)minuteAngle;
             _secondHand.Transformation.Rotation = (float)secondAngle;
         }
 

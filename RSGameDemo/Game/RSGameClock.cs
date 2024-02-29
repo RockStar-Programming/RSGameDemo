@@ -4,9 +4,10 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 
-using Rockstar._IRSGame;
 using Rockstar._Nodes;
 using Rockstar._Types;
+using Windows.UI.Core;
+using Rockstar._BaseGame;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -29,7 +30,7 @@ using Rockstar._Types;
 
 namespace Rockstar._GameClock
 {
-    public class RSGameClock : IRSGame
+    public class RSGameClock : RSBaseGame
     {
         // ********************************************************************************************
         // RSGameClock implements a simple clock, capable of simulating three different watch types
@@ -46,14 +47,14 @@ namespace Rockstar._GameClock
         // ********************************************************************************************
         // Constructors
 
-        public static RSGameClock CreateWithScene(RSNodeScene scene)
+        public static RSGameClock CreateWithWindow(CoreWindow window, Size size)
         {
-            return new RSGameClock(scene);
+            return new RSGameClock(window, size);
         }
 
-        private RSGameClock(RSNodeScene scene)
+        private RSGameClock(CoreWindow window, Size size) : base(window, size)
         {
-            _scene = scene;
+
         }
 
         // ********************************************************************************************
@@ -71,8 +72,6 @@ namespace Rockstar._GameClock
 
         // ********************************************************************************************
         // Internal Data
-
-        private RSNodeScene _scene;
 
         private RSNode _clock;
         private RSNode _clockFace;
@@ -290,7 +289,7 @@ namespace Rockstar._GameClock
 
         // Builds the clock
         //
-        public void Initialise()
+        public override void Initialise()
         {
             // base node
             _clock = RSNode.CreateWithPosition(new Vector2(400, 300));
@@ -313,7 +312,7 @@ namespace Rockstar._GameClock
             UpdateHands();
         }
 
-        public void Update(long interval)
+        public override void Update(long interval)
         {
             UpdateHands();
         }

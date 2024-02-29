@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -18,20 +19,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._IRSGame
+namespace Rockstar._Event
 {
-    public interface IRSGame
+    public class RSEventArgs : EventArgs
     {
         // ********************************************************************************************
-        // Defines the interface to be used for games
-
-        // Initialize is called once right after the game class has been created
+        // RSEventArgs encapsulates a generic event argument
         // 
-        void Initialise();
 
-        // Updated is called before the game is rendered
-        // 
-        void Update(long interval);
+        // ********************************************************************************************
+        // Constructors
+
+        public static RSEventArgs Create(Enum type, object data)
+        {
+            return new RSEventArgs(type, data); 
+        }
+
+        private RSEventArgs(Enum type, object data)
+        {
+            Type = type;
+            Data = data;
+        }
+
+        // ********************************************************************************************
+        // Properties
+
+        public Enum Type { get; }
+        public object Data { get; }
+
+        // ********************************************************************************************
+        // Internal Data
+
+        // ********************************************************************************************
+        // Methods
+
+        // ********************************************************************************************
+        // Event Handlers
+
+        // ********************************************************************************************
+        // Internal Methods
 
         // ********************************************************************************************
     }

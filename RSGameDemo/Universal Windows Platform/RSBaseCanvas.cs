@@ -100,9 +100,10 @@ namespace Rockstar._BaseCanvas
             _session.Transform = transformation;
         }
 
-        public void AddTransformation(Matrix3x2 transformation)
+        public Matrix3x2 AddTransformation(Matrix3x2 transformation)
         {
             _session.Transform = transformation * _session.Transform;
+            return _session.Transform;
         }
 
         // ********************************************************************************************

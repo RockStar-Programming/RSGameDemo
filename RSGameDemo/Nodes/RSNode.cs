@@ -1,8 +1,9 @@
 ﻿
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
-
+using Rockstar._Array;
 using Rockstar._BaseCanvas;
 using Rockstar._Types;
 
@@ -106,10 +107,12 @@ namespace Rockstar._Nodes
         // Internal Data
 
         protected const int DATA_COUNT_MAX = 3;
+        protected const float INVALID_POSITION = -9999;
 
         protected RSTransformation _transformation;
         protected RSNode _parent;
         protected List<RSNode> _children;
+        protected Matrix3x2 _outputMatrix;
 
         // ********************************************************************************************
         // Methods
@@ -120,10 +123,79 @@ namespace Rockstar._Nodes
         //
         public virtual void Render(RSBaseCanvas canvas)
         {
-            canvas.AddTransformation(_transformation.Matrix);
+            _outputMatrix = canvas.AddTransformation(_transformation.Matrix);
 
             // RSNode has no visible representation
 
+        }
+
+        // ********************************************************************************************
+        // Node positioning
+
+        // convert a screen position to a node position
+        public Vector2 LocalPosition(Vector2 screenPosition)
+        {
+            Vector2 result = new Vector2();
+            Matrix3x2 inverseMatrix;
+
+            if (Matrix3x2.Invert(_outputMatrix, out inverseMatrix))
+            {
+                result = Vector2.Transform(screenPosition, inverseMatrix);
+                
+                // if origin is in lower left, Y axis is inverse
+                if (RSTransformation.Origin == RSSceneOrigin.LowerLeft) result = new Vector2(result.X, -result.Y);
+                
+                // adjust for anchor
+                result = new Vector2(result.X - (0.5f - _transformation.Anchor.X) * (float)_transformation.Size.Width, result.Y - (0.5f - _transformation.Anchor.Y) * (float)_transformation.Size.Height);
+            }
+            else
+            {
+                // Handle the case where the matrix is singular and doesn't have an inverse
+
+            }
+            return result;
+        }
+
+        // override this to perform point inside checks for specific nodes
+        public virtual bool PointInsize(Vector2 screenPosition)
+        {
+            return false;
+        }
+
+        public bool PointInsizeRectangle(Vector2 screenPosition)
+        {
+            float width = (float)_transformation.Size.Width / 2.0f;
+            float height = (float)_transformation.Size.Height / 2.0f;
+
+            Vector2 position = LocalPosition(screenPosition);
+
+            if ((position.X < -width) || (position.X > width)) return false;
+            if ((position.Y < -height) || (position.Y > height)) return false;
+            return true;
+        }
+
+        public bool PointInsizeEllipse(Vector2 screenPosition)
+        {
+            float width = (float)_transformation.Size.Width / 2.0f;
+            float height = (float)_transformation.Size.Width / 2.0f;
+
+            Vector2 position = LocalPosition(screenPosition);
+
+            double value = (position.X * position.X) / (width * width) + (position.Y * position.Y) / (height * height);
+            return (value <= 1.0);
+        }
+
+        public List<RSNode> HitTest(Vector2 screenPosition) 
+        {
+            List<RSNode> hitList = new List<RSNode>();
+
+            if (PointInsize(screenPosition) == true) hitList.Add(this);
+            foreach (RSNode node in _children)
+            {
+                hitList.AddRange(node.HitTest(screenPosition));
+            }
+
+            return hitList;
         }
 
         // ********************************************************************************************

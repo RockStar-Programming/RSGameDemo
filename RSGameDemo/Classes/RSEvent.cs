@@ -1,4 +1,4 @@
-﻿using Rockstar.EventArgs;
+﻿
 using System.Collections.Generic;
 
 // ****************************************************************************************************
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Event
+namespace Rockstar._Event
 {
 	public class RSEvent
 	{

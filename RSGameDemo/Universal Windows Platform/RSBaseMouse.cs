@@ -1,4 +1,12 @@
-﻿using System;
+﻿
+using System.Collections.Generic;
+using Windows.UI.Core;
+using Windows.UI.Input;
+using System.Numerics;
+
+using Rockstar._BaseMouseButton;
+using Rockstar._Event;
+using System.Diagnostics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -19,42 +27,76 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.Event
+namespace Rockstar._BaseMouse
 {
-    public class RSEventArgs : EventArgs
+    public enum RSMouseButton
+    {
+        Left,
+        Middle,
+        Right
+    }
+
+    public class RSBaseMouse
     {
         // ********************************************************************************************
-        // RSEventArgs encapsulates a generic event argument
-        // 
+        // RSBaseMouse supports basic mouse handling 
+        // Events are generated for
+        // - Mouse button pressed
+        // - Mouse moved
+        // _ Mouse button released
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSEventArgs Create(Enum type, object data)
-        {
-            return new RSEventArgs(type, data); 
+        public static RSBaseMouse CreateWithWindow(CoreWindow window)
+        { 
+            return new RSBaseMouse(window);
         }
 
-        private RSEventArgs(Enum type, object data)
+        private RSBaseMouse(CoreWindow window) 
         {
-            Type = type;
-            Data = data;
+            // create a dictionary holding an RSUWPMouseButton for each available button 
+            _buttonList = new Dictionary<RSMouseButton, RSBaseMouseButton>
+            {
+                { RSMouseButton.Left, RSBaseMouseButton.Create() },
+                { RSMouseButton.Middle, RSBaseMouseButton.Create() },
+                { RSMouseButton.Right, RSBaseMouseButton.Create() }
+            };
+
+            // enable windows mouse event handling
+            window.PointerPressed += OnPointerChanged;
+            window.PointerMoved += OnPointerChanged;
+            window.PointerReleased += OnPointerChanged;
         }
 
         // ********************************************************************************************
         // Properties
 
-        public Enum Type { get; }
-        public object Data { get; }
-
         // ********************************************************************************************
         // Internal Data
+
+        private Dictionary<RSMouseButton, RSBaseMouseButton> _buttonList;
 
         // ********************************************************************************************
         // Methods
 
+        public void AddHandler(RSMouseButton button, RSMouseButtonEvent buttonEvent, RSEvent.Handler handler)
+        {
+            _buttonList[button].AddHandler(buttonEvent, handler);
+        }
+        
         // ********************************************************************************************
         // Event Handlers
+
+        private void OnPointerChanged(CoreWindow sender, PointerEventArgs args)
+        {
+            PointerPoint point = args.CurrentPoint;
+            Vector2 position = new Vector2((float)point.Position.X, (float)point.Position.Y);
+
+            _buttonList[RSMouseButton.Left].UpdateState(point.Properties.IsLeftButtonPressed, position);
+            _buttonList[RSMouseButton.Middle].UpdateState(point.Properties.IsMiddleButtonPressed, position);
+            _buttonList[RSMouseButton.Right].UpdateState(point.Properties.IsRightButtonPressed, position);
+        }
 
         // ********************************************************************************************
         // Internal Methods

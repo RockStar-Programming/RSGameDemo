@@ -1,7 +1,8 @@
-﻿using Rockstar.Event;
-using Rockstar.EventArgs;
-using Rockstar.Types;
+﻿
 using System.Collections.Generic;
+using System.Numerics;
+
+using Rockstar._Event;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -22,17 +23,17 @@ using System.Collections.Generic;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.UWPMouseButton
+namespace Rockstar._BaseMouseButton
 {
     public enum RSMouseButtonEvent
     {
-        OnPressed,
+        OnPressed,      
         OnMoved,
         OnReleased,
-        OnAll
+        OnAll           // 
     }
 
-    public class RSUWPMouseButton
+    public class RSBaseMouseButton
     {
         // ********************************************************************************************
         // RSUWPMouseButton handles event data for a single mouse button
@@ -43,12 +44,12 @@ namespace Rockstar.UWPMouseButton
         // ********************************************************************************************
         // Constructors
 
-        public static RSUWPMouseButton Create()
+        public static RSBaseMouseButton Create()
         {
-            return new RSUWPMouseButton();
+            return new RSBaseMouseButton();
         }
 
-        private RSUWPMouseButton()
+        private RSBaseMouseButton()
         {
             // create a dictionary holding an RSEvent for each available button event
             _eventList = new Dictionary<RSMouseButtonEvent, RSEvent>
@@ -58,7 +59,7 @@ namespace Rockstar.UWPMouseButton
                 { RSMouseButtonEvent.OnReleased, RSEvent.Create() }
             };
 
-            _lastPosition = new RSVector2();
+            _lastPosition = new Vector2();
         }
 
         // ********************************************************************************************
@@ -70,7 +71,7 @@ namespace Rockstar.UWPMouseButton
         // Internal Data
 
         private Dictionary<RSMouseButtonEvent, RSEvent> _eventList;
-        private RSVector2 _lastPosition;
+        private Vector2 _lastPosition;
         private bool _lastPressed;
         // movement threshold is added to reduce the number of times the movement handler is called
         // this is done to prevent repeated events for very small mouse movements
@@ -97,7 +98,7 @@ namespace Rockstar.UWPMouseButton
             }
         }
 
-        public void UpdateState(bool pressed, RSVector2 position)
+        public void UpdateState(bool pressed, Vector2 position)
         {
             if (ButtonIsSteadyPassive(pressed) == true)
             {
@@ -112,7 +113,7 @@ namespace Rockstar.UWPMouseButton
             else if (ButtonIsSteadyActive(pressed) == true)
             {
                 // do not execute a movement handler if movement is below movement threshold
-                if (position.DistanceTo(_lastPosition) >= MOVEMENT_THRESHOLD)
+                if (Vector2.Distance(_lastPosition, position) >= MOVEMENT_THRESHOLD)
                 {
                     _lastPosition = position;
                     _eventList[RSMouseButtonEvent.OnMoved].ExecuteHandler(this, RSEventArgs.Create(RSMouseButtonEvent.OnMoved, position));

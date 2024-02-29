@@ -7,6 +7,8 @@ using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 
 using Rockstar._BaseGame;
+using Rockstar._GameClockDD;
+using Rockstar._GameClock;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -104,7 +106,10 @@ namespace Rockstar._BaseWindow
 
             _view.TryResizeView(size);
 
-            _game = RSBaseGame.CreateWithWindowAndSize(_window, size);
+            _game = RSGameClockDD.CreateWithWindow(_window, size);
+
+            // Initialise the instance of the game running
+            _game.Initialise();
         }
 
         public void Run()

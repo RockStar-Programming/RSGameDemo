@@ -70,6 +70,11 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Methods
 
+        public override bool PointInsize(Vector2 screenPosition)
+        {
+            return PointInsizeRectangle(screenPosition);
+        }
+
         public override void Render(RSBaseCanvas canvas)
         {
             // NOTE: Size must be set prior to doing transformations in base node
