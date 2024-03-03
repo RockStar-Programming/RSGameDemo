@@ -74,13 +74,24 @@ namespace Rockstar._CoreGame
 
         public abstract void Update(long interval);
 
-        public virtual void Render(SKCanvas canvas)
+        // ********************************************************************************************
+        // Methods
+
+        public void UpdateNodes(long interval)
+        { 
+            if (_scene != null) 
+            {
+                UpdateNodeTree(_scene, interval);
+            }
+        }
+
+        public void Render(SKCanvas canvas)
         {
-            RSRenderSurface surface = RSRenderSurface.Create(canvas, SKColors.Black);
+            RSRenderSurface surface = RSRenderSurface.Create(canvas, SKColors.Gray);
 
             surface.Clear();
 
-            if (_scene != null) 
+            if (_scene != null)
             {
                 int nodeCount = _renderer.RenderNodeTree(_scene, surface);
 
@@ -99,13 +110,19 @@ namespace Rockstar._CoreGame
         }
 
         // ********************************************************************************************
-        // Methods
-
-        // ********************************************************************************************
         // Event Handlers
 
         // ********************************************************************************************
         // Internal Methods
+
+        private void UpdateNodeTree(RSNode node, long interval)
+        {
+            node.Update(interval);
+            foreach (RSNode child in node.Children)
+            { 
+                UpdateNodeTree(child, interval);
+            }
+        }
 
         // ********************************************************************************************
 

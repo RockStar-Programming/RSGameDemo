@@ -67,6 +67,8 @@ namespace Rockstar._CoreLoop
         public void Update()
         {
             _game.FrameTimer.BeginFrame();
+
+            _game.UpdateNodes(_game.FrameTimer.Interval);
             _game.Update(_game.FrameTimer.Interval);
         }
 

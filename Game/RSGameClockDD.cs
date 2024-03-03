@@ -325,7 +325,7 @@ namespace Rockstar._GameClockDD
             SKColor color = setup.GetArray("color").ToColor();
 
             // create label
-            RSNodeString result = RSNodeString.CreateString(text, position, font);
+            RSNodeString result = RSNodeString.CreateString(position, text, font);
             result.Transformation.Color = color;
 
             return result;

@@ -143,6 +143,27 @@ namespace Rockstar._RenderSurface
             _canvas.DrawBitmap(bitmap, x, y);
         }
 
+        public void DrawBitmap(float x, float y, float width, float height, int index, SKBitmap bitmap)
+        {
+            SKRect destination = new SKRect(x, y, x + width, y + height);
+            int bitmapWidth = bitmap.Width;
+            int bitmapHeight = bitmap.Height;
+            int xPos = 0;
+            int yPos = 0;
+            while (index > 0)
+            {
+                xPos += (int)width;
+                if (xPos >= bitmapWidth) 
+                {
+                    xPos = 0;
+                    yPos += (int)height;
+                }
+                index--;
+            }
+            SKRect source = new SKRect(xPos, yPos, xPos + width, yPos + height);
+            _canvas.DrawBitmap(bitmap, source, destination);
+        }
+
         // ********************************************************************************************
 
         public SKPaint GetTextPaint(RSFont font, SKColor color)

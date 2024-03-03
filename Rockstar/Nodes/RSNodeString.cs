@@ -37,12 +37,12 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeString CreateString(string text, Vector2 position, RSFont font)
+        public static RSNodeString CreateString(Vector2 position, string text, RSFont font)
         {
-            return new RSNodeString(text, position, font);
+            return new RSNodeString(position, text, font);
         }
 
-        protected RSNodeString(string text, Vector2 position, RSFont font)
+        protected RSNodeString(Vector2 position, string text, RSFont font)
         {
             _text = text;
             _font = font;

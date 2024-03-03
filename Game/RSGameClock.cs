@@ -479,7 +479,7 @@ namespace Rockstar._GameClock
             font.Bold = setup.Bold;
 
             string name = GetTypeName(setup.Name);
-            RSNodeString result = RSNodeString.CreateString(name, setup.Position, font);
+            RSNodeString result = RSNodeString.CreateString(setup.Position, name, font);
             result.Name = "text." + name;
             result.Transformation.Color = setup.Color;
 

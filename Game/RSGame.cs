@@ -6,6 +6,7 @@ using Rockstar._CodecJson;
 using Rockstar._CoreGame;
 using Rockstar._Dictionary;
 using Rockstar._Nodes;
+using Rockstar._Event;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -50,7 +51,7 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Internal Data
 
-        RSNodeSprite _sprite;
+        RSNodeAnimation _fox;
 
         // ********************************************************************************************
         // Methods
@@ -74,32 +75,48 @@ namespace Rockstar._Game
             // rightEar.Transformation.Rotation = 15;
             node.AddChild(rightEar);
 
-            RSNodeString text = RSNodeString.CreateString("Holy World", new Vector2(0, 0), RSFont.Create());
+            RSNodeString text = RSNodeString.CreateString(new Vector2(0, 0), "Holy World", RSFont.Create());
             // text.Transformation.Z = 20;
             rightEar.AddChild(text);
 
             _scene.AddChild(node);
 
-            _sprite = RSNodeSprite.CreateWithFile(new Vector2(200, 200), "Assets/_default.png");
-            _scene.AddChild(_sprite);
+            _fox = RSNodeAnimation.CreateWithFile(new Vector2(400, 300), new Size(256, 219) ,"Assets/blue_fox.png");
+            _fox.AnimationInterval = 100;
+            _scene.AddChild(_fox);
 
+            _scene.AddChild(RSNodeString.CreateString(new Vector2(400, 180), "Click to Animate", RSFont.Create()));
 
-
+            _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnPressed, OnLeftMouseEvent);
 
         }
 
         public override void Resize(Size size)
         {
+
         }
 
         public override void Update(long interval)
         {
-            float rotation = 90 * interval / 1000;
-            _sprite.Transformation.Rotation += rotation;
+
+            //float rotation = 90 * interval / 1000;
+            //_sprite.Transformation.Rotation += rotation;
         }
 
         // ********************************************************************************************
         // Event Handlers
+
+        public void OnLeftMouseEvent(object sender, RSEventArgs argument)
+        {
+            if (_fox.Running == true)
+            {
+                _fox.StopAtFrame(2);
+            }
+            else
+            {
+                _fox.Start();
+            }
+        }
 
         // ********************************************************************************************
         // Internal Methods
