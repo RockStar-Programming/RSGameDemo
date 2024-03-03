@@ -46,7 +46,7 @@
       {
         "text": "HAMILTON",
         "position": [ 0, 100 ],
-        "font": [ "Sans Serif Collection", 24, false, true ],
+        "font": [ "Sans Serif", 24, false, true ],
         "color": [ 184, 139, 22 ]
       },
       {
@@ -58,7 +58,7 @@
       {
         "text": "CERTIFIED 14400 BPH",
         "position": [ 0, -90 ],
-        "font": [ "Sans Serif Collection", 10, true, false ],
+        "font": [ "Sans Serif", 10, true, false ],
         "color": [ 184, 139, 22 ]
       }
     ]

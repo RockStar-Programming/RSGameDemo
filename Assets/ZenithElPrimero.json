@@ -46,7 +46,7 @@
       {
         "text": "Zenith",
         "position": [ 0, 100 ],
-        "font": [ "Sans Serif Collection", 24, false, false ],
+        "font": [ "Sans Serif", 24, false, false ],
         "color": [ 0 ]
       },
       {
@@ -58,7 +58,7 @@
       {
         "text": "El Primero",
         "position": [ 0, -90 ],
-        "font": [ "Sans Serif Collection", 10, true, false ],
+        "font": [ "Sans Serif", 10, true, false ],
         "color": [ 0, 0, 0 ]
       }
     ]

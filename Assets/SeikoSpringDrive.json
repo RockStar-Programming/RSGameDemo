@@ -67,13 +67,13 @@
       {
         "text": "SEIKO",
         "position": [ 0, 100 ],
-        "font": [ "Sans Serif Collection", 32, false, false ],
+        "font": [ "Sans Serif", 32, false, false ],
         "color": [ 230 ]
       },
       {
         "text": "PRESAGE",
         "position": [ 0, -60 ],
-        "font": [ "Sans Serif Collection", 20, false, false ],
+        "font": [ "Sans Serif", 20, false, false ],
         "color": [ 230 ]
       },
       {

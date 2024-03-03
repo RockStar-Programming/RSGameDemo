@@ -46,7 +46,7 @@
       {
         "text": "ROLEX",
         "position": [ 0, 100 ],
-        "font": [ "Sans Serif Collection", 28, false, false ],
+        "font": [ "Sans Serif", 28, false, false ],
         "color": [ 255 ]
       },
       {
@@ -58,7 +58,7 @@
       {
         "text": "SUBMARINER",
         "position": [ 0, -90 ],
-        "font": [ "Sans Serif Collection", 10, true, false ],
+        "font": [ "Sans Serif", 10, true, false ],
         "color": [ 255 ]
       }
     ]
