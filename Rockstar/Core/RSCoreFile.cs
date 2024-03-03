@@ -42,6 +42,7 @@ namespace Rockstar._CoreFile
         // Internal Data
 
         private static string APPLICATION_ASSETS_FOLDER = "Assets";
+        private static string DEFAULT_BITMAP = "Assets/default.png";
         private static string? _applicationPath = null;
 
         // ********************************************************************************************
@@ -73,14 +74,16 @@ namespace Rockstar._CoreFile
 
         public static SKBitmap ReadAsBitmap(params string[] pathList)
         {
+            SKBitmap result = null;
             try
             {
-                return SKBitmap.Decode(GetAbsolutePath(pathList));
+                result = SKBitmap.Decode(GetAbsolutePath(pathList));
             }
             catch (Exception)
             {
-                return SKBitmap.Decode(GetAbsolutePath(@"Assets/default.png"));
             }
+            if (result == null) return SKBitmap.Decode(GetAbsolutePath(DEFAULT_BITMAP));
+            return result;
         }
 
         // ********************************************************************************************

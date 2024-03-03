@@ -138,6 +138,11 @@ namespace Rockstar._RenderSurface
             _canvas.DrawText(text, x, y, paint);
         }
 
+        public void DrawBitmap(float x, float y, SKBitmap bitmap)
+        {
+            _canvas.DrawBitmap(bitmap, x, y);
+        }
+
         // ********************************************************************************************
 
         public SKPaint GetTextPaint(RSFont font, SKColor color)

@@ -2,6 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._GameClockDD;
+using Rockstar._Game;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -34,11 +35,11 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Constructors
 
-        RSGameClockDD _game;
+        RSGame _game;
 
         public RSCoreLoop()
         {
-            _game = RSGameClockDD.Create();
+            _game = RSGame.Create();
         }
 
         // ********************************************************************************************

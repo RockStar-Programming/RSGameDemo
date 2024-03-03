@@ -1,11 +1,13 @@
-﻿using SkiaSharp;
-using System.Numerics;
-
-using Rockstar._Types;
-using Rockstar._CodecJson;
-using Rockstar._CoreGame;
-using Rockstar._Dictionary;
+﻿using Rockstar._CoreFile;
 using Rockstar._Nodes;
+using Rockstar._RenderSurface;
+using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -26,20 +28,30 @@ using Rockstar._Nodes;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Game
+namespace Rockstar._Nodes
 {
-    internal class RSGame : RSCoreGame
+    public class RSNodeSprite :RSNode
     {
         // ********************************************************************************************
-        // Game template
+        // Implements bitmap based nodes
+        // 
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSGame Create()
-        {
-            return new RSGame();
+        public static RSNodeSprite CreateWithFile(Vector2 position, string filePath)
+        { 
+            RSNodeSprite result = new RSNodeSprite(position, filePath);
+
+            return result;
         }
+
+        public RSNodeSprite(Vector2 position, string filePath) 
+        { 
+            _bitmap = RSCoreFile.ReadAsBitmap(filePath);
+            InitWithData(position, new Size(_bitmap.Width, _bitmap.Height));
+        }
+
 
         // ********************************************************************************************
         // Class Properties
@@ -50,52 +62,20 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Internal Data
 
-        RSNodeSprite _sprite;
+        private SKBitmap _bitmap;
 
         // ********************************************************************************************
         // Methods
 
-        public override void Initialise(Size size)
+        public override bool PointInside(Vector2 screenPosition)
         {
-            RSDictionary _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
-
-            RSNodeSolid node = RSNodeSolid.CreateRectangle(new Vector2(100, 50), new Size(100, 60), SKColors.Red);
-            node.Transformation.Anchor = new Vector2(0.5f, 0.0f);
-            // node.Transformation.Z = 10;
-            // node.Transformation.Rotation = 15;
-
-            RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new Vector2(-50, 60), new Size(40, 40), SKColors.Green);
-            // leftEar.Transformation.Z = 15;
-            // leftEar.Transformation.Rotation = -15;
-            node.AddChild(leftEar);
-
-            RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new Vector2(50, 60), new Size(40, 40), SKColors.Green);
-            // rightEar.Transformation.Anchor = new Vector2();
-            // rightEar.Transformation.Rotation = 15;
-            node.AddChild(rightEar);
-
-            RSNodeString text = RSNodeString.CreateString("Holy World", new Vector2(0, 0), RSFont.Create());
-            // text.Transformation.Z = 20;
-            rightEar.AddChild(text);
-
-            _scene.AddChild(node);
-
-            _sprite = RSNodeSprite.CreateWithFile(new Vector2(200, 200), "Assets/_default.png");
-            _scene.AddChild(_sprite);
-
-
-
-
+            return PointInsizeRectangle(screenPosition);
         }
 
-        public override void Resize(Size size)
+        public override void Render(RSRenderSurface surface)
         {
-        }
-
-        public override void Update(long interval)
-        {
-            float rotation = 90 * interval / 1000;
-            _sprite.Transformation.Rotation += rotation;
+            Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            surface.DrawBitmap(upperLeft.X, upperLeft.Y, _bitmap);
         }
 
         // ********************************************************************************************
