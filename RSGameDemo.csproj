@@ -1,6 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows10.0.17763.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -44,7 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Rockstar\Classes\" />
     <Folder Include="Rockstar\Types\" />
   </ItemGroup>
 

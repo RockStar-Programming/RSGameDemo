@@ -1,14 +1,10 @@
-﻿using Rockstar._CoreFile;
-using Rockstar._RenderSurface;
-using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using SkiaSharp;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Rockstar._Nodes
+using Rockstar._CoreFile;
+using Rockstar._RenderSurface;
+
+namespace Rockstar._NodeList
 {
     public class RSNodeAnimation : RSNode
     {
@@ -52,7 +48,7 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Internal Data
 
-        private const int ANIMATION_INTERVAL_MIN = 50;
+        private const int ANIMATION_INTERVAL_MIN = 17;
         private const int ANIMATION_RUNNING = -1;
 
         private SKBitmap _bitmap;

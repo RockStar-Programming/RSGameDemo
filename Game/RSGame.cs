@@ -5,7 +5,7 @@ using Rockstar._Types;
 using Rockstar._CodecJson;
 using Rockstar._CoreGame;
 using Rockstar._Dictionary;
-using Rockstar._Nodes;
+using Rockstar._NodeList;
 using Rockstar._Event;
 
 // ****************************************************************************************************
@@ -99,8 +99,7 @@ namespace Rockstar._Game
         public override void Update(long interval)
         {
 
-            //float rotation = 90 * interval / 1000;
-            //_sprite.Transformation.Rotation += rotation;
+
         }
 
         // ********************************************************************************************
@@ -111,6 +110,7 @@ namespace Rockstar._Game
             if (_fox.Running == true)
             {
                 _fox.StopAtFrame(2);
+                // _fox.Stop();
             }
             else
             {
