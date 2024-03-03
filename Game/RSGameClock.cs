@@ -5,7 +5,6 @@ using System.Numerics;
 using Rockstar._Nodes;
 using Rockstar._Types;
 using Rockstar._CoreGame;
-using System.Security.Policy;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

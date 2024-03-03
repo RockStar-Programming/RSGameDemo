@@ -9,10 +9,8 @@ using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;
 using Rockstar._Event;
-using Rockstar._CoreMouse;
 using Rockstar._CoreMouseButton;
 using Rockstar._CoreGame;
-using System.Diagnostics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

@@ -1,9 +1,9 @@
 ﻿
 using System.Numerics;
+using Platform._Windows;
 
 using Rockstar._CoreMouseButton;
 using Rockstar._Event;
-using Rockstar._WinMouse;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

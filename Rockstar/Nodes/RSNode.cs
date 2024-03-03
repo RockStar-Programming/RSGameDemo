@@ -4,7 +4,6 @@ using System.Numerics;
 
 using Rockstar._RenderSurface;
 using Rockstar._Types;
-using Windows.Storage.Pickers.Provider;
 using Rockstar._NodeList;
 
 // ****************************************************************************************************

@@ -19,7 +19,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MainForm.cs" />
+    <Compile Remove="MainForm.Designer.cs" />
+    <Compile Remove="Program.cs" />
+    <Compile Remove="RSWinMouse.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove=".gitignore" />
+    <None Remove="Platform\Windows\MainForm.xaml" />
     <None Remove="README.md" />
     <None Remove="Rockstar\_Lego Principle\.%24RSCoreGame.drawio.bkp" />
     <None Remove="Rockstar\_Lego Principle\.%24RSGameClock.drawio.bkp" />
@@ -38,6 +46,12 @@
   <ItemGroup>
     <Folder Include="Rockstar\Classes\" />
     <Folder Include="Rockstar\Types\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\default.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

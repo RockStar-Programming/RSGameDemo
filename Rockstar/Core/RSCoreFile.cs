@@ -18,6 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
+using SkiaSharp;
+
 namespace Rockstar._CoreFile
 {
     public static class RSCoreFile
@@ -69,13 +71,25 @@ namespace Rockstar._CoreFile
             }
         }
 
+        public static SKBitmap ReadAsBitmap(params string[] pathList)
+        {
+            try
+            {
+                return SKBitmap.Decode(GetAbsolutePath(pathList));
+            }
+            catch (Exception)
+            {
+                return SKBitmap.Decode(GetAbsolutePath(@"Assets/default.png"));
+            }
+        }
+
         // ********************************************************************************************
         // Event Handlers
 
         // ********************************************************************************************
         // Internal Methods
 
-        private static string GetAbsolutePath(string[] pathList) 
+        private static string GetAbsolutePath(params string[] pathList) 
         {
             string filePath = Path.Combine(pathList);
             filePath = Path.Combine(ApplicationPath, filePath);
