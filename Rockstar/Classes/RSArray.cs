@@ -1,6 +1,5 @@
 ﻿
 using System.Collections;
-using System.Numerics;
 using SkiaSharp;
 
 using Rockstar._Types;
@@ -179,17 +178,17 @@ namespace Rockstar._Array
             return new SKSize(x, y);
         }
 
-        public Vector2 ToVector2()
+        public SKPoint ToVector2()
         {
             float x = 0, y;
 
-            // 0 values = Vector2(0, 0); 
-            // 1 value = Vector2(value, value)
-            // 2 values = Vector2(value1, value2)
+            // 0 values = SKPoint(0, 0); 
+            // 1 value = SKPoint(value, value)
+            // 2 values = SKPoint(value1, value2)
             if (Count >= 1) x = GetFloat(0, 0);
             if (Count >= 2) y = GetFloat(1, 0); else y = x;
 
-            return new Vector2(x, y);
+            return new SKPoint(x, y);
         }
 
         public RSFont ToFont()

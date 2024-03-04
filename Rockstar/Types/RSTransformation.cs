@@ -65,11 +65,11 @@ namespace Rockstar._Types
             {
                 // initialise data
                 //
-                Position = (data.Length > 0) && (data[0] is Vector2 position) ? position : new Vector2();
+                Position = (data.Length > 0) && (data[0] is SKPoint position) ? position : new SKPoint();
                 Size = (data.Length > 1) && (data[1] is SKSize size) ? size : DEFAULT_SIZE;
-                Scale = (data.Length > 2) && (data[2] is Vector2 scale) ? scale : DEFAULT_SCALE;
+                Scale = (data.Length > 2) && (data[2] is SKPoint scale) ? scale : DEFAULT_SCALE;
                 Rotation = (data.Length > 3) && (data[3] is float rotation) ? rotation : 0.0f;
-                Anchor = (data.Length > 4) && (data[4] is Vector2 anchor) ? anchor : DEFAULT_ANCHOR;
+                Anchor = (data.Length > 4) && (data[4] is SKPoint anchor) ? anchor : DEFAULT_ANCHOR;
                 Color = (data.Length > 5) && (data[5] is SKColor color) ? color : SKColors.White;
 
                 // always reset
@@ -90,19 +90,19 @@ namespace Rockstar._Types
         public static string SCALE = "Transformation.Scale";
 
         public static SKSize DEFAULT_SIZE = new SKSize(100, 100);
-        public static Vector2 DEFAULT_SCALE = new Vector2(1.0f, 1.0f);
-        public static Vector2 DEFAULT_ANCHOR = new Vector2(0.5f, 0.5f);
+        public static SKPoint DEFAULT_SCALE = new SKPoint(1.0f, 1.0f);
+        public static SKPoint DEFAULT_ANCHOR = new SKPoint(0.5f, 0.5f);
 
         // ********************************************************************************************
         // Properties
 
         public bool Visible { get; set; }
-        public Vector2 Position { get; set; }
+        public SKPoint Position { get; set; }
         public float Z { get; set; }
         public SKSize Size { get; set; }
-        public Vector2 Anchor { get; set; }
+        public SKPoint Anchor { get; set; }
         public float Rotation { get; set; }
-        public Vector2 Scale { get; set; }
+        public SKPoint Scale { get; set; }
         public SKColor Color { get; set; }
         public RSTransformationOrigin Origin { set; get; }
         public Matrix3x2 Matrix { get { return CalculateMatrix(); } }
@@ -134,11 +134,11 @@ namespace Rockstar._Types
 
         private Matrix3x2 CalculateMatrix()
         {
-            Vector2 pos = Position;
+            SKPoint pos = Position;
             float rotation = Rotation;
 
             if (Origin == RSTransformationOrigin.LowerLeft) pos.Y = -pos.Y;
-            _matrix = Matrix3x2.CreateRotation((float)Math.PI * rotation / 180.0f, pos);
+            _matrix = Matrix3x2.CreateRotation((float)Math.PI * rotation / 180.0f, new Vector2(pos.X, pos.Y));
             _matrix = Matrix3x2.CreateTranslation(pos.X, pos.Y) * _matrix;
             _matrix = Matrix3x2.CreateScale(Scale.X, Scale.Y) * _matrix;
             return _matrix;

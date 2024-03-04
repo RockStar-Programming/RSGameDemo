@@ -1,5 +1,5 @@
 ﻿
-using System.Numerics;
+using SkiaSharp;
 using Platform._Windows;
 
 using Rockstar._CoreMouseButton;
@@ -91,7 +91,7 @@ namespace Rockstar._CoreMouse
 
         private void OnLeftMouseButtonHandler(object sender, RSEventArgs argument)
         {
-            if (argument.Data is Vector2 position)
+            if (argument.Data is SKPoint position)
             {
                 bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
                 _leftButton.UpdateState(buttonPressed, position);
@@ -100,7 +100,7 @@ namespace Rockstar._CoreMouse
 
         private void OnMiddleMouseButtonHandler(object sender, RSEventArgs argument)
         {
-            if (argument.Data is Vector2 position)
+            if (argument.Data is SKPoint position)
             {
                 bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
                 _middleButton.UpdateState(buttonPressed, position);
@@ -109,7 +109,7 @@ namespace Rockstar._CoreMouse
 
         private void OnRightMouseButtonHandler(object sender, RSEventArgs argument)
         {
-            if (argument.Data is Vector2 position)
+            if (argument.Data is SKPoint position)
             {
                 bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
                 _rightButton.UpdateState(buttonPressed, position);

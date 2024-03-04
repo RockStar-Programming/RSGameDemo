@@ -1,4 +1,5 @@
 ﻿
+using SkiaSharp;
 using System.Numerics;
 
 // ****************************************************************************************************
@@ -25,15 +26,15 @@ namespace Rockstar._Types
     public static class RSExtensions
     {
         // ********************************************************************************************
-        // Vector2 Extensions
+        // SKPoint Extensions
 
         // Rotations are clock-wise
-        public static Vector2 Rotate(this Vector2 vector, float angle)
+        public static SKPoint Rotate(this SKPoint vector, float angle)
         {
             float phi = -angle * (float)Math.PI / 180.0f;
             float x = ((float)Math.Cos(phi) * vector.X) - ((float)Math.Sin(phi) * vector.Y);
             float y = ((float)Math.Sin(phi) * vector.X) + ((float)Math.Cos(phi) * vector.Y);
-            return new Vector2(x, y);
+            return new SKPoint(x, y);
         }
 
         // ********************************************************************************************

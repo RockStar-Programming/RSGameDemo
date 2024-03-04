@@ -1,4 +1,9 @@
 ﻿
+using SkiaSharp;
+
+using Rockstar._CoreMouseButton;
+using Rockstar._Event;
+
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -17,10 +22,6 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
-
-using Rockstar._CoreMouseButton;
-using Rockstar._Event;
-using System.Numerics;
 
 namespace Platform._Windows
 {
@@ -79,14 +80,14 @@ namespace Platform._Windows
 
         public bool PreFilterMessage(ref Message m)
         {
-            Vector2 position;
+            SKPoint position;
 
             switch (m.Msg)
             {
                 // Left button
                 //
                 case WM_LBUTTONDOWN:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );
@@ -95,7 +96,7 @@ namespace Platform._Windows
                     break;
 
                 case WM_LBUTTONUP:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );
@@ -106,7 +107,7 @@ namespace Platform._Windows
                 // Middle button
                 // 
                 case WM_MBUTTONDOWN:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );
@@ -115,7 +116,7 @@ namespace Platform._Windows
                     break;
 
                 case WM_MBUTTONUP:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );
@@ -126,7 +127,7 @@ namespace Platform._Windows
                 // Right button
                 //
                 case WM_RBUTTONDOWN:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );
@@ -135,7 +136,7 @@ namespace Platform._Windows
                     break;
 
                 case WM_RBUTTONUP:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );
@@ -146,7 +147,7 @@ namespace Platform._Windows
 
 
                 case WM_MOUSEMOVE:
-                    position = new Vector2(
+                    position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
                                 );

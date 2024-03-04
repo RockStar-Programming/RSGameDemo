@@ -1,5 +1,4 @@
 ﻿using SkiaSharp;
-using System.Numerics;
 
 using Rockstar._Types;
 using Rockstar._CodecJson;
@@ -60,32 +59,32 @@ namespace Rockstar._Game
         {
             RSDictionary _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
 
-            RSNodeSolid node = RSNodeSolid.CreateRectangle(new Vector2(100, 50), new SKSize(100, 60), SKColors.Red);
-            node.Transformation.Anchor = new Vector2(0.5f, 0.0f);
+            RSNodeSolid node = RSNodeSolid.CreateRectangle(new SKPoint(100, 50), new SKSize(100, 60), SKColors.Red);
+            node.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             // node.Transformation.Z = 10;
             // node.Transformation.Rotation = 15;
 
-            RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new Vector2(-50, 60), new SKSize(40, 40), SKColors.Green);
+            RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new SKPoint(-50, 60), new SKSize(40, 40), SKColors.Green);
             // leftEar.Transformation.Z = 15;
             // leftEar.Transformation.Rotation = -15;
             node.AddChild(leftEar);
 
-            RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new Vector2(50, 60), new SKSize(40, 40), SKColors.Green);
-            // rightEar.Transformation.Anchor = new Vector2();
+            RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new SKPoint(50, 60), new SKSize(40, 40), SKColors.Green);
+            // rightEar.Transformation.Anchor = new SKPoint();
             // rightEar.Transformation.Rotation = 15;
             node.AddChild(rightEar);
 
-            RSNodeString text = RSNodeString.CreateString(new Vector2(0, 0), "Holy World", RSFont.Create());
+            RSNodeString text = RSNodeString.CreateString(new SKPoint(0, 0), "Holy World", RSFont.Create());
             // text.Transformation.Z = 20;
             rightEar.AddChild(text);
 
             _scene.AddChild(node);
 
-            _fox = RSNodeAnimation.CreateWithFile(new Vector2(400, 300), new SKSize(256, 219) ,"Assets/blue_fox.png");
+            _fox = RSNodeAnimation.CreateWithFile(new SKPoint(400, 300), new SKSize(256, 219) ,"Assets/blue_fox.png");
             _fox.AnimationInterval = 100;
             _scene.AddChild(_fox);
 
-            _scene.AddChild(RSNodeString.CreateString(new Vector2(400, 180), "Click to Animate", RSFont.Create()));
+            _scene.AddChild(RSNodeString.CreateString(new SKPoint(400, 180), "Click to Animate", RSFont.Create()));
 
             _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnPressed, OnLeftMouseEvent);
 

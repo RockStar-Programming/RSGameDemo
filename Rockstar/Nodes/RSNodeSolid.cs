@@ -1,6 +1,5 @@
 ﻿
 using SkiaSharp;
-using System.Numerics;
 
 using Rockstar._RenderSurface;
 
@@ -35,7 +34,7 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSolid CreateRectangle(Vector2 position, SKSize size, SKColor color)
+        public static RSNodeSolid CreateRectangle(SKPoint position, SKSize size, SKColor color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Rectangle);
             result.InitWithData(position, size);
@@ -43,7 +42,7 @@ namespace Rockstar._NodeList
             return result;
         }
 
-        public static RSNodeSolid CreateEllipse(Vector2 position, SKSize size, SKColor color)
+        public static RSNodeSolid CreateEllipse(SKPoint position, SKSize size, SKColor color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Ellipse);
             result.InitWithData(position, size);
@@ -76,7 +75,7 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Methods
 
-        public override bool PointInside(Vector2 screenPosition)
+        public override bool PointInside(SKPoint screenPosition)
         {
             switch (_type)
             {
@@ -96,11 +95,11 @@ namespace Rockstar._NodeList
             switch (_type)
             {
                 case SolidType.Rectangle:
-                    Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+                    SKPoint upperLeft = new SKPoint((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
                     surface.DrawRectangle(upperLeft.X, upperLeft.Y, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
                     break;
                 case SolidType.Ellipse:
-                    Vector2 position = new Vector2((float)((0.5 - _transformation.Anchor.X) * _transformation.Size.Width), (float)((_transformation.Anchor.Y - 0.5) * _transformation.Size.Height));
+                    SKPoint position = new SKPoint((float)((0.5 - _transformation.Anchor.X) * _transformation.Size.Width), (float)((_transformation.Anchor.Y - 0.5) * _transformation.Size.Height));
                     surface.DrawEllipse(position.X, position.Y, (float)_transformation.Size.Width, (float)_transformation.Size.Height, _transformation.Color);
                     break;
                 default:

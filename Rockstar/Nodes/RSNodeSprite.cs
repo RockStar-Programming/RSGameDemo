@@ -1,6 +1,5 @@
 ﻿
 using SkiaSharp;
-using System.Numerics;
 
 using Rockstar._CoreFile;
 using Rockstar._RenderSurface;
@@ -35,14 +34,14 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSprite CreateWithFile(Vector2 position, string filePath)
+        public static RSNodeSprite CreateWithFile(SKPoint position, string filePath)
         { 
             RSNodeSprite result = new RSNodeSprite(position, filePath);
 
             return result;
         }
 
-        public RSNodeSprite(Vector2 position, string filePath) 
+        public RSNodeSprite(SKPoint position, string filePath) 
         { 
             _bitmap = RSCoreFile.ReadAsBitmap(filePath);
             InitWithData(position, new SKSize(_bitmap.Width, _bitmap.Height));
@@ -63,14 +62,14 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Methods
 
-        public override bool PointInside(Vector2 screenPosition)
+        public override bool PointInside(SKPoint screenPosition)
         {
             return PointInsizeRectangle(screenPosition);
         }
 
         public override void Render(RSRenderSurface surface)
         {
-            Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            SKPoint upperLeft = new SKPoint((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
             surface.DrawBitmap(upperLeft.X, upperLeft.Y, _bitmap);
         }
 

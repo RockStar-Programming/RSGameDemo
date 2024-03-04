@@ -1,5 +1,4 @@
 ﻿
-using System.Numerics;
 using SkiaSharp;
 
 using Rockstar._RenderSurface;
@@ -37,12 +36,12 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeString CreateString(Vector2 position, string text, RSFont font)
+        public static RSNodeString CreateString(SKPoint position, string text, RSFont font)
         {
             return new RSNodeString(position, text, font);
         }
 
-        protected RSNodeString(Vector2 position, string text, RSFont font)
+        protected RSNodeString(SKPoint position, string text, RSFont font)
         {
             _text = text;
             _font = font;
@@ -67,7 +66,7 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Methods
 
-        public override bool PointInside(Vector2 screenPosition)
+        public override bool PointInside(SKPoint screenPosition)
         {
             return PointInsizeRectangle(screenPosition);
         }
@@ -84,7 +83,7 @@ namespace Rockstar._NodeList
             _transformation.Size = new SKSize(width, height);
 
             float offset = metrics.XHeight / 2;
-            Vector2 center = new Vector2(-_transformation.Size.Width * _transformation.Anchor.X, ((float)_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
+            SKPoint center = new SKPoint(-_transformation.Size.Width * _transformation.Anchor.X, ((float)_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
 
             surface.DrawText(center.X, center.Y, _text, paint);
         }

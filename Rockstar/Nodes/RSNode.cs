@@ -4,7 +4,6 @@ using System.Numerics;
 
 using Rockstar._RenderSurface;
 using Rockstar._Types;
-using Rockstar._NodeList;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -48,7 +47,7 @@ namespace Rockstar._NodeList
             return result;
         }
 
-        public static RSNode CreateWithPosition(Vector2 position)
+        public static RSNode CreateWithPosition(SKPoint position)
         {
             RSNode result = new RSNode();
             result.InitWithData(position);
@@ -150,7 +149,7 @@ namespace Rockstar._NodeList
         //
         public void RenderDebug(RSRenderSurface surface)
         {
-            Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            SKPoint upperLeft = new SKPoint((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
             surface.DrawBox(upperLeft.X, upperLeft.Y, _transformation.Size.Width, _transformation.Size.Height, DEBUG_COLOR, DEBUG_LINEWIDTH);
         }
 
@@ -169,20 +168,21 @@ namespace Rockstar._NodeList
         // Node positioning
 
         // convert a screen position to a node position
-        public Vector2 LocalPosition(Vector2 screenPosition)
+        public SKPoint LocalPosition(SKPoint screenPosition)
         {
-            Vector2 result = new Vector2();
+            SKPoint result = new SKPoint();
             Matrix3x2 inverseMatrix;
 
             if (Matrix3x2.Invert(_renderMatrix, out inverseMatrix))
             {
-                result = Vector2.Transform(screenPosition, inverseMatrix);
+                Vector2 vector = Vector2.Transform(new Vector2(screenPosition.X, screenPosition.Y), inverseMatrix);
+                result = new SKPoint(vector.X, vector.Y); ;
                 
                 // if origin is in lower left, Y axis is inverse
-                if (_transformation.Origin == RSTransformationOrigin.LowerLeft) result = new Vector2(result.X, -result.Y);
+                if (_transformation.Origin == RSTransformationOrigin.LowerLeft) result = new SKPoint(result.X, -result.Y);
                 
                 // adjust for anchor
-                result = new Vector2(result.X - (0.5f - _transformation.Anchor.X) * (float)_transformation.Size.Width, result.Y - (0.5f - _transformation.Anchor.Y) * (float)_transformation.Size.Height);
+                result = new SKPoint(result.X - (0.5f - _transformation.Anchor.X) * (float)_transformation.Size.Width, result.Y - (0.5f - _transformation.Anchor.Y) * (float)_transformation.Size.Height);
             }
             else
             {
@@ -193,35 +193,35 @@ namespace Rockstar._NodeList
         }
 
         // override this to perform point inside checks for specific nodes
-        public virtual bool PointInside(Vector2 screenPosition)
+        public virtual bool PointInside(SKPoint screenPosition)
         {
             return false;
         }
 
-        public bool PointInsizeRectangle(Vector2 screenPosition)
+        public bool PointInsizeRectangle(SKPoint screenPosition)
         {
             float width = (float)_transformation.Size.Width / 2.0f;
             float height = (float)_transformation.Size.Height / 2.0f;
 
-            Vector2 position = LocalPosition(screenPosition);
+            SKPoint position = LocalPosition(screenPosition);
 
             if ((position.X < -width) || (position.X > width)) return false;
             if ((position.Y < -height) || (position.Y > height)) return false;
             return true;
         }
 
-        public bool PointInsizeEllipse(Vector2 screenPosition)
+        public bool PointInsizeEllipse(SKPoint screenPosition)
         {
             float width = (float)_transformation.Size.Width / 2.0f;
             float height = (float)_transformation.Size.Width / 2.0f;
 
-            Vector2 position = LocalPosition(screenPosition);
+            SKPoint position = LocalPosition(screenPosition);
 
             double value = (position.X * position.X) / (width * width) + (position.Y * position.Y) / (height * height);
             return (value <= 1.0);
         }
 
-        public RSNodeList GetHitList(Vector2 screenPosition) 
+        public RSNodeList GetHitList(SKPoint screenPosition) 
         {
             RSNodeList result = RSNodeList.Create();
 

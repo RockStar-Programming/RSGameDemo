@@ -1,5 +1,5 @@
-﻿using SkiaSharp;
-using System.Numerics;
+﻿
+using SkiaSharp;
 
 using Rockstar._CoreFile;
 using Rockstar._RenderSurface;
@@ -15,14 +15,14 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeAnimation CreateWithFile(Vector2 position, SKSize size, string filePath)
+        public static RSNodeAnimation CreateWithFile(SKPoint position, SKSize size, string filePath)
         {
             RSNodeAnimation result = new RSNodeAnimation(position, size, filePath);
 
             return result;
         }
 
-        public RSNodeAnimation(Vector2 position, SKSize size, string filePath)
+        public RSNodeAnimation(SKPoint position, SKSize size, string filePath)
         {
             _bitmap = RSCoreFile.ReadAsBitmap(filePath);
             InitWithData(position, size);
@@ -60,14 +60,14 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Methods
 
-        public override bool PointInside(Vector2 screenPosition)
+        public override bool PointInside(SKPoint screenPosition)
         {
             return PointInsizeRectangle(screenPosition);
         }
 
         public override void Render(RSRenderSurface surface)
         {
-            Vector2 upperLeft = new Vector2((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            SKPoint upperLeft = new SKPoint((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
             surface.DrawBitmap(upperLeft.X, upperLeft.Y, _transformation.Size.Width, _transformation.Size.Height, _frame, _bitmap);
         }
 

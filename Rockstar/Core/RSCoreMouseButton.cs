@@ -1,5 +1,5 @@
 ﻿
-using System.Numerics;
+using SkiaSharp;
 
 using Rockstar._Event;
 
@@ -65,7 +65,7 @@ namespace Rockstar._CoreMouseButton
                 { RSMouseEvent.OnReleased, RSEvent.Create() }
             };
 
-            _lastPosition = new Vector2();
+            _lastPosition = new SKPoint();
         }
 
         // ********************************************************************************************
@@ -77,7 +77,7 @@ namespace Rockstar._CoreMouseButton
         // Internal Data
 
         private Dictionary<RSMouseEvent, RSEvent> _eventList;
-        private Vector2 _lastPosition;
+        private SKPoint _lastPosition;
         private bool _lastPressed;
         // movement threshold is added to reduce the number of times the movement handler is called
         // this is done to prevent repeated events for very small mouse movements
@@ -104,7 +104,7 @@ namespace Rockstar._CoreMouseButton
             }
         }
 
-        public void UpdateState(bool pressed, Vector2 position)
+        public void UpdateState(bool pressed, SKPoint position)
         {
             if (ButtonIsSteadyPassive(pressed) == true)
             {
@@ -119,7 +119,7 @@ namespace Rockstar._CoreMouseButton
             else if (ButtonIsSteadyActive(pressed) == true)
             {
                 // do not execute a movement handler if movement is below movement threshold
-                if (Vector2.Distance(_lastPosition, position) >= MOVEMENT_THRESHOLD)
+                if (SKPoint.Distance(_lastPosition, position) >= MOVEMENT_THRESHOLD)
                 {
                     _lastPosition = position;
                     _eventList[RSMouseEvent.OnMoved].ExecuteHandler(this, RSEventArgs.Create(RSMouseEvent.OnMoved, position));
