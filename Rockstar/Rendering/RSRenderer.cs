@@ -70,10 +70,10 @@ namespace Rockstar._Renderer
             RSNodeList renderList = RSNodeList.Create();
 
             // reset surface transformation and transform the entire tree
-            Matrix3x2 matrix = Matrix3x2.Identity;
+            SKMatrix matrix = SKMatrix.Identity;
             if (surface.Origin == RSTransformationOrigin.LowerLeft)
             {
-                matrix = Matrix3x2.CreateTranslation(0, surface.Size.Height);
+                matrix = SKMatrix.CreateTranslation(0, surface.Size.Height);
             }
             surface.SetMatrix(matrix);
 
@@ -108,7 +108,7 @@ namespace Rockstar._Renderer
         public void RenderDebugString(int nodeCount, double fps, RSRenderSurface surface)
         {
             SKMatrix matrix = surface.Canvas.TotalMatrix;
-            surface.SetCanvasMatrix(Matrix3x2.Identity);
+            surface.SetCanvasMatrix(SKMatrix.Identity);
 
             if (fps > 999.9) fps = 999.9;
             string message = string.Format("Nodes:{0} @{1:00}x{2:00} - {3:0.0}fps", nodeCount, surface.Size.Width, surface.Size.Height, fps);
@@ -148,7 +148,7 @@ namespace Rockstar._Renderer
             foreach (RSNode child in node.Children)
             {
                 // store surface matrix before child transformations are added
-                Matrix3x2 matrix = surface.Matrix;
+                SKMatrix matrix = surface.Matrix;
 
                 // transform children
                 TransformNodeTree(child, surface, renderList);

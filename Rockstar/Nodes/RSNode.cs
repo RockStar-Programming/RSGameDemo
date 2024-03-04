@@ -107,7 +107,7 @@ namespace Rockstar._NodeList
         public RSTransformation Transformation { get { return _transformation; } }
         public RSNode? Parent { get { return _parent; } }
         public List<RSNode> Children { get { return _children; } }
-        public Matrix3x2 RenderMatrix { get { return _renderMatrix; } }
+        public SKMatrix RenderMatrix { get { return _renderMatrix; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -121,7 +121,7 @@ namespace Rockstar._NodeList
         protected RSTransformation _transformation;
         protected RSNode? _parent;
         protected List<RSNode> _children;
-        protected Matrix3x2 _renderMatrix;
+        protected SKMatrix _renderMatrix;
 
         private static long _nodeIndex = 0;
 
@@ -171,12 +171,11 @@ namespace Rockstar._NodeList
         public SKPoint LocalPosition(SKPoint screenPosition)
         {
             SKPoint result = new SKPoint();
-            Matrix3x2 inverseMatrix;
+            SKMatrix inverseMatrix;
 
-            if (Matrix3x2.Invert(_renderMatrix, out inverseMatrix))
+            if (_renderMatrix.TryInvert(out inverseMatrix))
             {
-                Vector2 vector = Vector2.Transform(new Vector2(screenPosition.X, screenPosition.Y), inverseMatrix);
-                result = new SKPoint(vector.X, vector.Y); ;
+                result = inverseMatrix.MapPoint(screenPosition);
                 
                 // if origin is in lower left, Y axis is inverse
                 if (_transformation.Origin == RSTransformationOrigin.LowerLeft) result = new SKPoint(result.X, -result.Y);

@@ -47,7 +47,7 @@ namespace Rockstar._RenderSurface
             _size = new SKSize(_canvas.DeviceClipBounds.Width, _canvas.DeviceClipBounds.Height);
             _color = color;
             _origin = origin;
-            _matrix = Matrix3x2.Identity;
+            _matrix = SKMatrix.Identity;
             _antiAlias = true;
         }
 
@@ -60,7 +60,7 @@ namespace Rockstar._RenderSurface
         public SKCanvas Canvas { get { return _canvas; } }
         public SKSize Size { get { return _size; } }
         public RSTransformationOrigin Origin { get { return _origin; } }
-        public Matrix3x2 Matrix { get { return _matrix; } }
+        public SKMatrix Matrix { get { return _matrix; } }
         public bool AntiAlias { get { return _antiAlias; } }
 
         // ********************************************************************************************
@@ -70,30 +70,26 @@ namespace Rockstar._RenderSurface
         private SKSize _size;
         private SKColor _color;
         private RSTransformationOrigin _origin;
-        private Matrix3x2 _matrix;
+        private SKMatrix _matrix;
         private bool _antiAlias;
 
         // ********************************************************************************************
         // Methods
 
-        public void SetMatrix(Matrix3x2 matrix)
+        public void SetMatrix(SKMatrix matrix)
         {
             _matrix = matrix;
         }
 
-        public Matrix3x2 MultiplyMatrix(Matrix3x2 matrix)
+        public SKMatrix MultiplyMatrix(SKMatrix matrix)
         {
-            _matrix = matrix * _matrix;
+            _matrix = SKMatrix.Concat(_matrix, matrix);
             return _matrix;
         }
 
-        public void SetCanvasMatrix(Matrix3x2 transformation)
+        public void SetCanvasMatrix(SKMatrix transformation)
         {
-            _canvas.SetMatrix(new SKMatrix(
-                scaleX: transformation.M11, scaleY: transformation.M22,
-                skewX: transformation.M21, skewY: transformation.M12,
-                transX: transformation.M31, transY: transformation.M32,
-                persp0: 0, persp1: 0, persp2: 1));
+            _canvas.SetMatrix(transformation);
         }
 
         // ********************************************************************************************

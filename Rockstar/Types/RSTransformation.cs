@@ -105,12 +105,12 @@ namespace Rockstar._Types
         public SKPoint Scale { get; set; }
         public SKColor Color { get; set; }
         public RSTransformationOrigin Origin { set; get; }
-        public Matrix3x2 Matrix { get { return CalculateMatrix(); } }
+        public SKMatrix Matrix { get { return CalculateMatrix(); } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private Matrix3x2 _matrix;
+        private SKMatrix _matrix;
 
         // ********************************************************************************************
         // Methods
@@ -132,15 +132,16 @@ namespace Rockstar._Types
             Origin = transformation.Origin;
         }
 
-        private Matrix3x2 CalculateMatrix()
+        private SKMatrix CalculateMatrix()
         {
             SKPoint pos = Position;
             float rotation = Rotation;
 
             if (Origin == RSTransformationOrigin.LowerLeft) pos.Y = -pos.Y;
-            _matrix = Matrix3x2.CreateRotation((float)Math.PI * rotation / 180.0f, new Vector2(pos.X, pos.Y));
-            _matrix = Matrix3x2.CreateTranslation(pos.X, pos.Y) * _matrix;
-            _matrix = Matrix3x2.CreateScale(Scale.X, Scale.Y) * _matrix;
+            _matrix = SKMatrix.CreateRotation((float)Math.PI * rotation / 180.0f, pos.X, pos.Y);
+            _matrix = SKMatrix.Concat(_matrix, SKMatrix.CreateTranslation(pos.X, pos.Y));
+            _matrix = SKMatrix.Concat(_matrix, SKMatrix.CreateScale(Scale.X, Scale.Y));
+            
             return _matrix;
         }
 

@@ -66,12 +66,14 @@ namespace Rockstar._Game
 
             RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new SKPoint(-50, 60), new SKSize(40, 40), SKColors.Green);
             // leftEar.Transformation.Z = 15;
-            // leftEar.Transformation.Rotation = -15;
+            leftEar.Transformation.Rotation = -15;
+            leftEar.Transformation.Scale = new SKPoint(1.5f, 1.5f);
             node.AddChild(leftEar);
 
             RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new SKPoint(50, 60), new SKSize(40, 40), SKColors.Green);
             // rightEar.Transformation.Anchor = new SKPoint();
-            // rightEar.Transformation.Rotation = 15;
+            rightEar.Transformation.Rotation = 15;
+            rightEar.Transformation.Scale = new SKPoint(0.5f, 0.5f);
             node.AddChild(rightEar);
 
             RSNodeString text = RSNodeString.CreateString(new SKPoint(0, 0), "Holy World", RSFont.Create());
