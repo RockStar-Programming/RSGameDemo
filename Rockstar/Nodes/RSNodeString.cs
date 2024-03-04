@@ -83,9 +83,10 @@ namespace Rockstar._NodeList
             _transformation.Size = new SKSize(width, height);
 
             float offset = metrics.XHeight / 2;
-            SKPoint center = new SKPoint(-_transformation.Size.Width * _transformation.Anchor.X, ((float)_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
-
-            surface.DrawText(center.X, center.Y, _text, paint);
+            SKPoint center = new SKPoint(
+                -_transformation.Size.Width * _transformation.Anchor.X, 
+                (_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
+            surface.DrawText(center, _text, paint);
         }
 
         // ********************************************************************************************

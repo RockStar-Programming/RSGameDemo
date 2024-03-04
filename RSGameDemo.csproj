@@ -48,10 +48,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Rockstar\Types\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="Assets\default.png">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>

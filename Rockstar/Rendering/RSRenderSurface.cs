@@ -1,6 +1,5 @@
 ﻿
 using SkiaSharp;
-using System.Numerics;
 
 using Rockstar._Types;
 
@@ -95,7 +94,7 @@ namespace Rockstar._RenderSurface
         // ********************************************************************************************
         // Draw Methods
 
-        public void DrawBox(float x, float y, float width, float height, SKColor color, float line)
+        public void DrawBox(SKPoint position, SKSize size, SKColor color, float line)
         {
             SKPaint paint = new SKPaint
             {
@@ -104,10 +103,10 @@ namespace Rockstar._RenderSurface
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = line
             };
-            _canvas.DrawRect(x, y, width, height, paint);
+            _canvas.DrawRect(position.X, position.Y, size.Width, size.Height, paint);
         }
 
-        public void DrawRectangle(float x, float y, float width, float height, SKColor color)
+        public void DrawRectangle(SKPoint position, SKSize size, SKColor color)
         {
             SKPaint paint = new SKPaint
             {
@@ -115,10 +114,10 @@ namespace Rockstar._RenderSurface
                 IsAntialias = _antiAlias,
                 Style = SKPaintStyle.Fill
             };
-            _canvas.DrawRect(x, y, width, height, paint);
+            _canvas.DrawRect(position.X, position.Y, size.Width, size.Height, paint);
         }
 
-        public void DrawEllipse(float x, float y, float width, float height, SKColor color)
+        public void DrawEllipse(SKPoint position, SKSize size, SKColor color)
         {
             SKPaint paint = new SKPaint
             {
@@ -126,37 +125,18 @@ namespace Rockstar._RenderSurface
                 IsAntialias = _antiAlias,
                 Style = SKPaintStyle.Fill
             };
-            _canvas.DrawOval(x, y, width / 2, height / 2, paint);
+            _canvas.DrawOval(position.X, position.Y, size.Width / 2, size.Height / 2, paint);
         }
 
-        public void DrawText(float x, float y,  string text, SKPaint paint) 
+        public void DrawText(SKPoint position,  string text, SKPaint paint) 
         {
-            _canvas.DrawText(text, x, y, paint);
+            _canvas.DrawText(text, position.X, position.Y, paint);
         }
 
-        public void DrawBitmap(float x, float y, SKBitmap bitmap)
+        public void DrawBitmap(SKPoint position, SKSize size, RSSpriteFrame frame, SKBitmap bitmap)
         {
-            _canvas.DrawBitmap(bitmap, x, y);
-        }
-
-        public void DrawBitmap(float x, float y, float width, float height, int index, SKBitmap bitmap)
-        {
-            SKRect destination = new SKRect(x, y, x + width, y + height);
-            int bitmapWidth = bitmap.Width;
-            int xPos = 0;
-            int yPos = 0;
-            while (index > 0)
-            {
-                xPos += (int)width;
-                if ((xPos + (int)width) > bitmapWidth) 
-                {
-                    xPos = 0;
-                    yPos += (int)height;
-                }
-                index--;
-            }
-            SKRect source = new SKRect(xPos, yPos, xPos + width, yPos + height);
-            _canvas.DrawBitmap(bitmap, source, destination);
+            SKRect destination = new SKRect(position.X, position.Y, position.X + size.Width, position.X + size.Height);
+            _canvas.DrawBitmap(bitmap, frame.Rect, destination);
         }
 
         // ********************************************************************************************

@@ -1,6 +1,5 @@
 ﻿
 using SkiaSharp;
-using System.Numerics;
 
 using Rockstar._RenderSurface;
 using Rockstar._Types;
@@ -149,8 +148,10 @@ namespace Rockstar._NodeList
         //
         public void RenderDebug(RSRenderSurface surface)
         {
-            SKPoint upperLeft = new SKPoint((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
-            surface.DrawBox(upperLeft.X, upperLeft.Y, _transformation.Size.Width, _transformation.Size.Height, DEBUG_COLOR, DEBUG_LINEWIDTH);
+            SKPoint upperLeft = new SKPoint(
+                (float)-_transformation.Size.Width * _transformation.Anchor.X, 
+                (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            surface.DrawBox(upperLeft, _transformation.Size, DEBUG_COLOR, DEBUG_LINEWIDTH);
         }
 
         // Override Update to perform visual updates to a node

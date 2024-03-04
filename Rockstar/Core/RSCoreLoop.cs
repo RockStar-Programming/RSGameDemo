@@ -36,11 +36,11 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Constructors
 
-        RSGameClockDD _game;
+        RSGame _game;
 
         public RSCoreLoop()
         {
-            _game = RSGameClockDD.Create();
+            _game = RSGame.Create();
         }
 
         // ********************************************************************************************

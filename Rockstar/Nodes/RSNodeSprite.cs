@@ -3,6 +3,8 @@ using SkiaSharp;
 
 using Rockstar._CoreFile;
 using Rockstar._RenderSurface;
+using System.Security.Policy;
+using Rockstar._SpriteSheet;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,7 +27,7 @@ using Rockstar._RenderSurface;
 
 namespace Rockstar._NodeList
 {
-    public class RSNodeSprite :RSNode
+    public class RSNodeSprite : RSNode
     {
         // ********************************************************************************************
         // Implements bitmap based nodes
@@ -35,16 +37,27 @@ namespace Rockstar._NodeList
         // Constructors
 
         public static RSNodeSprite CreateWithFile(SKPoint position, string filePath)
-        { 
-            RSNodeSprite result = new RSNodeSprite(position, filePath);
-
-            return result;
+        {
+            return new RSNodeSprite(position, filePath);
         }
 
-        public RSNodeSprite(SKPoint position, string filePath) 
-        { 
-            _bitmap = RSCoreFile.ReadAsBitmap(filePath);
-            InitWithData(position, new SKSize(_bitmap.Width, _bitmap.Height));
+        public static RSNodeSprite CreateWithFileAndSize(SKPoint position, SKSize size,string filePath)
+        {
+            return new RSNodeSprite(position, size, filePath);
+        }
+
+        private RSNodeSprite(SKPoint position, string filePath)
+        {
+            _sheet = RSSpriteSheet.CreateFromFile(filePath);
+            InitWithData(position, new SKSize(_sheet.Bitmap.Width, _sheet.Bitmap.Height));
+            _currentFrame = 0;
+        }
+
+        private RSNodeSprite(SKPoint position, SKSize size, string filePath)
+        {
+            _sheet = RSSpriteSheet.CreateFromFileAndSize(filePath, size);
+            InitWithData(position, size);
+            _currentFrame = 0;
         }
 
 
@@ -54,10 +67,14 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Properties
 
+        public RSSpriteSheet Sheet { get { return _sheet; } }
+        public int CurrentFrame { get { return _currentFrame; } }
+
         // ********************************************************************************************
         // Internal Data
 
-        private SKBitmap _bitmap;
+        private RSSpriteSheet _sheet;
+        private int _currentFrame;
 
         // ********************************************************************************************
         // Methods
@@ -69,8 +86,15 @@ namespace Rockstar._NodeList
 
         public override void Render(RSRenderSurface surface)
         {
-            SKPoint upperLeft = new SKPoint((float)-_transformation.Size.Width * _transformation.Anchor.X, (float)-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
-            surface.DrawBitmap(upperLeft.X, upperLeft.Y, _bitmap);
+            SKPoint upperLeft = new SKPoint(
+                -_transformation.Size.Width * _transformation.Anchor.X,
+                -_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
+            surface.DrawBitmap(upperLeft, _transformation.Size, _sheet.Frame(_currentFrame), _sheet.Bitmap);
+        }
+
+        public void SetCurrentFrame(int index)
+        {
+            _currentFrame = index % _sheet.FrameCount;
         }
 
         // ********************************************************************************************

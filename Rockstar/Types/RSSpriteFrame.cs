@@ -1,7 +1,9 @@
-﻿
-using SkiaSharp;
-
-using Rockstar._RenderSurface;
+﻿using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -22,37 +24,29 @@ using Rockstar._RenderSurface;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._NodeList
+namespace Rockstar._Types
 {
-    public class RSNodeSolid : RSNode
+    public class RSSpriteFrame
     {
         // ********************************************************************************************
-        // Simple colored solids
+        // A sprite frame defines an area within a bitmap
         //
-        // Inherits RSNode, and implements rendering of solid objects
+        // See _readme.txt
+        //
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSolid CreateRectangle(SKPoint position, SKSize size, SKColor color)
-        {
-            RSNodeSolid result = new RSNodeSolid(SolidType.Rectangle);
-            result.InitWithData(position, size);
-            result.Transformation.Color = color;
-            return result;
+        public static RSSpriteFrame Create(SKPoint position, SKSize size)
+        { 
+            return new RSSpriteFrame(position, size);
         }
 
-        public static RSNodeSolid CreateEllipse(SKPoint position, SKSize size, SKColor color)
+        private RSSpriteFrame(SKPoint position, SKSize size)
         {
-            RSNodeSolid result = new RSNodeSolid(SolidType.Ellipse);
-            result.InitWithData(position, size);
-            result.Transformation.Color = color;
-            return result;
-        }
-
-        private RSNodeSolid(SolidType type)
-        {
-            _type = type;
+            X = position.X; Y = position.Y; 
+            Width = size.Width; Height = size.Height;
+            Rect = new SKRect(X, Y, X + Width, Y + Height);
         }
 
         // ********************************************************************************************
@@ -61,55 +55,17 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Properties
 
+        public float X { get; }
+        public float Y { get; }
+        public float Width { get; }
+        public float Height { get; }
+        public SKRect Rect { get; }
+
         // ********************************************************************************************
         // Internal Data
 
-        private enum SolidType
-        {
-            Rectangle,
-            Ellipse
-        }
-
-        private SolidType _type;
-
         // ********************************************************************************************
         // Methods
-
-        public override bool PointInside(SKPoint screenPosition)
-        {
-            switch (_type)
-            {
-                case SolidType.Rectangle:
-                    return PointInsizeRectangle(screenPosition);
-                case SolidType.Ellipse:
-                    return PointInsizeEllipse(screenPosition);
-                default: 
-                    return false;
-            }
-        }
-
-        public override void Render(RSRenderSurface surface)
-        {
-            base.Render(surface);
-
-            switch (_type)
-            {
-                case SolidType.Rectangle:
-                    SKPoint upperLeft = new SKPoint(
-                        -_transformation.Size.Width * _transformation.Anchor.X, 
-                        -_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
-                    surface.DrawRectangle(upperLeft, _transformation.Size, _transformation.Color);
-                    break;
-                case SolidType.Ellipse:
-                    SKPoint position = new SKPoint(
-                        (0.5f - _transformation.Anchor.X) * _transformation.Size.Width, 
-                        (_transformation.Anchor.Y - 0.5f) * _transformation.Size.Height);
-                    surface.DrawEllipse(position, _transformation.Size, _transformation.Color);
-                    break;
-                default:
-                    break;
-            }
-        }
 
         // ********************************************************************************************
         // Event Handlers

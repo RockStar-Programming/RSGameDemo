@@ -6,6 +6,7 @@ using Rockstar._CoreGame;
 using Rockstar._Dictionary;
 using Rockstar._NodeList;
 using Rockstar._Event;
+using System.Diagnostics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -50,7 +51,7 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Internal Data
 
-        RSNodeAnimation _fox;
+        RSNodeSprite _fox;
 
         // ********************************************************************************************
         // Methods
@@ -82,13 +83,13 @@ namespace Rockstar._Game
 
             _scene.AddChild(node);
 
-            _fox = RSNodeAnimation.CreateWithFile(new SKPoint(400, 300), new SKSize(256, 219) ,"Assets/blue_fox.png");
-            _fox.AnimationInterval = 100;
+            _fox = RSNodeSprite.CreateWithFileAndSize(new SKPoint(400, 300), new SKSize(256, 219) ,"Assets/blue_fox.png");
             _scene.AddChild(_fox);
 
             _scene.AddChild(RSNodeString.CreateString(new SKPoint(400, 180), "Click to Animate", RSFont.Create()));
 
             _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnPressed, OnLeftMouseEvent);
+            _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnReleased, OnLeftMouseEvent);
 
         }
 
@@ -108,16 +109,7 @@ namespace Rockstar._Game
 
         public void OnLeftMouseEvent(object sender, RSEventArgs argument)
         {
-            //if (_fox.Running == true)
-            //{
-            //    _fox.StopAtFrame(2);
-            //    // _fox.Stop();
-            //}
-            //else
-            //{
-            //    _fox.Start();
-            //}
-            _fox.Play(3, 2);
+            _fox.SetCurrentFrame(_fox.CurrentFrame + 1);
         }
 
         // ********************************************************************************************

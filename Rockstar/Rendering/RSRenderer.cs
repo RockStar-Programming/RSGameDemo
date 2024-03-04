@@ -1,6 +1,5 @@
 ﻿
 using SkiaSharp;
-using System.Numerics;
 
 using Rockstar._NodeList;
 using Rockstar._Types;
@@ -121,8 +120,12 @@ namespace Rockstar._Renderer
 
             SKColor color = new SKColor(255, 255, 255, 64);
 
-            surface.DrawRectangle(surface.Size.Width - width - (2 * RENDER_DEBUG_INSET), surface.Size.Height - height, width + (2 * RENDER_DEBUG_INSET), height, color);
-            surface.DrawText(surface.Size.Width - width - RENDER_DEBUG_INSET, surface.Size.Height - metrics.Descent, message, paint);
+            SKPoint position = new SKPoint(surface.Size.Width - width - (2 * RENDER_DEBUG_INSET), surface.Size.Height - height);
+            SKSize size = new SKSize(width + (2 * RENDER_DEBUG_INSET), height);
+            surface.DrawRectangle(position, size, color);
+
+            position = new SKPoint(surface.Size.Width - width - RENDER_DEBUG_INSET, surface.Size.Height - metrics.Descent);
+            surface.DrawText(position, message, paint);
 
             surface.Canvas.SetMatrix(matrix);
         }

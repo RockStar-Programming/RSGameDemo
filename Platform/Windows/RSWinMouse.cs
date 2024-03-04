@@ -60,12 +60,16 @@ namespace Platform._Windows
 
         private const int WM_LBUTTONDOWN = 0x0201;
         private const int WM_LBUTTONUP = 0x0202;
+        private const int WM_LBUTTONDBLCLK = 0x0203;
 
         private const int WM_MBUTTONDOWN = 0x0207;
         private const int WM_MBUTTONUP = 0x0208;
+        private const int WM_MBUTTONDBLCLK = 0x0209;
 
         private const int WM_RBUTTONDOWN = 0x0204;
         private const int WM_RBUTTONUP = 0x0205;
+        private const int WM_RBUTTONDBLCLK = 0x0206;
+
 
         private RSEvent _leftMouseEvent;
         private RSEvent _middleMouseEvent;
@@ -87,6 +91,7 @@ namespace Platform._Windows
                 // Left button
                 //
                 case WM_LBUTTONDOWN:
+                case WM_LBUTTONDBLCLK:
                     position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
@@ -107,6 +112,7 @@ namespace Platform._Windows
                 // Middle button
                 // 
                 case WM_MBUTTONDOWN:
+                case WM_MBUTTONDBLCLK:
                     position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
@@ -127,6 +133,7 @@ namespace Platform._Windows
                 // Right button
                 //
                 case WM_RBUTTONDOWN:
+                case WM_RBUTTONDBLCLK:
                     position = new SKPoint(
                                     x: m.LParam.ToInt32() & 0xFFFF, // Low-order word
                                     y: m.LParam.ToInt32() >> 16 // High-order word
