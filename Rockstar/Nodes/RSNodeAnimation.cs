@@ -15,14 +15,14 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeAnimation CreateWithFile(Vector2 position, Size size, string filePath)
+        public static RSNodeAnimation CreateWithFile(Vector2 position, SKSize size, string filePath)
         {
             RSNodeAnimation result = new RSNodeAnimation(position, size, filePath);
 
             return result;
         }
 
-        public RSNodeAnimation(Vector2 position, Size size, string filePath)
+        public RSNodeAnimation(Vector2 position, SKSize size, string filePath)
         {
             _bitmap = RSCoreFile.ReadAsBitmap(filePath);
             InitWithData(position, size);
@@ -98,6 +98,13 @@ namespace Rockstar._NodeList
         public void StopAtFrame(int frame) 
         {
             _frameStop = frame % FrameCount;
+        }
+
+        public void Play(int startFrame, int endFrame)
+        {
+            Frame = startFrame;
+            _frameStop = endFrame % FrameCount;
+            _animationTime = 0;
         }
 
         // ********************************************************************************************

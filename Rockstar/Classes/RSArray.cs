@@ -166,7 +166,7 @@ namespace Rockstar._Array
             return new SKColor(red, green, blue, alpha);
         }
 
-        public Size ToSize()
+        public SKSize ToSize()
         {
             float x = 0, y;
 
@@ -176,7 +176,7 @@ namespace Rockstar._Array
             if (Count >= 1) x = GetFloat(0, 0);
             if (Count >= 2) y = GetFloat(1, 0); else y = x;
 
-            return new Size((int)x, (int)y);
+            return new SKSize(x, y);
         }
 
         public Vector2 ToVector2()

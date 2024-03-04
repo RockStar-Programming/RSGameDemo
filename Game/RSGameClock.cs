@@ -124,7 +124,7 @@ namespace Rockstar._GameClock
 
         private struct ClockMarker
         {
-            public Size Size;
+            public SKSize Size;
             public bool Circular;
             public SKColor Color;
             public float Offset;
@@ -191,28 +191,28 @@ namespace Rockstar._GameClock
 
         private static ClockMarker SECOND_MARKER = new ClockMarker()
         {
-            Size = new Size(2, 12),
+            Size = new SKSize(2, 12),
             Circular = false,
             Color = SKColors.LightGray
         };
 
         private static ClockMarker HOUR_DOT_MARKER = new ClockMarker()
         {
-            Size = new Size(20, 20),
+            Size = new SKSize(20, 20),
             Circular = true,
             Color = SKColors.DarkGray
         };
 
         private static ClockMarker HOUR_RECTANGLE_MARKER = new ClockMarker()
         {
-            Size = new Size(14, 28),
+            Size = new SKSize(14, 28),
             Circular = false,
             Color = SKColors.DarkGray
         };
 
         private static ClockMarker HOUR_DOUBLE_RECTANGLE_MARKER = new ClockMarker()
         {
-            Size = new Size(14, 28),
+            Size = new SKSize(14, 28),
             Circular = false,
             Color = SKColors.DarkGray,
             Offset = 10
@@ -286,7 +286,7 @@ namespace Rockstar._GameClock
 
         // Builds the clock
         //
-        public override void Initialise(Size size)
+        public override void Initialise(SKSize size)
         {
             // base node
             _clock = RSNode.CreateWithPosition(new Vector2(400, 300));
@@ -309,7 +309,7 @@ namespace Rockstar._GameClock
             UpdateHands();
         }
 
-        public override void Resize(Size size)
+        public override void Resize(SKSize size)
         {
 
         }
@@ -335,7 +335,7 @@ namespace Rockstar._GameClock
 
             // create face
             //
-            RSNodeSolid face = RSNodeSolid.CreateEllipse(new Vector2(), new Size((int)CLOCK_FACE.Radius * 2, (int)CLOCK_FACE.Radius * 2), CLOCK_FACE.Color);
+            RSNodeSolid face = RSNodeSolid.CreateEllipse(new Vector2(), new SKSize(CLOCK_FACE.Radius * 2, CLOCK_FACE.Radius * 2), CLOCK_FACE.Color);
             face.Name = "face";
             result.AddChild(face);
 
@@ -442,14 +442,14 @@ namespace Rockstar._GameClock
             // create the hand base with requested size and color
             // hand will rotate around anchor point, so this is placed center bottom
             //
-            RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new Size((int)hand.Width, (int)hand.Length), hand.Color);
+            RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new SKSize(hand.Width, hand.Length), hand.Color);
             handBody.Name = hand.Name + ".body";
             handBody.Transformation.Anchor = new Vector2(0.5f, 0.0f);
             result.AddChild(handBody);
 
             // create a top rounded point and add it to the hand base at the top
             //
-            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new Vector2(0, hand.Length), new Size((int)hand.Width, (int)hand.Width), hand.Color);
+            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new Vector2(0, hand.Length), new SKSize(hand.Width, hand.Width), hand.Color);
             handTop.Name = hand.Name + ".top";
             result.AddChild(handTop);
 
@@ -457,7 +457,7 @@ namespace Rockstar._GameClock
             // 
             if (hand.TailWidth > 0)
             {
-                RSNodeSolid tail = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new Size((int)hand.TailWidth, (int)hand.TailLength), hand.Color);
+                RSNodeSolid tail = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new SKSize(hand.TailWidth, hand.TailLength), hand.Color);
                 tail.Name = hand.Name + ".tail";
                 tail.Transformation.Anchor = new Vector2(0.5f, 1.0f);
                 result.AddChild(tail);
@@ -465,7 +465,7 @@ namespace Rockstar._GameClock
 
             // create a round base, and add it to the hand base at the bottom
             //
-            RSNodeSolid handBase = RSNodeSolid.CreateEllipse(new Vector2(0, 0), new Size((int)hand.BaseDiameter, (int)hand.BaseDiameter), hand.Color);
+            RSNodeSolid handBase = RSNodeSolid.CreateEllipse(new Vector2(0, 0), new SKSize(hand.BaseDiameter, hand.BaseDiameter), hand.Color);
             handBase.Name = hand.Name + ".base";
             result.AddChild(handBase);
 

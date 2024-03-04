@@ -81,7 +81,7 @@ namespace Rockstar._NodeList
             float width = paint.MeasureText(_text);
             SKFontMetrics metrics = paint.FontMetrics;
             float height = metrics.Descent - metrics.Ascent;
-            _transformation.Size = new Size((int)width, (int)height);
+            _transformation.Size = new SKSize(width, height);
 
             float offset = metrics.XHeight / 2;
             Vector2 center = new Vector2(-_transformation.Size.Width * _transformation.Anchor.X, ((float)_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);

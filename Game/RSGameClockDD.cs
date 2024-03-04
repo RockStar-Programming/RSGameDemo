@@ -133,7 +133,7 @@ namespace Rockstar._GameClockDD
 
         // Builds the clock
         //
-        public override void Initialise(Size size)
+        public override void Initialise(SKSize size)
         {
             // load watch base "mechanics"
             _clockType = _setup.GetObject("clock/type", "Quartz").ToEnum<ClockType>();
@@ -165,7 +165,7 @@ namespace Rockstar._GameClockDD
             UpdateHands();
         }
 
-        public override void Resize(Size size)
+        public override void Resize(SKSize size)
         {
 
         }
@@ -206,7 +206,7 @@ namespace Rockstar._GameClockDD
             // load dial setup
             float radius = setup.GetFloat("radius", 120);
             SKColor color = setup.GetArray("color").ToColor();
-            RSNodeSolid dial = RSNodeSolid.CreateEllipse(new Vector2(), new Size((int)radius * 2, (int)radius * 2), color);
+            RSNodeSolid dial = RSNodeSolid.CreateEllipse(new Vector2(), new SKSize(radius * 2, radius * 2), color);
             result.AddChild(dial);
 
             return result;
@@ -226,7 +226,7 @@ namespace Rockstar._GameClockDD
             // load dial setup
             radius = setup.GetFloat("radius", 120);
             color = setup.GetArray("color").ToColor();
-            RSNodeSolid dial = RSNodeSolid.CreateEllipse(new Vector2(), new Size((int)radius * 2, (int)radius * 2), color);
+            RSNodeSolid dial = RSNodeSolid.CreateEllipse(new Vector2(), new SKSize(radius * 2, radius * 2), color);
             result.AddChild(dial);
 
             // create hour markers
@@ -258,8 +258,8 @@ namespace Rockstar._GameClockDD
             SKColor color = setup.GetArray("color").ToColor();
             RSArray typeList = RSArray.CreateWithObject(setup.GetObject("type"));
             long markerCount = setup.GetLong("count", 0);
-            Size rectangleSize = setup.GetArray("rectangle_size").ToSize();
-            Size ellipseSize = setup.GetArray("ellipse_size").ToSize();
+            SKSize rectangleSize = setup.GetArray("rectangle_size").ToSize();
+            SKSize ellipseSize = setup.GetArray("ellipse_size").ToSize();
             float offset = setup.GetFloat("offset", 0);
 
             // iterate defined markers
@@ -339,28 +339,28 @@ namespace Rockstar._GameClockDD
             RSNode result = RSNode.Create();
 
             // load hand setup data
-            Size size = setup.GetArray("size").ToSize();
+            SKSize size = setup.GetArray("size").ToSize();
             float handBase = setup.GetFloat("base", 0);
             SKColor color = setup.GetArray("color").ToColor();
-            Size tail = setup.GetArray("tail").ToSize();
+            SKSize tail = setup.GetArray("tail").ToSize();
 
             // create the hand base with requested rectangleSize and color
             // hand will rotate around anchor point, so this is placed center bottom
             //
-            RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new Size(size.Width, size.Height), color);
+            RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new SKSize(size.Width, size.Height), color);
             handBody.Transformation.Anchor = new Vector2(0.5f, 0.0f);
             result.AddChild(handBody);
 
             // create a top rounded point and add it to the hand base at the top
             //
-            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new Vector2(0, (float)size.Height), new Size(size.Width, size.Width), color);
+            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new Vector2(0, (float)size.Height), new SKSize(size.Width, size.Width), color);
             result.AddChild(handTop);
 
             // create a tail if any defined
             // 
             if (tail.Width > 0)
             {
-                RSNodeSolid tailNode = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new Size(tail.Width, tail.Height), color);
+                RSNodeSolid tailNode = RSNodeSolid.CreateRectangle(new Vector2(0, 0), new SKSize(tail.Width, tail.Height), color);
                 tailNode.Transformation.Anchor = new Vector2(0.5f, 1.0f);
                 result.AddChild(tailNode);
             }
@@ -369,7 +369,7 @@ namespace Rockstar._GameClockDD
             //
             if (handBase > 0)
             {
-                RSNodeSolid baseNode = RSNodeSolid.CreateEllipse(new Vector2(0, 0), new Size((int)handBase, (int)handBase), color);
+                RSNodeSolid baseNode = RSNodeSolid.CreateEllipse(new Vector2(0, 0), new SKSize(handBase, handBase), color);
                 result.AddChild(baseNode);
             }
 

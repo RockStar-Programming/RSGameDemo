@@ -4,7 +4,6 @@ using System.Numerics;
 using Rockstar._NodeList;
 using Rockstar._Types;
 using Rockstar._RenderSurface;
-using Rockstar._NodeList;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

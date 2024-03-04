@@ -66,7 +66,7 @@ namespace Rockstar._Types
                 // initialise data
                 //
                 Position = (data.Length > 0) && (data[0] is Vector2 position) ? position : new Vector2();
-                Size = (data.Length > 1) && (data[1] is Size size) ? size : DEFAULT_SIZE;
+                Size = (data.Length > 1) && (data[1] is SKSize size) ? size : DEFAULT_SIZE;
                 Scale = (data.Length > 2) && (data[2] is Vector2 scale) ? scale : DEFAULT_SCALE;
                 Rotation = (data.Length > 3) && (data[3] is float rotation) ? rotation : 0.0f;
                 Anchor = (data.Length > 4) && (data[4] is Vector2 anchor) ? anchor : DEFAULT_ANCHOR;
@@ -89,7 +89,7 @@ namespace Rockstar._Types
         public static string ROTATION = "Transformation.Rotation";
         public static string SCALE = "Transformation.Scale";
 
-        public static Size DEFAULT_SIZE = new Size(100, 100);
+        public static SKSize DEFAULT_SIZE = new SKSize(100, 100);
         public static Vector2 DEFAULT_SCALE = new Vector2(1.0f, 1.0f);
         public static Vector2 DEFAULT_ANCHOR = new Vector2(0.5f, 0.5f);
 
@@ -99,7 +99,7 @@ namespace Rockstar._Types
         public bool Visible { get; set; }
         public Vector2 Position { get; set; }
         public float Z { get; set; }
-        public Size Size { get; set; }
+        public SKSize Size { get; set; }
         public Vector2 Anchor { get; set; }
         public float Rotation { get; set; }
         public Vector2 Scale { get; set; }

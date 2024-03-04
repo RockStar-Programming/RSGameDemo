@@ -35,7 +35,7 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSolid CreateRectangle(Vector2 position, Size size, SKColor color)
+        public static RSNodeSolid CreateRectangle(Vector2 position, SKSize size, SKColor color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Rectangle);
             result.InitWithData(position, size);
@@ -43,7 +43,7 @@ namespace Rockstar._NodeList
             return result;
         }
 
-        public static RSNodeSolid CreateEllipse(Vector2 position, Size size, SKColor color)
+        public static RSNodeSolid CreateEllipse(Vector2 position, SKSize size, SKColor color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Ellipse);
             result.InitWithData(position, size);

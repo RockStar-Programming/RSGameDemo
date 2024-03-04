@@ -54,12 +54,12 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Methods
 
-        public void Initialise(Size size)
+        public void Initialise(SKSize size)
         {
             _game.Initialise(size);
         }
 
-        public void Resize(Size size)
+        public void Resize(SKSize size)
         {
             _game.Resize(size);
         }

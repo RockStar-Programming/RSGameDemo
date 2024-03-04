@@ -45,7 +45,7 @@ namespace Rockstar._NodeList
         public RSNodeSprite(Vector2 position, string filePath) 
         { 
             _bitmap = RSCoreFile.ReadAsBitmap(filePath);
-            InitWithData(position, new Size(_bitmap.Width, _bitmap.Height));
+            InitWithData(position, new SKSize(_bitmap.Width, _bitmap.Height));
         }
 
 

@@ -56,21 +56,21 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Methods
 
-        public override void Initialise(Size size)
+        public override void Initialise(SKSize size)
         {
             RSDictionary _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
 
-            RSNodeSolid node = RSNodeSolid.CreateRectangle(new Vector2(100, 50), new Size(100, 60), SKColors.Red);
+            RSNodeSolid node = RSNodeSolid.CreateRectangle(new Vector2(100, 50), new SKSize(100, 60), SKColors.Red);
             node.Transformation.Anchor = new Vector2(0.5f, 0.0f);
             // node.Transformation.Z = 10;
             // node.Transformation.Rotation = 15;
 
-            RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new Vector2(-50, 60), new Size(40, 40), SKColors.Green);
+            RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new Vector2(-50, 60), new SKSize(40, 40), SKColors.Green);
             // leftEar.Transformation.Z = 15;
             // leftEar.Transformation.Rotation = -15;
             node.AddChild(leftEar);
 
-            RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new Vector2(50, 60), new Size(40, 40), SKColors.Green);
+            RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new Vector2(50, 60), new SKSize(40, 40), SKColors.Green);
             // rightEar.Transformation.Anchor = new Vector2();
             // rightEar.Transformation.Rotation = 15;
             node.AddChild(rightEar);
@@ -81,7 +81,7 @@ namespace Rockstar._Game
 
             _scene.AddChild(node);
 
-            _fox = RSNodeAnimation.CreateWithFile(new Vector2(400, 300), new Size(256, 219) ,"Assets/blue_fox.png");
+            _fox = RSNodeAnimation.CreateWithFile(new Vector2(400, 300), new SKSize(256, 219) ,"Assets/blue_fox.png");
             _fox.AnimationInterval = 100;
             _scene.AddChild(_fox);
 
@@ -91,7 +91,7 @@ namespace Rockstar._Game
 
         }
 
-        public override void Resize(Size size)
+        public override void Resize(SKSize size)
         {
 
         }
@@ -107,15 +107,16 @@ namespace Rockstar._Game
 
         public void OnLeftMouseEvent(object sender, RSEventArgs argument)
         {
-            if (_fox.Running == true)
-            {
-                _fox.StopAtFrame(2);
-                // _fox.Stop();
-            }
-            else
-            {
-                _fox.Start();
-            }
+            //if (_fox.Running == true)
+            //{
+            //    _fox.StopAtFrame(2);
+            //    // _fox.Stop();
+            //}
+            //else
+            //{
+            //    _fox.Start();
+            //}
+            _fox.Play(3, 2);
         }
 
         // ********************************************************************************************

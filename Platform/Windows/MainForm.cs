@@ -3,6 +3,7 @@ using SkiaSharp.Views.Desktop;
 using System.Diagnostics;
 
 using Rockstar._CoreLoop;
+using SkiaSharp;
 
 namespace Rockstar
 {
@@ -28,7 +29,7 @@ namespace Rockstar
             Controls.Add(_controller);
 
             _gameLoop = new RSCoreLoop();
-            _gameLoop.Initialise(Size);
+            _gameLoop.Initialise(new SKSize(800, 600));
 
             _gameRunning = true;
             _gameThread = new Thread(() =>

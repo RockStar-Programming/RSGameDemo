@@ -44,7 +44,7 @@ namespace Rockstar._RenderSurface
         private RSRenderSurface(SKCanvas canvas, SKColor color, RSTransformationOrigin origin)
         {
             _canvas = canvas;
-            _size = new Size(_canvas.DeviceClipBounds.Width, _canvas.DeviceClipBounds.Height);
+            _size = new SKSize(_canvas.DeviceClipBounds.Width, _canvas.DeviceClipBounds.Height);
             _color = color;
             _origin = origin;
             _matrix = Matrix3x2.Identity;
@@ -58,7 +58,7 @@ namespace Rockstar._RenderSurface
         // Properties
 
         public SKCanvas Canvas { get { return _canvas; } }
-        public Size Size { get { return _size; } }
+        public SKSize Size { get { return _size; } }
         public RSTransformationOrigin Origin { get { return _origin; } }
         public Matrix3x2 Matrix { get { return _matrix; } }
         public bool AntiAlias { get { return _antiAlias; } }
@@ -67,7 +67,7 @@ namespace Rockstar._RenderSurface
         // Internal Data
 
         private SKCanvas _canvas;
-        private Size _size;
+        private SKSize _size;
         private SKColor _color;
         private RSTransformationOrigin _origin;
         private Matrix3x2 _matrix;
@@ -147,13 +147,12 @@ namespace Rockstar._RenderSurface
         {
             SKRect destination = new SKRect(x, y, x + width, y + height);
             int bitmapWidth = bitmap.Width;
-            int bitmapHeight = bitmap.Height;
             int xPos = 0;
             int yPos = 0;
             while (index > 0)
             {
                 xPos += (int)width;
-                if (xPos >= bitmapWidth) 
+                if ((xPos + (int)width) > bitmapWidth) 
                 {
                     xPos = 0;
                     yPos += (int)height;

@@ -6,7 +6,6 @@ using Rockstar._NodeList;
 using Rockstar._Renderer;
 using Rockstar._RenderSurface;
 using Rockstar._CoreMouse;
-using Rockstar._NodeList;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -68,9 +67,9 @@ namespace Rockstar._CoreGame
         // ********************************************************************************************
         // Methods to implement / override
 
-        public abstract void Initialise(Size size);
+        public abstract void Initialise(SKSize size);
 
-        public abstract void Resize(Size size);
+        public abstract void Resize(SKSize size);
 
         public abstract void Update(long interval);
 
