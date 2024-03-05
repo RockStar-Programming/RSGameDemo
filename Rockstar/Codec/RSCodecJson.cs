@@ -30,11 +30,11 @@ namespace Rockstar._CodecJson
     public static class RSCodecJson
     {
         // ********************************************************************************************
-        // RSCodecJson supports encoding and decoding JSON files into RSDictionary and RSarray classes
+        // RSCodecJson supports decoding JSON files into RSDictionary and RSarray classes
         // It supports any level of nesting
         //
         // IMPORTANT:
-        // As RSCodeJson must be aware of RSDictionary and RSArray, it is clear that:
+        // As RSCodecJson must be aware of RSDictionary and RSArray, it is clear that:
         // - RSCodecJson must be above those classes in the Lepo Principle Pyramid
         // - Because of that, RSDictionary and RSArray CAN NOT be aware of RSCodecJson
 

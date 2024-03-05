@@ -169,6 +169,13 @@ namespace Rockstar._Dictionary
             return fallback;
         }
 
+        public RSDictionary GetDictionary(string key, RSDictionary? fallback = null)
+        {
+            if (GetEntry(key) is RSDictionary result) return result;
+            if (fallback == null) return RSDictionary.Create();
+            return fallback;
+        }
+
         // ********************************************************************************************
         // Event Handlers
 

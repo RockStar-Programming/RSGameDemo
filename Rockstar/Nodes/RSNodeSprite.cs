@@ -5,6 +5,8 @@ using Rockstar._CoreFile;
 using Rockstar._RenderSurface;
 using System.Security.Policy;
 using Rockstar._SpriteSheet;
+using Rockstar._Types;
+using System.Drawing;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -46,6 +48,11 @@ namespace Rockstar._NodeList
             return new RSNodeSprite(position, size, filePath);
         }
 
+        public static RSNodeSprite CreateWithFileAndJson(SKPoint position, string filePath, string? jsonPath = null)
+        {
+            return new RSNodeSprite(position, filePath, jsonPath);
+        }
+
         private RSNodeSprite(SKPoint position, string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFile(filePath);
@@ -57,6 +64,14 @@ namespace Rockstar._NodeList
         {
             _sheet = RSSpriteSheet.CreateFromFileAndSize(filePath, size);
             InitWithData(position, size);
+            _currentFrame = 0;
+        }
+
+        private RSNodeSprite(SKPoint position, string filePath, string? jsonPath)
+        { 
+            _sheet = RSSpriteSheet.CreateFromFileAndJson(filePath, jsonPath);
+            // The size of the 
+            InitWithData(position, _sheet.Frame(0).Size);
             _currentFrame = 0;
         }
 
@@ -86,10 +101,13 @@ namespace Rockstar._NodeList
 
         public override void Render(RSRenderSurface surface)
         {
+            RSSpriteFrame frame = _sheet.Frame(_currentFrame);
+
             SKPoint upperLeft = new SKPoint(
-                -_transformation.Size.Width * _transformation.Anchor.X,
-                -_transformation.Size.Height * (1.0f - _transformation.Anchor.Y));
-            surface.DrawBitmap(upperLeft, _transformation.Size, _sheet.Frame(_currentFrame), _sheet.Bitmap);
+                 (-_transformation.Size.Width * _transformation.Anchor.X) + frame.Offset.X,
+                 (-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y)) + frame.Offset.Y);
+
+            surface.DrawBitmap(upperLeft, frame, _sheet.Bitmap);
         }
 
         public void SetCurrentFrame(int index)

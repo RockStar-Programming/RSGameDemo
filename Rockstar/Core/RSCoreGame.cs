@@ -92,13 +92,17 @@ namespace Rockstar._CoreGame
 
             if (_scene != null)
             {
+                // render the entire node tree
                 int nodeCount = _renderer.RenderNodeTree(_scene, surface);
 
+                // render any nodes added to debug list
                 if (_debugNodeList != null)
                 {
                     _renderer.RenderNodeList(_debugNodeList, surface, true);
+                    nodeCount += _debugNodeList.Count;
                 }
 
+                // render right corner debug information
                 if (RENDER_DEBUG_INFORMATION == true)
                 {
                     _renderer.RenderDebugString(nodeCount, _frameTimer.FPS, surface);

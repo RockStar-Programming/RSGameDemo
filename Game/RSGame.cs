@@ -51,7 +51,7 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Internal Data
 
-        RSNodeSprite _fox;
+        RSNodeSprite _cat;
 
         // ********************************************************************************************
         // Methods
@@ -83,13 +83,23 @@ namespace Rockstar._Game
 
             _scene.AddChild(node);
 
-            _fox = RSNodeSprite.CreateWithFileAndSize(new SKPoint(400, 300), new SKSize(256, 219) ,"Assets/blue_fox.png");
-            _scene.AddChild(_fox);
+            // _cat = RSNodeSprite.CreateWithFileAndSize(new SKPoint(400, 200), new SKSize(256, 219) ,"Assets/blue_cat_simple.png");
+            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(400, 200), "Assets/blue_cat.png");
+            // _cat.Transformation.Rotation = 45;
+            // _cat.Transformation.Scale = new SKPoint(1.5f, 1.0f);
+            _cat.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            _scene.AddChild(_cat);
 
             _scene.AddChild(RSNodeString.CreateString(new SKPoint(400, 180), "Click to Animate", RSFont.Create()));
 
+            RSNodeSolid dot = RSNodeSolid.CreateEllipse(new SKPoint(0, 0), new SKSize(10, 10), SKColors.Yellow);
+            _cat.AddChild(dot);
+
+
             _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnPressed, OnLeftMouseEvent);
             _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnReleased, OnLeftMouseEvent);
+
+            _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Right, _CoreMouseButton.RSMouseEvent.OnAll, OnRightMouseEvent);
 
         }
 
@@ -109,7 +119,14 @@ namespace Rockstar._Game
 
         public void OnLeftMouseEvent(object sender, RSEventArgs argument)
         {
-            _fox.SetCurrentFrame(_fox.CurrentFrame + 1);
+            // _cat.Transformation.Rotation += 1;
+            _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
+        }
+
+        public void OnRightMouseEvent(object sender, RSEventArgs argument)
+        {
+            _cat.Transformation.Rotation += 5;
+            // _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
         }
 
         // ********************************************************************************************

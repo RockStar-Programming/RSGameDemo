@@ -85,6 +85,8 @@ namespace Rockstar._Renderer
             // node list is not transformed and sorted, ready to render
             RenderNodeList(renderList, surface);
 
+            RenderNodeList(renderList, surface, true);
+
             return renderList.Count;
         }
 

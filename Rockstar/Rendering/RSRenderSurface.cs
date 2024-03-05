@@ -47,7 +47,7 @@ namespace Rockstar._RenderSurface
             _color = color;
             _origin = origin;
             _matrix = SKMatrix.Identity;
-            _antiAlias = true;
+            SetRenderQuality(SKFilterQuality.Low);
         }
 
         // ********************************************************************************************
@@ -61,6 +61,7 @@ namespace Rockstar._RenderSurface
         public RSTransformationOrigin Origin { get { return _origin; } }
         public SKMatrix Matrix { get { return _matrix; } }
         public bool AntiAlias { get { return _antiAlias; } }
+        public SKFilterQuality Quality { get { return _quality; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -71,6 +72,7 @@ namespace Rockstar._RenderSurface
         private RSTransformationOrigin _origin;
         private SKMatrix _matrix;
         private bool _antiAlias;
+        private SKFilterQuality _quality;
 
         // ********************************************************************************************
         // Methods
@@ -99,6 +101,7 @@ namespace Rockstar._RenderSurface
             SKPaint paint = new SKPaint
             {
                 Color = color,
+                FilterQuality = _quality,
                 IsAntialias = _antiAlias,
                 Style = SKPaintStyle.Stroke,
                 StrokeWidth = line
@@ -111,6 +114,7 @@ namespace Rockstar._RenderSurface
             SKPaint paint = new SKPaint
             {
                 Color = color,
+                FilterQuality = _quality,
                 IsAntialias = _antiAlias,
                 Style = SKPaintStyle.Fill
             };
@@ -122,6 +126,7 @@ namespace Rockstar._RenderSurface
             SKPaint paint = new SKPaint
             {
                 Color = color,
+                FilterQuality = _quality,
                 IsAntialias = _antiAlias,
                 Style = SKPaintStyle.Fill
             };
@@ -130,13 +135,35 @@ namespace Rockstar._RenderSurface
 
         public void DrawText(SKPoint position,  string text, SKPaint paint) 
         {
+            paint.FilterQuality = _quality;
+            paint.IsAntialias = _antiAlias;
             _canvas.DrawText(text, position.X, position.Y, paint);
         }
 
-        public void DrawBitmap(SKPoint position, SKSize size, RSSpriteFrame frame, SKBitmap bitmap)
+        public void DrawBitmap(SKPoint position, RSSpriteFrame frame, SKBitmap bitmap)
         {
-            SKRect destination = new SKRect(position.X, position.Y, position.X + size.Width, position.X + size.Height);
-            _canvas.DrawBitmap(bitmap, frame.Rect, destination);
+            SKPaint paint = new SKPaint
+            {
+                FilterQuality = _quality,
+                IsAntialias = _antiAlias
+            };
+
+            SKSize renderSize = new SKSize(frame.SheetRect.Right - frame.SheetRect.Left, frame.SheetRect.Bottom - frame.SheetRect.Top);
+            SKRect destination = new SKRect(position.X, position.Y, position.X + renderSize.Width, position.Y + renderSize.Height);
+
+            if (frame.Rotated != 0)
+            {
+                // this calculates the rotation point on the screen
+                SKPoint offset = new SKPoint(position.X + (frame.SheetRect.Width / 2), position.Y + (frame.SheetRect.Width / 2));
+
+                // translate, rotate and translate back
+                _canvas.Translate(offset.X, offset.Y);
+                _canvas.RotateDegrees(-frame.Rotated);
+                _canvas.Translate(-offset.X, -offset.Y);
+            }
+
+            _canvas.DrawBitmap(bitmap, frame.SheetRect, destination, paint);
+
         }
 
         // ********************************************************************************************
@@ -162,6 +189,12 @@ namespace Rockstar._RenderSurface
             };
 
             return paint;
+        }
+
+        public void SetRenderQuality(SKFilterQuality quality)
+        {
+            _antiAlias = (quality != SKFilterQuality.None);
+            _quality = quality;
         }
 
         public void Clear()

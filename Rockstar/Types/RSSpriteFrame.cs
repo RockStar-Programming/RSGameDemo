@@ -1,9 +1,7 @@
-﻿using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using SkiaSharp;
+
+using Rockstar._Dictionary;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -42,11 +40,44 @@ namespace Rockstar._Types
             return new RSSpriteFrame(position, size);
         }
 
+        public static RSSpriteFrame CreateFromTexturePacker(RSDictionary setup)
+        {
+            return new RSSpriteFrame(setup);
+        }
+
         private RSSpriteFrame(SKPoint position, SKSize size)
         {
-            X = position.X; Y = position.Y; 
-            Width = size.Width; Height = size.Height;
-            Rect = new SKRect(X, Y, X + Width, Y + Height);
+            Size = size;
+            SheetRect = new SKRect(position.X, position.Y, position.X + size.Width, position.Y + size.Height);
+            Offset = SKPoint.Empty;
+        }
+
+        private RSSpriteFrame(RSDictionary setup)
+        {
+            RSDictionary frame = setup.GetDictionary(TP_FRAME);
+            RSDictionary data;
+
+            Rotated = (setup.GetBool(TP_ROTATED, false) == true) ? 90 : 0;
+
+            data = setup.GetDictionary(TP_SOURCE_SIZE);
+            Size = new SKSize(data.GetFloat(TP_WIDTH, 0), data.GetFloat(TP_HEIGHT, 0));
+
+            SKSize frameSize = new SKSize(frame.GetFloat(TP_WIDTH, 0), frame.GetFloat(TP_HEIGHT, 0));
+            if (Rotated != 0)
+            {
+                (frameSize.Width, frameSize.Height) = (frameSize.Height, frameSize.Width);
+            }
+
+            SheetRect = new SKRect
+            {
+                Left = frame.GetFloat(TP_X, 0),
+                Top = frame.GetFloat(TP_Y, 0),
+                Right = frame.GetFloat(TP_X, 0) + frameSize.Width,
+                Bottom = frame.GetFloat(TP_Y, 0) + frameSize.Height
+            };
+
+            data = setup.GetDictionary(TP_SPRITE_SOURCE_SIZE);
+            Offset = new SKPoint(data.GetFloat(TP_X, 0), data.GetFloat(TP_Y, 0));
         }
 
         // ********************************************************************************************
@@ -54,15 +85,25 @@ namespace Rockstar._Types
 
         // ********************************************************************************************
         // Properties
-
-        public float X { get; }
-        public float Y { get; }
-        public float Width { get; }
-        public float Height { get; }
-        public SKRect Rect { get; }
+        public SKRect SheetRect { get; }
+        public SKSize Size { get; }
+        public float Rotated { get; }
+        public SKPoint Offset { get; }
 
         // ********************************************************************************************
         // Internal Data
+
+        // Texture Packer encoding keys
+        //
+        public const string TP_FRAMES = "frames";
+        public const string TP_FRAME = "frame";
+        public const string TP_X = "x";
+        public const string TP_Y = "y";
+        public const string TP_WIDTH = "w";
+        public const string TP_HEIGHT = "h";
+        public const string TP_ROTATED = "rotated";
+        public const string TP_SOURCE_SIZE = "sourcesize";
+        public const string TP_SPRITE_SOURCE_SIZE = "spritesourcesize";
 
         // ********************************************************************************************
         // Methods
@@ -72,6 +113,8 @@ namespace Rockstar._Types
 
         // ********************************************************************************************
         // Internal Methods
+
+
 
         // ********************************************************************************************
     }

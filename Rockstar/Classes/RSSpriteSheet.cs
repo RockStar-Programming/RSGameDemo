@@ -3,6 +3,9 @@ using SkiaSharp;
 
 using Rockstar._CoreFile;
 using Rockstar._Types;
+using Rockstar._Dictionary;
+using Rockstar._CodecJson;
+using Rockstar._Array;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,6 +28,12 @@ using Rockstar._Types;
 
 namespace Rockstar._SpriteSheet
 {
+    public enum RSSpriteSheetFormat
+    {
+        Unknown,
+        TexturePackerArray
+    }
+
     public class RSSpriteSheet
     {
         // ********************************************************************************************
@@ -36,6 +45,8 @@ namespace Rockstar._SpriteSheet
         // 1) just from a file => creates one frame
         // 2) From a file and a size => automatically creates available frames
         // 3) From a file and a json => creates the frames from the json
+        //    Currently supported
+        //    - TexturePacker Array format
 
         // ********************************************************************************************
         // Constructors
@@ -50,7 +61,7 @@ namespace Rockstar._SpriteSheet
             return new RSSpriteSheet(filePath, size);
         }
 
-        public static RSSpriteSheet CreateFromFileAndJson(string filePath, string jsonPath)
+        public static RSSpriteSheet CreateFromFileAndJson(string filePath, string? jsonPath = null)
         {
             return new RSSpriteSheet(filePath, jsonPath);
         }
@@ -92,9 +103,32 @@ namespace Rockstar._SpriteSheet
             }
         }
 
-        private RSSpriteSheet(string filePath, string jsonPath) : this(filePath)
+        private RSSpriteSheet(string filePath, string? jsonPath) : this(filePath)
         {
-            throw new NotImplementedException();
+            // if json path is null, get it from the file path
+            if (jsonPath == null) jsonPath = Path.ChangeExtension(filePath, "." + RSKeys.JSON);
+            RSDictionary setup = RSCodecJson.CreateDictionaryWithFilePath(jsonPath);
+
+            // Load available frames from a json
+            // Currently TexturePacker Array is supported
+            //
+            switch (GetSpriteSheetFormat(setup))
+            {
+                case RSSpriteSheetFormat.TexturePackerArray:
+                    UnpackTexturePackerArray(setup); 
+                    break;
+
+                default:
+                    break;
+            }
+
+            // if no frames has been added, create a single frame of the entire bitmap
+            if (_frameList.Count == 0)
+            {
+                SKSize size = new SKSize(_bitmap.Width, _bitmap.Height);
+                RSSpriteFrame frame = RSSpriteFrame.Create(SKPoint.Empty, size);
+                _frameList.Add(frame);
+            }
         }
 
         // ********************************************************************************************
@@ -125,6 +159,21 @@ namespace Rockstar._SpriteSheet
 
         // ********************************************************************************************
         // Internal Methods
+
+        private RSSpriteSheetFormat GetSpriteSheetFormat(RSDictionary setup)
+        {
+            return RSSpriteSheetFormat.TexturePackerArray;
+        }
+
+        private void UnpackTexturePackerArray(RSDictionary setup)
+        {
+            RSArray frameList = setup.GetArray(RSSpriteFrame.TP_FRAMES, new RSArray());
+            foreach (RSDictionary frameSetup in frameList)
+            {
+                RSSpriteFrame frame = RSSpriteFrame.CreateFromTexturePacker(frameSetup);
+                _frameList.Add(frame);
+            }
+        }
 
         // ********************************************************************************************
     }
