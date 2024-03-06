@@ -28,9 +28,9 @@ namespace Rockstar._Nodes
 {
     public enum RSNodeTouchMode
     {
-        None,           // touche disabled
-        Simple,         // simple boundary box detection
-        Accurate        // shape and pixel detection
+        None,                   // hittest disabled
+        Simple,                 // simple boundary box detection
+        Accurate,               // shape and pixel detection
     }
 
     public class RSNode
@@ -242,6 +242,7 @@ namespace Rockstar._Nodes
             RSNodeList result = RSNodeList.Create();
 
             if (PointInside(screenPosition) == true) result.Add(this);
+
             foreach (RSNode node in _children)
             {
                 result.AddRange(node.GetHitList(screenPosition));

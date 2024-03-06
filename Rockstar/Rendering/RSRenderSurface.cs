@@ -2,6 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._Types;
+using Rockstar._Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -37,16 +38,22 @@ namespace Rockstar._RenderSurface
 
         public static RSRenderSurface Create(SKCanvas canvas, SKColor color, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
         {
-            return new RSRenderSurface(canvas, color, origin);
+            return new RSRenderSurface(canvas, color, origin, false);
         }
 
-        private RSRenderSurface(SKCanvas canvas, SKColor color, RSTransformationOrigin origin)
+        public static RSRenderSurface CreateOffScreen(RSNodeSurface node, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
+        {
+            return new RSRenderSurface(node.Canvas, node.Color, origin, true);
+        }
+
+        private RSRenderSurface(SKCanvas canvas, SKColor color, RSTransformationOrigin origin, bool offScreen)
         {
             _canvas = canvas;
             _size = new SKSize(_canvas.DeviceClipBounds.Width, _canvas.DeviceClipBounds.Height);
             _color = color;
             _origin = origin;
             _matrix = SKMatrix.Identity;
+            _offScreen = offScreen;
             SetRenderQuality(SKFilterQuality.Low);
         }
 
@@ -62,6 +69,7 @@ namespace Rockstar._RenderSurface
         public SKMatrix Matrix { get { return _matrix; } }
         public bool AntiAlias { get { return _antiAlias; } }
         public SKFilterQuality Quality { get { return _quality; } }
+        public bool OffScreen { get { return _offScreen; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -73,6 +81,7 @@ namespace Rockstar._RenderSurface
         private SKMatrix _matrix;
         private bool _antiAlias;
         private SKFilterQuality _quality;
+        private bool _offScreen;
 
         // ********************************************************************************************
         // Methods

@@ -44,7 +44,7 @@ namespace Rockstar
                     while (stopwatch.ElapsedTicks < nextTick)
                     {
                         // Yield thread to prevent 100% CPU usage, but with minimum delay
-                        Thread.Sleep(0); 
+                        Thread.Sleep(0);
                     }
                     nextTick += ticksPerFrame;
 

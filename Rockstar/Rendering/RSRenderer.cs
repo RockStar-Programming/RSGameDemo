@@ -57,15 +57,23 @@ namespace Rockstar._Renderer
         // ********************************************************************************************
         // Properties
 
+        public int NodeCount { get { return _nodeCount; } }
+
         // ********************************************************************************************
         // Internal Data
 
         private const int RENDER_DEBUG_INSET = 5;
+        private int _nodeCount;
 
         // ********************************************************************************************
         // Methods
 
-        public int RenderNodeTree(RSNode node, RSRenderSurface surface)
+        public void RenderBegin()
+        {
+            _nodeCount = 0;
+        }
+
+        public void RenderNodeTree(RSRenderSurface surface, RSNode node)
         {
             RSNodeList renderList = RSNodeList.Create();
 
@@ -75,44 +83,46 @@ namespace Rockstar._Renderer
             {
                 matrix = SKMatrix.CreateTranslation(0, surface.Size.Height);
             }
-            // transform to base node anchor point
+            // apply anchor point
             SKPoint pos = new SKPoint(
-                node.Transformation.Size.Width * node.Transformation.Anchor.X, 
-                node.Transformation.Size.Height * node.Transformation.Anchor.Y);
+                node.Transformation.Size.Width * node.Transformation.Anchor.X,
+                -node.Transformation.Size.Height * node.Transformation.Anchor.Y);
             matrix = SKMatrix.Concat(matrix, SKMatrix.CreateTranslation(pos.X, pos.Y));
 
-            // set initial matrix
+            // set initial matrix and clear render surface
             surface.SetMatrix(matrix);
+            surface.Clear();
 
             // transform the node tree to render
-            TransformNodeTree(node, surface, renderList);
+            BuildRenderList(surface, node, renderList);
 
             // sort the render list for Z
             renderList.Sort();
 
-            // node list is not transformed and sorted, ready to render
-            RenderNodeList(renderList, surface);
-
-            return renderList.Count;
+            // node list is now transformed and sorted, ready to render
+            RenderNodeList(surface, renderList);
+            _nodeCount += renderList.Count;
         }
 
-        public void RenderNodeList(RSNodeList renderList, RSRenderSurface surface, bool debugMode = false)
+        public void RenderNodeList(RSRenderSurface surface, RSNodeList renderList)
         {
             foreach (RSNode renderNode in renderList)
             {
                 surface.SetCanvasMatrix(renderNode.RenderMatrix);
-                if (debugMode == false)
-                {
-                    renderNode.Render(surface);
-                }
-                else 
-                {
-                    renderNode.RenderDebug(surface);
-                }
+                renderNode.Render(surface);
             }
         }
 
-        public void RenderDebugString(int nodeCount, double fps, RSRenderSurface surface)
+        public void RenderDebugNodeList(RSRenderSurface surface, RSNodeList renderList)
+        {
+            foreach (RSNode renderNode in renderList)
+            {
+                surface.SetCanvasMatrix(renderNode.RenderMatrix);
+                renderNode.RenderDebug(surface);
+            }
+        }
+
+        public void RenderDebugString(RSRenderSurface surface, int nodeCount, double fps)
         {
             SKMatrix matrix = surface.Canvas.TotalMatrix;
             surface.SetCanvasMatrix(SKMatrix.Identity);
@@ -144,28 +154,59 @@ namespace Rockstar._Renderer
         // ********************************************************************************************
         // Internal Methods
 
-        private void TransformNodeTree(RSNode node, RSRenderSurface surface, RSNodeList renderList)
+        // Builds a render list from a node tree
+        // Called recursively for off screen rendering
+        // Nodes are transformed into final position, but actual rendering is not done yet
+        // The surface maxtrix is used for accumulative transformations
+        // 
+        private void BuildRenderList(RSRenderSurface surface, RSNode node, RSNodeList renderList)
         {
-            // transform the node
-            node.ApplySurfaceMatrix(surface);
+            bool ChildrenRendered = false;
 
-            // add node to render list if visible
-            if (node.Transformation.Visible == true)
+            // If node is a surface, and canvas is different from the node surface canvas,
+            //   children should be rendered off screen
+            //
+            if ((node is RSNodeSurface nodeSurface) && (surface.Canvas != nodeSurface.Canvas))
             {
-                renderList.Add(node);
+                // Create off screen surface, and render the tree
+                RSRenderSurface renderSurface = RSRenderSurface.CreateOffScreen(nodeSurface);
+                RenderNodeTree(renderSurface, nodeSurface);
+
+                // children was just rendered, so drop them here
+                ChildrenRendered = true;
             }
 
-            // recursively iterate all children
-            foreach (RSNode child in node.Children)
+            // Dont transform and add nodes that are off screen node surfaces
+            // This ensures that surfaces are only added to on-screen canvas
+            //
+            if ((surface.OffScreen == false) || (node is RSNodeSurface == false))
             {
-                // store surface matrix before child transformations are added
-                SKMatrix matrix = surface.Matrix;
+                // Transform the node no matter if it is visible or not
+                //   as children might depend on it
+                node.ApplySurfaceMatrix(surface);
 
-                // transform children
-                TransformNodeTree(child, surface, renderList);
+                // Add the node to the render list if visible
+                if (node.Transformation.Visible == true)
+                {
+                    renderList.Add(node);
+                }
+            }
 
-                // restore surface matrix
-                surface.SetMatrix(matrix);
+            // Render children if not already
+            if (ChildrenRendered == false)
+            {
+                // Recursively iterate all children
+                foreach (RSNode child in node.Children)
+                {
+                    // Store surface matrix before child transformations are added
+                    SKMatrix matrix = surface.Matrix;
+
+                    // Transform children
+                    BuildRenderList(surface, child, renderList);
+
+                    // Restore surface matrix
+                    surface.SetMatrix(matrix);
+                }
             }
         }
 

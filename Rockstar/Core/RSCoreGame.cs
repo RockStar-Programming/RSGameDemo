@@ -89,32 +89,29 @@ namespace Rockstar._CoreGame
         {
             RSRenderSurface surface = RSRenderSurface.Create(canvas, SKColors.Gray);
 
-            surface.Clear();
-
             if (_scene != null)
             {
                 // scenes forces anchor point and size
                 _scene.Transformation.Anchor = SKPoint.Empty;
                 _scene.Transformation.Size = surface.Size;
+
+                _renderer.RenderBegin();
                 
                 // render the entire node tree
-                int nodeCount = _renderer.RenderNodeTree(_scene, surface);
+                _renderer.RenderNodeTree(surface, _scene);
 
                 // render any nodes added to debug list
                 if (_debugNodeList != null)
                 {
-                    _renderer.RenderNodeList(_debugNodeList, surface, true);
-                    nodeCount += _debugNodeList.Count;
+                    _renderer.RenderDebugNodeList(surface, _debugNodeList);
                 }
 
                 // render right corner debug information
                 if (RENDER_DEBUG_INFORMATION == true)
                 {
-                    _renderer.RenderDebugString(nodeCount, _frameTimer.FPS, surface);
+                    _renderer.RenderDebugString(surface, _renderer.NodeCount, _frameTimer.FPS);
                 }
-
             }
-
         }
 
         // ********************************************************************************************

@@ -82,7 +82,7 @@ namespace Rockstar._Nodes
 
         public SKBitmap Bitmap { get { return _bitmap; } }
         public SKCanvas Canvas { get { return _canvas; } }
-        public SKColor Color { get { return _color; } }
+        public SKColor Color { get { return _color; } set { _color = value; } }
         public RSNodeSurfaceRenderMode RenderMode { get { return _renderMode; } }
 
         // ********************************************************************************************
@@ -102,14 +102,11 @@ namespace Rockstar._Nodes
             if (_touchMode != RSNodeTouchMode.Accurate) return base.PointInside(screenPosition);
 
             // TODO: check alpha in image
-            return false;
+            return PointInsizeRectangle(screenPosition);
         }
 
         public override void Render(RSRenderSurface surface)
         {
-            _canvas.Clear(_color);
-            _canvas.DrawCircle(SKPoint.Empty, 20, new SKPaint { Color = SKColors.Green });
-
             SKPoint upperLeft = new SKPoint(
                  (-_transformation.Size.Width * _transformation.Anchor.X),
                  (-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y)));
