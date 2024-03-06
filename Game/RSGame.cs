@@ -4,9 +4,9 @@ using Rockstar._Types;
 using Rockstar._CodecJson;
 using Rockstar._CoreGame;
 using Rockstar._Dictionary;
-using Rockstar._NodeList;
 using Rockstar._Event;
-using System.Diagnostics;
+using Rockstar._Nodes;
+using Rockstar._CoreMouseButton;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -95,6 +95,9 @@ namespace Rockstar._Game
             RSNodeSolid dot = RSNodeSolid.CreateEllipse(new SKPoint(0, 0), new SKSize(10, 10), SKColors.Yellow);
             _cat.AddChild(dot);
 
+            RSNodeSurface surface = RSNodeSurface.CreateWithSize(new SKPoint(300, 50), new SKSize(50, 50));
+            surface.Transformation.Rotation = 30;
+            _scene.AddChild(surface);
 
             _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnPressed, OnLeftMouseEvent);
             _mouse.AddHandler(_CoreMouseButton.RSMouseButton.Left, _CoreMouseButton.RSMouseEvent.OnReleased, OnLeftMouseEvent);
@@ -125,8 +128,17 @@ namespace Rockstar._Game
 
         public void OnRightMouseEvent(object sender, RSEventArgs argument)
         {
-            _cat.Transformation.Rotation += 5;
-            // _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
+            if (argument.Data is SKPoint position)
+            {
+                if (argument.Type is RSMouseEvent.OnReleased)
+                {
+                    _debugNodeList.Clear();
+                }
+                else
+                {
+                    _debugNodeList = _scene.GetHitList(position);
+                }
+            }
         }
 
         // ********************************************************************************************

@@ -31,6 +31,7 @@ namespace Rockstar._Types
         //
         // See _readme.txt
         //
+        // sprite frames currently only supports TexturePacker style  rotated sprites
 
         // ********************************************************************************************
         // Constructors
@@ -45,6 +46,8 @@ namespace Rockstar._Types
             return new RSSpriteFrame(setup);
         }
 
+        // ********************************************************************************************
+
         private RSSpriteFrame(SKPoint position, SKSize size)
         {
             Size = size;
@@ -57,13 +60,13 @@ namespace Rockstar._Types
             RSDictionary frame = setup.GetDictionary(TP_FRAME);
             RSDictionary data;
 
-            Rotated = (setup.GetBool(TP_ROTATED, false) == true) ? 90 : 0;
+            Rotation = (setup.GetBool(TP_ROTATED, false) == true) ? 90 : 0;
 
             data = setup.GetDictionary(TP_SOURCE_SIZE);
             Size = new SKSize(data.GetFloat(TP_WIDTH, 0), data.GetFloat(TP_HEIGHT, 0));
 
             SKSize frameSize = new SKSize(frame.GetFloat(TP_WIDTH, 0), frame.GetFloat(TP_HEIGHT, 0));
-            if (Rotated != 0)
+            if (Rotation != 0)
             {
                 (frameSize.Width, frameSize.Height) = (frameSize.Height, frameSize.Width);
             }
@@ -87,7 +90,7 @@ namespace Rockstar._Types
         // Properties
         public SKRect SheetRect { get; }
         public SKSize Size { get; }
-        public float Rotated { get; }
+        public float Rotation { get; }
         public SKPoint Offset { get; }
 
         // ********************************************************************************************

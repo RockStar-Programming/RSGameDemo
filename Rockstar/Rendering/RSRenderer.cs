@@ -4,6 +4,7 @@ using SkiaSharp;
 using Rockstar._NodeList;
 using Rockstar._Types;
 using Rockstar._RenderSurface;
+using Rockstar._Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -74,6 +75,13 @@ namespace Rockstar._Renderer
             {
                 matrix = SKMatrix.CreateTranslation(0, surface.Size.Height);
             }
+            // transform to base node anchor point
+            SKPoint pos = new SKPoint(
+                node.Transformation.Size.Width * node.Transformation.Anchor.X, 
+                node.Transformation.Size.Height * node.Transformation.Anchor.Y);
+            matrix = SKMatrix.Concat(matrix, SKMatrix.CreateTranslation(pos.X, pos.Y));
+
+            // set initial matrix
             surface.SetMatrix(matrix);
 
             // transform the node tree to render
@@ -84,8 +92,6 @@ namespace Rockstar._Renderer
 
             // node list is not transformed and sorted, ready to render
             RenderNodeList(renderList, surface);
-
-            RenderNodeList(renderList, surface, true);
 
             return renderList.Count;
         }

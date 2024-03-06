@@ -1,12 +1,9 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._CoreFile;
 using Rockstar._RenderSurface;
-using System.Security.Policy;
 using Rockstar._SpriteSheet;
 using Rockstar._Types;
-using System.Drawing;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -27,13 +24,16 @@ using System.Drawing;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._NodeList
+namespace Rockstar._Nodes
 {
     public class RSNodeSprite : RSNode
     {
         // ********************************************************************************************
         // Implements bitmap based nodes
         // 
+        // IMPORTANT:
+        // For animations, sprite frames should always have the same size
+        // if not, anything but anchor(0.5, 0.5) might result in jumpy animations
 
         // ********************************************************************************************
         // Constructors
@@ -53,6 +53,8 @@ namespace Rockstar._NodeList
             return new RSNodeSprite(position, filePath, jsonPath);
         }
 
+        // ********************************************************************************************
+
         private RSNodeSprite(SKPoint position, string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFile(filePath);
@@ -70,11 +72,9 @@ namespace Rockstar._NodeList
         private RSNodeSprite(SKPoint position, string filePath, string? jsonPath)
         { 
             _sheet = RSSpriteSheet.CreateFromFileAndJson(filePath, jsonPath);
-            // The size of the 
             InitWithData(position, _sheet.Frame(0).Size);
             _currentFrame = 0;
         }
-
 
         // ********************************************************************************************
         // Class Properties
@@ -88,6 +88,8 @@ namespace Rockstar._NodeList
         // ********************************************************************************************
         // Internal Data
 
+        private byte ALPHA_THRESHOLD = 5;
+
         private RSSpriteSheet _sheet;
         private int _currentFrame;
 
@@ -96,7 +98,35 @@ namespace Rockstar._NodeList
 
         public override bool PointInside(SKPoint screenPosition)
         {
-            return PointInsizeRectangle(screenPosition);
+            if (_touchMode != RSNodeTouchMode.Accurate) return base.PointInside(screenPosition);
+
+            // check if inside rectangle
+            if (PointInsizeRectangle(screenPosition) == false) return false;
+
+            RSSpriteFrame frame = _sheet.Frame(_currentFrame);
+
+            // calculate texture coordinate
+            SKPoint point = LocalPosition(screenPosition);
+            SKPoint textureCoordinate = new SKPoint(point.X + (frame.Size.Width / 2.0f), -point.Y + (frame.Size.Height / 2.0f));
+            textureCoordinate = textureCoordinate - frame.Offset;
+
+            if (frame.Rotation != 0)
+            {
+                SKPoint rotationCenter = new SKPoint(frame.SheetRect.Width / 2.0f, frame.SheetRect.Width / 2.0f);
+
+                textureCoordinate = textureCoordinate - rotationCenter;
+                textureCoordinate = textureCoordinate.Rotate(-frame.Rotation);
+                textureCoordinate = textureCoordinate + rotationCenter;
+            }
+
+            textureCoordinate = textureCoordinate + new SKPoint(frame.SheetRect.Left, frame.SheetRect.Top);
+            if ((int)textureCoordinate.X < 0) return false;
+            if ((int)textureCoordinate.X >= _sheet.Bitmap.Width) return false;
+            if ((int)textureCoordinate.Y < 0) return false;
+            if ((int)textureCoordinate.Y >= _sheet.Bitmap.Height) return false;
+
+            SKColor color = _sheet.Bitmap.GetPixel((int)textureCoordinate.X, (int)textureCoordinate.Y);
+            return (color.Alpha > ALPHA_THRESHOLD);
         }
 
         public override void Render(RSRenderSurface surface)
@@ -113,6 +143,8 @@ namespace Rockstar._NodeList
         public void SetCurrentFrame(int index)
         {
             _currentFrame = index % _sheet.FrameCount;
+            // set content size to the currently selected frame
+            _transformation.Size = _sheet.Frame(_currentFrame).Size;
         }
 
         // ********************************************************************************************

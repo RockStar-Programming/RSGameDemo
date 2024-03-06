@@ -1,4 +1,6 @@
 ﻿
+using SkiaSharp;
+
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -18,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._NodeList
+namespace Rockstar._Nodes
 {
     public class RSNodeScene : RSNode
     {
@@ -32,6 +34,13 @@ namespace Rockstar._NodeList
         public static RSNodeScene CreateScene()
         {
             return new RSNodeScene();
+        }
+
+        // ********************************************************************************************
+
+        public override bool PointInside(SKPoint screenPositionn)
+        {
+            return false;
         }
 
         private RSNodeScene()

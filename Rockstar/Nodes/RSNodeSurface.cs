@@ -25,29 +25,53 @@ using Rockstar._Types;
 
 namespace Rockstar._Nodes
 {
-    internal class RSNodeString : RSNode
+    public enum RSNodeSurfaceRenderMode
+    {
+        Automatic,
+        Manual
+    }
+
+    public class RSNodeSurface : RSNode
     {
         // ********************************************************************************************
-        // Implementation of node based string
-        //
-        // IMPORTANT:
-        // The Transformation.Size of the node is ALWAYS set to the actual render size, when the node is rendered 
+        // A node surface encapsulates off-screen rendering, but works 100% like any other node
+        // With a few limitations
+        // - Performance will be lower, due to the the off-screen render stage
+        // - Children can (unlike any other parent node) NOT extend beyond the basic size of the node.
+        //     If they do, they will be clipped
+        // - Rendering can be controlled. It can either be:
+        //     Automatic, ie done for each frame (default)
+        //     Manual, ie only done on demand
+        // 
+        // A node surface with no children added, and a visible color, will look just like a rectangle
+        // Placement of children works identical to any other node, except for the clipping
+        // Node surfaces can contain other node surfaces
+        // 
+        // Node surfaces are used to achieve special effects when rendering. This could be:
+        // - Uniform alpha blending on complex geometry (like ex. an animates character)
+        // - Multi pass rendering
+        // - Accumulative rendering
+        // - Many more
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeString CreateString(SKPoint position, string text, RSFont font)
-        {
-            return new RSNodeString(position, text, font);
+        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size)
+        { 
+            return new RSNodeSurface(position, size);
         }
 
         // ********************************************************************************************
 
-        protected RSNodeString(SKPoint position, string text, RSFont font)
+        private RSNodeSurface(SKPoint position, SKSize size)
         {
-            _text = text;
-            _font = font;
-            InitWithData(position);
+            InitWithData(position, size);
+            // create render canvas
+            _bitmap = new SKBitmap((int)size.Width, (int)size.Height);
+            _canvas = new SKCanvas(_bitmap);
+            _color = SKColors.Transparent;
+            _frame = RSSpriteFrame.Create(SKPoint.Empty, size);
+            _renderMode = RSNodeSurfaceRenderMode.Automatic;
         }
 
         // ********************************************************************************************
@@ -56,39 +80,41 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Properties
 
-        public string Text { get { return _text; } }
-        public RSFont Font { get { return _font; } }
+        public SKBitmap Bitmap { get { return _bitmap; } }
+        public SKCanvas Canvas { get { return _canvas; } }
+        public SKColor Color { get { return _color; } }
+        public RSNodeSurfaceRenderMode RenderMode { get { return _renderMode; } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private string _text;
-        private RSFont _font;
+        private SKBitmap _bitmap;
+        private SKCanvas _canvas;
+        private SKColor _color;
+        private RSSpriteFrame _frame;
+        private RSNodeSurfaceRenderMode _renderMode;
 
         // ********************************************************************************************
         // Methods
 
         public override bool PointInside(SKPoint screenPosition)
         {
-            return base.PointInsizeRectangle(screenPosition);
+            if (_touchMode != RSNodeTouchMode.Accurate) return base.PointInside(screenPosition);
+
+            // TODO: check alpha in image
+            return false;
         }
 
         public override void Render(RSRenderSurface surface)
         {
-            SKPaint paint = surface.GetTextPaint(_font, _transformation.Color); 
+            _canvas.Clear(_color);
+            _canvas.DrawCircle(SKPoint.Empty, 20, new SKPaint { Color = SKColors.Green });
 
-            // NOTE: Transformation.Size must be set prior to doing any calculations
-            // Get the size of the text
-            float width = paint.MeasureText(_text);
-            SKFontMetrics metrics = paint.FontMetrics;
-            float height = metrics.Descent - metrics.Ascent;
-            _transformation.Size = new SKSize(width, height);
+            SKPoint upperLeft = new SKPoint(
+                 (-_transformation.Size.Width * _transformation.Anchor.X),
+                 (-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y)));
 
-            float offset = metrics.XHeight / 2;
-            SKPoint center = new SKPoint(
-                -_transformation.Size.Width * _transformation.Anchor.X, 
-                (_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
-            surface.DrawText(center, _text, paint);
+            surface.DrawBitmap(upperLeft, _frame, _bitmap);
         }
 
         // ********************************************************************************************

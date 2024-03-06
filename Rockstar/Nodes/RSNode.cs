@@ -3,6 +3,7 @@ using SkiaSharp;
 
 using Rockstar._RenderSurface;
 using Rockstar._Types;
+using Rockstar._NodeList;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,8 +24,15 @@ using Rockstar._Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._NodeList
+namespace Rockstar._Nodes
 {
+    public enum RSNodeTouchMode
+    {
+        None,           // touche disabled
+        Simple,         // simple boundary box detection
+        Accurate        // shape and pixel detection
+    }
+
     public class RSNode
     {
         // ********************************************************************************************
@@ -60,6 +68,8 @@ namespace Rockstar._NodeList
             return result;
         }
 
+        // ********************************************************************************************
+        
         protected RSNode()
         {
             _transformation = RSTransformation.CreateWithData();
@@ -71,6 +81,7 @@ namespace Rockstar._NodeList
 
             // data which always is reset
             _children = new List<RSNode>();
+            _touchMode = RSNodeTouchMode.Accurate;
         }
 
         protected void InitWithNode(RSNode node)
@@ -107,6 +118,7 @@ namespace Rockstar._NodeList
         public RSNode? Parent { get { return _parent; } }
         public List<RSNode> Children { get { return _children; } }
         public SKMatrix RenderMatrix { get { return _renderMatrix; } }
+        public RSNodeTouchMode TouchMode { get { return _touchMode; } set { SetTouchMode(value); } }
 
         // ********************************************************************************************
         // Internal Data
@@ -121,6 +133,7 @@ namespace Rockstar._NodeList
         protected RSNode? _parent;
         protected List<RSNode> _children;
         protected SKMatrix _renderMatrix;
+        protected RSNodeTouchMode _touchMode;
 
         private static long _nodeIndex = 0;
 
@@ -195,29 +208,32 @@ namespace Rockstar._NodeList
         // override this to perform point inside checks for specific nodes
         public virtual bool PointInside(SKPoint screenPosition)
         {
+            if (_touchMode == RSNodeTouchMode.Simple) return PointInsizeRectangle(screenPosition);
             return false;
         }
 
         public bool PointInsizeRectangle(SKPoint screenPosition)
         {
-            float width = (float)_transformation.Size.Width / 2.0f;
-            float height = (float)_transformation.Size.Height / 2.0f;
+            float halfWidth = (float)_transformation.Size.Width / 2.0f;
+            float halfHeight = (float)_transformation.Size.Height / 2.0f;
 
-            SKPoint position = LocalPosition(screenPosition);
+            SKPoint nodePosition = LocalPosition(screenPosition);
 
-            if ((position.X < -width) || (position.X > width)) return false;
-            if ((position.Y < -height) || (position.Y > height)) return false;
+            if ((nodePosition.X < -halfWidth) || (nodePosition.X > halfWidth)) return false;
+            if ((nodePosition.Y < -halfHeight) || (nodePosition.Y > halfHeight)) return false;
             return true;
         }
 
         public bool PointInsizeEllipse(SKPoint screenPosition)
         {
-            float width = (float)_transformation.Size.Width / 2.0f;
-            float height = (float)_transformation.Size.Width / 2.0f;
+            float halfWidth = (float)_transformation.Size.Width / 2.0f;
+            float halfHeight = (float)_transformation.Size.Width / 2.0f;
 
-            SKPoint position = LocalPosition(screenPosition);
+            SKPoint nodePosition = LocalPosition(screenPosition);
 
-            double value = (position.X * position.X) / (width * width) + (position.Y * position.Y) / (height * height);
+            double value = 
+                (nodePosition.X * nodePosition.X) / (halfWidth * halfWidth) + 
+                (nodePosition.Y * nodePosition.Y) / (halfHeight * halfHeight);
             return (value <= 1.0);
         }
 
@@ -255,6 +271,14 @@ namespace Rockstar._NodeList
         private void SetName(string name)
         {
             if (name != null) _name = name;
+        }
+
+        private void SetTouchMode(RSNodeTouchMode mode)
+        {
+            if (Enum.IsDefined(typeof(RSNodeTouchMode), mode))
+            {
+                _touchMode = mode;
+            }
         }
 
         // ********************************************************************************************

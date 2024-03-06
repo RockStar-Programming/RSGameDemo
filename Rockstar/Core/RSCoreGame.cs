@@ -6,6 +6,7 @@ using Rockstar._NodeList;
 using Rockstar._Renderer;
 using Rockstar._RenderSurface;
 using Rockstar._CoreMouse;
+using Rockstar._Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -92,6 +93,10 @@ namespace Rockstar._CoreGame
 
             if (_scene != null)
             {
+                // scenes forces anchor point and size
+                _scene.Transformation.Anchor = SKPoint.Empty;
+                _scene.Transformation.Size = surface.Size;
+                
                 // render the entire node tree
                 int nodeCount = _renderer.RenderNodeTree(_scene, surface);
 

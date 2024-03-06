@@ -22,7 +22,7 @@ using Rockstar._RenderSurface;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._NodeList
+namespace Rockstar._Nodes
 {
     public class RSNodeSolid : RSNode
     {
@@ -49,6 +49,8 @@ namespace Rockstar._NodeList
             result.Transformation.Color = color;
             return result;
         }
+
+        // ********************************************************************************************
 
         private RSNodeSolid(SolidType type)
         {
@@ -77,13 +79,15 @@ namespace Rockstar._NodeList
 
         public override bool PointInside(SKPoint screenPosition)
         {
+            if (_touchMode != RSNodeTouchMode.Accurate) return base.PointInside(screenPosition);
+
             switch (_type)
             {
                 case SolidType.Rectangle:
                     return PointInsizeRectangle(screenPosition);
                 case SolidType.Ellipse:
                     return PointInsizeEllipse(screenPosition);
-                default: 
+                default:
                     return false;
             }
         }
