@@ -37,6 +37,7 @@ namespace Rockstar._Renderer
         //    - Visible nodes are added to render list
         // 2) Render list is sorted according to Z (lower Z rendered first)
         // 3) Render list is rendered to canvas
+        // 4) RenderNodeTree is called resursively for off screen rendering 
 
         // ********************************************************************************************
         // Constructors
@@ -136,7 +137,7 @@ namespace Rockstar._Renderer
             SKFontMetrics metrics = paint.FontMetrics;
             float height = metrics.Descent - metrics.Ascent;
 
-            SKColor color = new SKColor(255, 255, 255, 64);
+            SKColor color = new SKColor(0, 0, 0, 64);
 
             SKPoint position = new SKPoint(surface.Size.Width - width - (2 * RENDER_DEBUG_INSET), surface.Size.Height - height);
             SKSize size = new SKSize(width + (2 * RENDER_DEBUG_INSET), height);

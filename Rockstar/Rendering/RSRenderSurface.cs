@@ -23,9 +23,9 @@ using Rockstar._Nodes;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._RenderSurface
+namespace Rockstar._RenderSurface 
 {
-    public class RSRenderSurface
+    public class RSRenderSurface : IDisposable
     {
         // ********************************************************************************************
         // Render surface encapsulates an SKCanvas for rendering 
@@ -55,6 +55,11 @@ namespace Rockstar._RenderSurface
             _matrix = SKMatrix.Identity;
             _offScreen = offScreen;
             SetRenderQuality(SKFilterQuality.Low);
+        }
+
+        public void Dispose()
+        {
+            _canvas.Dispose();
         }
 
         // ********************************************************************************************

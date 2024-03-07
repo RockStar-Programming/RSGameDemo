@@ -1,5 +1,8 @@
-﻿
-using Rockstar._Nodes;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -20,27 +23,16 @@ using Rockstar._Nodes;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._NodeList
+namespace Rockstar._Nodes
 {
-    public class RSNodeList : List<RSNode>
+    public class RSNodeClipping : RSNode
     {
         // ********************************************************************************************
-        // Encapsulates a Level and Transformation.Z sorted node list
-        // 
-        // Nodes will first be sorted according to Level, then each level according to Transformation.Z 
-        // 
+        // The clipping node implements a node, clipping all its children
+        //
 
         // ********************************************************************************************
         // Constructors
-
-        public static RSNodeList Create()
-        {
-            return new RSNodeList();
-        }
-
-        private RSNodeList()
-        { 
-        }
 
         // ********************************************************************************************
         // Class Properties
@@ -53,11 +45,6 @@ namespace Rockstar._NodeList
 
         // ********************************************************************************************
         // Methods
-
-        public new void Sort()
-        {
-            this.OrderBy(item => item.Level).ThenBy(item => item.Transformation.Z).ToList();
-        }
 
         // ********************************************************************************************
         // Event Handlers

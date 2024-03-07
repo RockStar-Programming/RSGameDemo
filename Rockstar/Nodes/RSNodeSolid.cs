@@ -47,6 +47,7 @@ namespace Rockstar._Nodes
             RSNodeSolid result = new RSNodeSolid(SolidType.Ellipse);
             result.InitWithData(position, size);
             result.Transformation.Color = color;
+            result._isRound = true;
             return result;
         }
 

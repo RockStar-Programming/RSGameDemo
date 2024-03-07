@@ -7,6 +7,7 @@ using Rockstar._Renderer;
 using Rockstar._RenderSurface;
 using Rockstar._CoreMouse;
 using Rockstar._Nodes;
+using Rockstar._Physics;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -45,6 +46,10 @@ namespace Rockstar._CoreGame
             _scene = RSNodeScene.CreateScene();
             _frameTimer = RSFrameTimer.Create();
             _debugNodeList = RSNodeList.Create();
+
+            // Adding a bit of X gravity, prevents perfect stacking of objects
+            //
+            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
         }
 
         // ********************************************************************************************
@@ -64,6 +69,7 @@ namespace Rockstar._CoreGame
         protected RSNodeScene _scene;
         protected RSFrameTimer _frameTimer;
         protected RSNodeList _debugNodeList;
+        protected RSPhysics _physics;
 
         // ********************************************************************************************
         // Methods to implement / override
@@ -79,6 +85,11 @@ namespace Rockstar._CoreGame
 
         public void UpdateNodes(long interval)
         { 
+            if (_physics != null)
+            {
+                _physics.Update(interval);
+            }
+
             if (_scene != null) 
             {
                 UpdateNodeTree(_scene, interval);
@@ -92,7 +103,8 @@ namespace Rockstar._CoreGame
             if (_scene != null)
             {
                 // scenes forces anchor point and size
-                _scene.Transformation.Anchor = SKPoint.Empty;
+                _scene.Transformation.Position = new SKPoint(-_scene.Transformation.Size.Width / 2.0f, -_scene.Transformation.Size.Height / 2.0f); ;
+                _scene.Transformation.Anchor = new SKPoint(0.5f, 0.5f); // SKPoint.Empty;
                 _scene.Transformation.Size = surface.Size;
 
                 _renderer.RenderBegin();

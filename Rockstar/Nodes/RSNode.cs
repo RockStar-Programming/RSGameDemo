@@ -33,7 +33,7 @@ namespace Rockstar._Nodes
         Accurate,               // shape and pixel detection
     }
 
-    public class RSNode
+    public class RSNode : IDisposable
     {
         // ********************************************************************************************
         // RSNode encapsulates an invisible node
@@ -43,6 +43,13 @@ namespace Rockstar._Nodes
         // - Handle child nodes
         //
         // The node is not responsible for rendering its children
+        //
+        // The Level property orders nodes in levels
+        // - Setting Level for a node, will also set all its children
+        // - Adding a node will set Level to parent level
+        // - Inserting a parent, will set parent Level to node Level
+        //     When inserting, any children will not be affected
+        // - Removing nodes does not affect levels
 
         // ********************************************************************************************
         // Constructors & cleanup
@@ -82,6 +89,8 @@ namespace Rockstar._Nodes
             // data which always is reset
             _children = new List<RSNode>();
             _touchMode = RSNodeTouchMode.Accurate;
+            _level = 0;
+            _isRound = false;
         }
 
         protected void InitWithNode(RSNode node)
@@ -104,7 +113,7 @@ namespace Rockstar._Nodes
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+
         }
 
         // ********************************************************************************************
@@ -114,7 +123,9 @@ namespace Rockstar._Nodes
         // Properties
 
         public string Name { get { return _name; } set { SetName(value); } }
+        public int Level { get { return _level; } }
         public RSTransformation Transformation { get { return _transformation; } }
+        public bool IsRound { get { return _isRound; } }
         public RSNode? Parent { get { return _parent; } }
         public List<RSNode> Children { get { return _children; } }
         public SKMatrix RenderMatrix { get { return _renderMatrix; } }
@@ -129,7 +140,9 @@ namespace Rockstar._Nodes
         protected const float DEBUG_LINEWIDTH = 2.0f;
 
         protected string _name;
+        protected int _level;
         protected RSTransformation _transformation;
+        protected bool _isRound;
         protected RSNode? _parent;
         protected List<RSNode> _children;
         protected SKMatrix _renderMatrix;
@@ -138,9 +151,52 @@ namespace Rockstar._Nodes
         private static long _nodeIndex = 0;
 
         // ********************************************************************************************
+        // Class Methods
+
+        public static void RemoveChildren(RSNode node)
+        {
+            RSNodeList nodeList = RSNode.ChildList(node);
+            foreach (RSNode child in nodeList)
+            {
+                if (child._parent != null)
+                {
+                    child._parent._children.Remove(child);
+                    child._parent = null;
+                }
+            }
+            node._children.Clear();
+        }
+
+        public static RSNodeList ChildList(RSNode node)
+        {
+            RSNodeList result = RSNodeList.Create();
+
+            foreach (RSNode child in node.Children)
+            {
+                result.AddRange(ChildList(child));
+            }
+
+            return result;
+        }
+
+        // Nodes can not be replaced if they have no parent, or if they have children
+        public static void ReplaceNode(RSNode nodeToReplace, params RSNode[] nodeList)
+        {
+            if ((nodeToReplace._parent != null) && (nodeToReplace._children.Count == 0))
+            {
+                foreach (RSNode node in nodeList)
+                {
+                    nodeToReplace._parent.AddChild(node);
+                }
+                nodeToReplace._parent._children.Remove(nodeToReplace);
+                nodeToReplace._parent = null;
+            }
+        }
+
+        // ********************************************************************************************
         // Methods
 
-        // transforms the node into the current render surface
+        // transforms the nodeToRemove into the current render surface
         //
         public void ApplySurfaceMatrix(RSRenderSurface surface)
         {
@@ -149,7 +205,7 @@ namespace Rockstar._Nodes
             _renderMatrix = surface.MultiplyMatrix(_transformation.Matrix);
         }
 
-        // Override Render to draw the visual content of a node
+        // Override Render to draw the visual content of a nodeToRemove
         //
         public virtual void Render(RSRenderSurface surface)
         {
@@ -157,7 +213,7 @@ namespace Rockstar._Nodes
 
         }
 
-        // RenderDebug draws a simple frame around the node
+        // RenderDebug draws a simple frame around the nodeToRemove
         //
         public void RenderDebug(RSRenderSurface surface)
         {
@@ -167,21 +223,21 @@ namespace Rockstar._Nodes
             surface.DrawBox(upperLeft, _transformation.Size, DEBUG_COLOR, DEBUG_LINEWIDTH);
         }
 
-        // Override Update to perform visual updates to a node
+        // Override Update to perform visual updates to a nodeToRemove
         // IMPORTANT:
         // This is not intended for any kind of game mechanics
-        // Should be used only to update visual apperance of a node descendant
+        // Should be used only to update visual apperance of a nodeToRemove descendant
         // Example could be for sprite animations, using a series of images
         //
         public virtual void Update(long interval)
         {
-            ;
+
         }
 
         // ********************************************************************************************
         // Node positioning
 
-        // convert a screen position to a node position
+        // convert a screen position to a nodeToRemove position
         public SKPoint LocalPosition(SKPoint screenPosition)
         {
             SKPoint result = new SKPoint();
@@ -243,9 +299,13 @@ namespace Rockstar._Nodes
 
             if (PointInside(screenPosition) == true) result.Add(this);
 
-            foreach (RSNode node in _children)
+            // dont hit test on nodes added to a surface
+            if (this is RSNodeSurface == false)
             {
-                result.AddRange(node.GetHitList(screenPosition));
+                foreach (RSNode node in _children)
+                {
+                    result.AddRange(node.GetHitList(screenPosition));
+                }
             }
 
             return result;
@@ -254,12 +314,25 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Handling Children
 
-        public void AddChild(RSNode node)
+        public void AddChild(RSNode nodeToAdd)
         {
-            if (node._parent == null)
+            if (nodeToAdd._parent == null)
             {
-                node._parent = this;
-                _children.Add(node);
+                nodeToAdd._parent = this;
+                nodeToAdd._level = _level;
+                _children.Add(nodeToAdd);
+            }
+        }
+
+        // ********************************************************************************************
+
+        public void SetLevel(int level)
+        {
+            _level = level;
+            RSNodeList nodeList = ChildList(this);
+            foreach (RSNode child in nodeList)
+            {
+                child._level = level;
             }
         }
 
