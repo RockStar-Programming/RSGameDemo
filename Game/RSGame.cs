@@ -28,6 +28,13 @@ using Rockstar._NodeList;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
+//
+// IMPORTANT
+//
+// This is where all my test code goes, so do not expect this to be super clean at all times
+//
+
+
 namespace Rockstar._Game
 {
     internal class RSGame : RSCoreGame
