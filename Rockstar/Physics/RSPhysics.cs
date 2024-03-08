@@ -90,8 +90,9 @@ namespace Rockstar._Physics
         private const float GROUND_THICKNESS = 50.0f;
         private const float DEFAULT_DENSITY = 1.0f;
         private const float DEFAULT_FRICTION = 0.1f;
-        private const float DEFAULT_RESTITUTION = 0.7f;
-        private const float INFINITE_ENERGY = float.MaxValue;
+        private const float DEFAULT_RESTITUTION = 0.1f;
+
+        private const float ENERGY_INFINITE = float.MaxValue;
 
         private const int VELOCITY_INTERACTIONS = 2;
         private const int POSITION_INTERACTIONS = 1;
@@ -192,14 +193,34 @@ namespace Rockstar._Physics
             }
         }
 
-        public RSPhysicsDef AddDynamicNode(RSNode node, float breakEnergy)
+        public void AddDynamicNode(RSNode node, float breakEnergy)
         {
-            return AddNode(node, BodyType.Dynamic, breakEnergy);
+            AddNode(node, BodyType.Dynamic, breakEnergy);
         }
 
-        public RSPhysicsDef AddStaticNode(RSNode node, float breakEnergy = INFINITE_ENERGY)
+        public void AddDynamicNode(RSNode node, float breakEnergy, float density)
         {
-            return AddNode(node, BodyType.Static, breakEnergy);
+            AddNode(node, BodyType.Dynamic, breakEnergy, density);
+        }
+
+        public void AddDynamicNode(RSNode node, params object[] data)
+        {
+            AddNode(node, BodyType.Dynamic, data);
+        }
+
+        public void AddStaticNode(RSNode node, float breakEnergy)
+        {
+            AddNode(node, BodyType.Static, breakEnergy);
+        }
+
+        public void AddStaticNode(RSNode node, float breakEnergy, float density)
+        {
+            AddNode(node, BodyType.Static, breakEnergy, density);
+        }
+
+        public void AddStaticNode(RSNode node, params object[] data)
+        {
+            AddNode(node, BodyType.Static, data);
         }
 
         public void RemoveNode(RSNode node)
@@ -229,10 +250,11 @@ namespace Rockstar._Physics
         // ********************************************************************************************
         // Internal Methods
 
-        private RSPhysicsDef AddNode(RSNode node, BodyType type, float breakEnergy)
+        private void AddNode(RSNode node, BodyType type, params object[] data)
         {
             lock (_lockObject)
             {
+
                 BodyDef bodyDef = new BodyDef();
                 bodyDef.type = type;
                 bodyDef.position = new Vector2(node.Transformation.Position.X / _scale, node.Transformation.Position.Y / _scale);
@@ -253,16 +275,17 @@ namespace Rockstar._Physics
                     polygon.SetAsBox(node.Transformation.Size.Width / (2.0f * _scale), node.Transformation.Size.Height / (2.0f * _scale));
                     fixture.shape = polygon;
                 }
-                fixture.density = DEFAULT_DENSITY;
-                fixture.friction = DEFAULT_FRICTION;
-                fixture.restitution = DEFAULT_RESTITUTION;
+
+                float breakEnergy = ((data.Length >= 1) && (data[0] is float value)) ? value : ENERGY_INFINITE;
+
+                fixture.density = ((data.Length >= 2) && (data[1] is float density)) ? density : DEFAULT_DENSITY; ;
+                fixture.friction = ((data.Length >= 3) && (data[2] is float friction)) ? friction : DEFAULT_FRICTION;
+                fixture.restitution = ((data.Length >= 4) && (data[3] is float restitution)) ? restitution : DEFAULT_RESTITUTION;
 
                 body.CreateFixture(fixture);
 
-                RSPhysicsDef physics = RSPhysicsDef.CreateWithNode(node, fixture, breakEnergy);
+                RSPhysicsDef physics = RSPhysicsDef.CreateWithNode(node, body, fixture, breakEnergy);
                 body.SetUserData(physics);
-
-                return physics;
             }
         }
 
@@ -315,8 +338,6 @@ namespace Rockstar._Physics
                 //
                 float energyA = Math.Abs(initialEnergy - energy) / 2.0f;
                 
-                Debug.WriteLine("Energy BodyA {0:0.0} / {1:0.00}", energyA, bodyA.GetMass());
-
                 // if energy is above breaking energy, the body is added to the kill list
                 RSPhysicsDef physicsA = bodyA.GetUserData<RSPhysicsDef>();
                 if (energyA > physicsA.BreakEnergy) _bodyKillList.Add(bodyA);
@@ -328,7 +349,6 @@ namespace Rockstar._Physics
             if (_contactList.TryGetValue(bodyB, out initialEnergy))
             {
                 float energyB = Math.Abs(initialEnergy - energy) / 2.0f;
-                Debug.WriteLine("Energy BodyB {0:0.0} / {1:0.00}", energyB, bodyB.GetMass());
                 RSPhysicsDef physicsB = bodyB.GetUserData<RSPhysicsDef>();
                 if (energyB > physicsB.BreakEnergy) _bodyKillList.Add(bodyB);
                 _contactList.Remove(bodyB);

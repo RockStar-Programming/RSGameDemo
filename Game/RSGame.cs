@@ -8,8 +8,6 @@ using Rockstar._Event;
 using Rockstar._Nodes;
 using Rockstar._CoreMouseButton;
 using Rockstar._NodeList;
-using System.Diagnostics;
-using Rockstar._PhysicsDef;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -73,8 +71,8 @@ namespace Rockstar._Game
 
             _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseEvent);
 
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnPressed, OnLeftMouseAddPhysics);
-            _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnPressed, OnRightMouseAddPhysics);
+            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, OnLeftMouseAddPhysics);
+            _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseAddPhysics);
         }
 
         public override void Resize(SKSize size)
@@ -134,8 +132,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(25, 25), SKColors.Cyan);
                 _scene.AddChild(solid);
-                RSPhysicsDef def = _physics.AddDynamicNode(solid, 1.0f);
-                def.Density = 1.0f;
+                _physics.AddDynamicNode(solid, 1.0f, 1.0f, 0.3f, 0.9f);
             }    
         }
 
@@ -147,8 +144,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(25, 25), SKColors.Magenta);
                 _scene.AddChild(solid);
-                RSPhysicsDef def = _physics.AddDynamicNode(solid, 5.0f);
-                def.Density = 500.0f;
+                _physics.AddDynamicNode(solid, 50.0f, 25.0f, 0.5f, 0.1f);
             }
         }
 

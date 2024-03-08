@@ -39,13 +39,14 @@ namespace Rockstar._CoreMouse
         // ********************************************************************************************
         // Constructors
 
-        public static RSCoreMouse Create()
+        public static RSCoreMouse Create(object gameLock)
         { 
-            return new RSCoreMouse();
+            return new RSCoreMouse(gameLock);
         }
 
-        private RSCoreMouse() : base()
+        private RSCoreMouse(object gameLock) : base()
         {
+            _gameLock = gameLock;
             _leftButton = RSCoreMouseButton.Create();
             _middleButton = RSCoreMouseButton.Create();
             _rightButton = RSCoreMouseButton.Create();
@@ -61,6 +62,7 @@ namespace Rockstar._CoreMouse
         // ********************************************************************************************
         // Internal Data
 
+        private object _gameLock;
         private RSCoreMouseButton _leftButton;
         private RSCoreMouseButton _middleButton;
         private RSCoreMouseButton _rightButton;
@@ -91,28 +93,37 @@ namespace Rockstar._CoreMouse
 
         private void OnLeftMouseButtonHandler(object sender, RSEventArgs argument)
         {
-            if (argument.Data is SKPoint position)
+            lock (_gameLock)
             {
-                bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
-                _leftButton.UpdateState(buttonPressed, position);
+                if (argument.Data is SKPoint position)
+                {
+                    bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
+                    _leftButton.UpdateState(buttonPressed, position);
+                }
             }
         }
 
         private void OnMiddleMouseButtonHandler(object sender, RSEventArgs argument)
         {
-            if (argument.Data is SKPoint position)
+            lock (_gameLock)
             {
-                bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
-                _middleButton.UpdateState(buttonPressed, position);
+                if (argument.Data is SKPoint position)
+                {
+                    bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
+                    _middleButton.UpdateState(buttonPressed, position);
+                }
             }
         }
 
         private void OnRightMouseButtonHandler(object sender, RSEventArgs argument)
         {
-            if (argument.Data is SKPoint position)
+            lock (_gameLock)
             {
-                bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
-                _rightButton.UpdateState(buttonPressed, position);
+                if (argument.Data is SKPoint position)
+                {
+                    bool buttonPressed = (argument.Type is RSMouseEvent.OnReleased) ? false : true;
+                    _rightButton.UpdateState(buttonPressed, position);
+                }
             }
         }
 

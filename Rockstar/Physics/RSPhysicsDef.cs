@@ -37,16 +37,17 @@ namespace Rockstar._PhysicsDef
         // ********************************************************************************************
         // Constructors
 
-        public static RSPhysicsDef CreateWithNode(RSNode node, FixtureDef fixture, float breakEnergy)
+        public static RSPhysicsDef CreateWithNode(RSNode node, Body body, FixtureDef fixture, float breakEnergy)
         {
-            return new RSPhysicsDef(node, fixture, breakEnergy);
+            return new RSPhysicsDef(node, body, fixture, breakEnergy);
         }
 
         // ********************************************************************************************
 
-        private RSPhysicsDef(RSNode node, FixtureDef fixture, float breakEnergy)
+        private RSPhysicsDef(RSNode node, Body body, FixtureDef fixture, float breakEnergy)
         {
             _node = node;
+            _body = body;
             _fixture = fixture;
             _breakEnergy = breakEnergy;
         }
@@ -58,16 +59,18 @@ namespace Rockstar._PhysicsDef
         // Properties
 
         public RSNode Node { get { return _node; } }
+        public Body Body { get { return _body; } }
         public FixtureDef Fixture { get { return _fixture; } }
         public float BreakEnergy { get { return _breakEnergy; } }
-        public float Density { get { return _fixture.density; } set { SetDensity(value); } }
-        public float Friction { get { return _fixture.friction; } set { SetFriction(value); } }
-        public float Restitution { get { return _fixture.restitution; } set { SetRestitution(value); } }
+        public float Density { get { return _fixture.density; } }
+        public float Friction { get { return _fixture.friction; } }
+        public float Restitution { get { return _fixture.restitution; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private RSNode _node;
+        private Body _body;
         private FixtureDef _fixture;
         private float _breakEnergy;
 
@@ -79,21 +82,6 @@ namespace Rockstar._PhysicsDef
 
         // ********************************************************************************************
         // Internal Methods
-
-        private void SetDensity(float density)
-        { 
-            _fixture.density = density;
-        }
-
-        private void SetFriction(float friction)
-        {
-            _fixture.friction = friction;
-        }
-
-        private void SetRestitution(float restitution)
-        {
-            _fixture.restitution = restitution;
-        }
 
         // ********************************************************************************************
     }
