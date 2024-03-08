@@ -57,6 +57,7 @@ namespace Rockstar._Game
 
         RSNodeSprite? _cat;
         RSNodeSurface? _surface;
+        RSNodeSurface? _motionCanvas;
         RSNodeString? _loadScene;
 
         // ********************************************************************************************
@@ -133,7 +134,7 @@ namespace Rockstar._Game
                 position = _scene.LocalPosition(position);
 
                 RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(18, 18), SKColors.Cyan);
-                _scene.AddChild(solid);
+                _motionCanvas.AddChild(solid);
                 _physics.AddDynamicNode(solid, 1.0f, 1.0f, 0.3f, 0.9f);
             }    
         }
@@ -160,55 +161,24 @@ namespace Rockstar._Game
             _scene.Transformation.Size = size;
             _physics.Reset(_scene);
 
-            // RSDictionary _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
-
-            //RSNodeSolid node = RSNodeSolid.CreateRectangle(new SKPoint(100, 50), new SKSize(100, 60), SKColors.Red);
-            //node.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
-            //// node.Transformation.Z = 10;
-            //// node.Transformation.Rotation = 15;
-
-            //RSNodeSolid leftEar = RSNodeSolid.CreateRectangle(new SKPoint(-50, 60), new SKSize(40, 40), SKColors.Green);
-            //// leftEar.Transformation.Z = 15;
-            //leftEar.Transformation.Rotation = -15;
-            //leftEar.Transformation.Scale = new SKPoint(1.5f, 1.5f);
-            //node.AddChild(leftEar);
-
-            //RSNodeSolid rightEar = RSNodeSolid.CreateRectangle(new SKPoint(50, 60), new SKSize(40, 40), SKColors.Green);
-            //// rightEar.Transformation.Anchor = new SKPoint();
-            //rightEar.Transformation.Rotation = 15;
-            //rightEar.Transformation.Scale = new SKPoint(0.5f, 0.5f);
-            //node.AddChild(rightEar);
-
-            //RSNodeString text = RSNodeString.CreateString(new SKPoint(0, 0), "Holy World", RSFont.Create());
-            //// text.Transformation.Z = 20;
-            //rightEar.AddChild(text);
-
-            //_scene.AddChild(node);
-
-
-            RSNodeString text = RSNodeString.CreateString(new SKPoint(500, 420), "Click to Animate", RSFont.Create());
-            _scene.AddChild(text);
+            // create an off screen render canvas to make motion streaks on
+            // because alpha in this case is everything, the surface is created without pre-multiplied alpha
+            // this allows for slightly better blending
             //
+            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size, false);
+            _motionCanvas.Transformation.Anchor = SKPoint.Empty;
+            _motionCanvas.Color = new SKColor(32, 32, 32, 32);
+            _scene.AddChild(_motionCanvas);
 
             _surface = RSNodeSurface.CreateWithSize(new SKPoint(200, 200), new SKSize(250, 250));
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
-            _surface.Transformation.Rotation = -30;
-            _surface.Color = new SKColor(128, 128, 128, 32);
+            _surface.Color = SKColors.AliceBlue;
             _scene.AddChild(_surface);
             _physics.AddStaticNode(_surface);
 
-            // _cat = RSNodeSprite.CreateWithFileAndSize(new SKPoint(400, 200), new SKSize(256, 219) ,"Assets/blue_cat_simple.png");
             _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -100), "Assets/blue_cat.png");
-            // _cat.Transformation.Rotation = 45;
-            // _cat.Transformation.Scale = new SKPoint(1.5f, 1.0f);
             _cat.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.AddChild(_cat);
-
-            //_cat.AddChild(RSNodeSolid.CreateEllipse(new SKPoint(0, 0), new SKSize(10, 10), SKColors.Yellow));
-
-            ////_ellipse = RSNodeSolid.CreateEllipse(SKPoint.Empty, new SKSize(50, 100), SKColors.Yellow);
-            ////_surface.AddChild(_ellipse);
-            ///
 
             _loadScene = RSNodeString.CreateString(new SKPoint(50, 50), "Reload Scene", RSFont.Create());
             _scene.AddChild(_loadScene);

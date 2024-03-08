@@ -56,18 +56,34 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size)
+        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size, bool preMultiplyAlpha = true)
         { 
-            return new RSNodeSurface(position, size);
+            return new RSNodeSurface(position, size, preMultiplyAlpha);
         }
 
         // ********************************************************************************************
 
-        private RSNodeSurface(SKPoint position, SKSize size)
+        private RSNodeSurface(SKPoint position, SKSize size, bool preMultiplyAlpha)
         {
             InitWithData(position, size);
-            // create render canvas
-            _bitmap = new SKBitmap((int)size.Width, (int)size.Height);
+
+            if (preMultiplyAlpha == true)
+            {
+                _bitmap = new SKBitmap((int)size.Width, (int)size.Height);
+            }
+            else
+            {
+                // create bitmap without pre-multiplied alpha
+                // this makes blended operations look better, at a slight cost of speed
+                //
+                SKImageInfo imageInfo = new SKImageInfo((int)size.Width, (int)size.Height)
+                {
+                    ColorType = SKColorType.Rgba8888,
+                    AlphaType = SKAlphaType.Unpremul // Specify non-premultiplied alpha
+                };
+                _bitmap = new SKBitmap(imageInfo);
+            }
+
             _canvas = new SKCanvas(_bitmap);
             _color = SKColors.Transparent;
             _frame = RSSpriteFrame.Create(SKPoint.Empty, size);
