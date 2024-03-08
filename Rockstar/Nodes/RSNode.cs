@@ -324,6 +324,12 @@ namespace Rockstar._Nodes
             }
         }
 
+        public void RemoveChild(RSNode nodeToRemove) 
+        {
+            _children.Remove(nodeToRemove);
+            nodeToRemove._parent = null;
+        }
+
         // ********************************************************************************************
 
         public void SetLevel(int level)

@@ -9,6 +9,7 @@ using Rockstar._Nodes;
 using Rockstar._CoreMouseButton;
 using Rockstar._NodeList;
 using System.Diagnostics;
+using Rockstar._PhysicsDef;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -133,7 +134,8 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(25, 25), SKColors.Cyan);
                 _scene.AddChild(solid);
-                _physics.AddDynamicNode(solid);
+                RSPhysicsDef def = _physics.AddDynamicNode(solid, 1.0f);
+                def.Density = 1.0f;
             }    
         }
 
@@ -145,7 +147,8 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(25, 25), SKColors.Magenta);
                 _scene.AddChild(solid);
-                _physics.AddDynamicNode(solid);
+                RSPhysicsDef def = _physics.AddDynamicNode(solid, 5.0f);
+                def.Density = 500.0f;
             }
         }
 

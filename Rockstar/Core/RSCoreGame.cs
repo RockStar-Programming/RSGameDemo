@@ -87,7 +87,7 @@ namespace Rockstar._CoreGame
         { 
             if (_physics != null)
             {
-                _physics.Update(interval);
+                _physics.Update(_scene, interval);
             }
 
             if (_scene != null) 
