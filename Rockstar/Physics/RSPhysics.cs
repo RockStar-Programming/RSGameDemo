@@ -94,8 +94,8 @@ namespace Rockstar._Physics
 
         private const float ENERGY_INFINITE = float.MaxValue;
 
-        private const int VELOCITY_INTERACTIONS = 2;
-        private const int POSITION_INTERACTIONS = 1;
+        private const int VELOCITY_INTERACTIONS = 4;
+        private const int POSITION_INTERACTIONS = 2;
 
         private World _world;
         private float _scale;
@@ -118,7 +118,10 @@ namespace Rockstar._Physics
                 foreach (Body bodyToKill in _bodyKillList)
                 {
                     RSPhysicsDef physics = bodyToKill.GetUserData<RSPhysicsDef>();
-                    scene.RemoveChild(physics.Node);
+                    if (physics.Node.Parent != null)
+                    {
+                        physics.Node.Parent.RemoveChild(physics.Node);
+                    }
                     _world.DestroyBody(bodyToKill);
                 }
             }

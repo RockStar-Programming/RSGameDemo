@@ -52,12 +52,12 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Internal Data
 
+
+        float _catTimer = 0;
+
         RSNodeSprite? _cat;
-        
-        RSNodeSolid _ellipse;
-        RSNodeSolid _square;
-        RSNodeSurface _surface;
-        RSNodeString _loadScene;
+        RSNodeSurface? _surface;
+        RSNodeString? _loadScene;
 
         // ********************************************************************************************
         // Methods
@@ -82,9 +82,12 @@ namespace Rockstar._Game
 
         public override void Update(long interval)
         {
-            // _ellipse.Transformation.Rotation += 0.1f;
-
-
+            _catTimer += interval;
+            if (_catTimer > 100)
+            {
+                _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
+                _catTimer -= 100;
+            }
         }
 
         // ********************************************************************************************
@@ -92,7 +95,6 @@ namespace Rockstar._Game
 
         public void OnLeftMouseEvent(object sender, RSEventArgs argument)
         {
-            _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
 
             if (argument.Data is SKPoint position)
             {
@@ -130,7 +132,7 @@ namespace Rockstar._Game
             {
                 position = _scene.LocalPosition(position);
 
-                RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(25, 25), SKColors.Cyan);
+                RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(18, 18), SKColors.Cyan);
                 _scene.AddChild(solid);
                 _physics.AddDynamicNode(solid, 1.0f, 1.0f, 0.3f, 0.9f);
             }    
@@ -142,7 +144,7 @@ namespace Rockstar._Game
             {
                 position = _scene.LocalPosition(position);
 
-                RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(25, 25), SKColors.Magenta);
+                RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(18, 18), SKColors.Magenta);
                 _scene.AddChild(solid);
                 _physics.AddDynamicNode(solid, 50.0f, 25.0f, 0.5f, 0.1f);
             }
@@ -183,14 +185,6 @@ namespace Rockstar._Game
 
             //_scene.AddChild(node);
 
-            // _cat = RSNodeSprite.CreateWithFileAndSize(new SKPoint(400, 200), new SKSize(256, 219) ,"Assets/blue_cat_simple.png");
-            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(500, 200), "Assets/blue_cat.png");
-            // _cat.Transformation.Rotation = 45;
-            // _cat.Transformation.Scale = new SKPoint(1.5f, 1.0f);
-            _cat.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
-            _scene.AddChild(_cat);
-
-            _cat.AddChild(RSNodeSolid.CreateEllipse(new SKPoint(0, 0), new SKSize(10, 10), SKColors.Yellow));
 
             RSNodeString text = RSNodeString.CreateString(new SKPoint(500, 420), "Click to Animate", RSFont.Create());
             _scene.AddChild(text);
@@ -199,20 +193,24 @@ namespace Rockstar._Game
             _surface = RSNodeSurface.CreateWithSize(new SKPoint(200, 200), new SKSize(250, 250));
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.Transformation.Rotation = -30;
-            _surface.Color = new SKColor(255, 0, 0, 32);
+            _surface.Color = new SKColor(128, 128, 128, 32);
             _scene.AddChild(_surface);
             _physics.AddStaticNode(_surface);
 
+            // _cat = RSNodeSprite.CreateWithFileAndSize(new SKPoint(400, 200), new SKSize(256, 219) ,"Assets/blue_cat_simple.png");
+            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -100), "Assets/blue_cat.png");
+            // _cat.Transformation.Rotation = 45;
+            // _cat.Transformation.Scale = new SKPoint(1.5f, 1.0f);
+            _cat.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            _surface.AddChild(_cat);
 
-            _square = RSNodeSolid.CreateRectangle(new SKPoint(0, 50), new SKSize(100, 100), SKColors.Aqua);
-            _square.Transformation.Rotation = 30;
-            _surface.AddChild(_square);
+            //_cat.AddChild(RSNodeSolid.CreateEllipse(new SKPoint(0, 0), new SKSize(10, 10), SKColors.Yellow));
 
             ////_ellipse = RSNodeSolid.CreateEllipse(SKPoint.Empty, new SKSize(50, 100), SKColors.Yellow);
             ////_surface.AddChild(_ellipse);
             ///
 
-            _loadScene = RSNodeString.CreateString(new SKPoint(50, 50), "Load Scene", RSFont.Create());
+            _loadScene = RSNodeString.CreateString(new SKPoint(50, 50), "Reload Scene", RSFont.Create());
             _scene.AddChild(_loadScene);
         }
 

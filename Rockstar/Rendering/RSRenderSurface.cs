@@ -162,7 +162,7 @@ namespace Rockstar._RenderSurface
                 IsAntialias = _antiAlias,
                 //ColorFilter = SKColorFilter.CreateBlendMode(
                 //    new SKColor(255, 255, 0, 255), // Tint color
-                //    SKBlendMode.Luminosity // Blend mode
+                //    SKBlendMode.Modulate // Blend mode
                 //)
             };
 
@@ -215,8 +215,26 @@ namespace Rockstar._RenderSurface
         }
 
         public void Clear()
-        { 
-            _canvas.Clear(_color);
+        {
+            if (_color.Alpha == 255)
+            {
+                _canvas.Clear(_color);
+            }
+            else
+            {
+                // only clear canvas partially
+                SKPaint paint = new SKPaint
+                {
+                    ColorFilter = SKColorFilter.CreateBlendMode(
+                        _color,
+                        SKBlendMode.SrcOut
+                    )
+                };
+
+                // Apply the paint using SaveLayer and Restore to clear alpha partially
+                _canvas.SaveLayer(paint);
+                _canvas.Restore();
+            }
         }
 
         // ********************************************************************************************
