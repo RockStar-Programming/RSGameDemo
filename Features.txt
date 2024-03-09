@@ -13,6 +13,8 @@ actions
 shaders
 blending
 add (int)levels to nodes
+sprite illumination
+complex animations
 
 full ddp and scene loading
 scripting

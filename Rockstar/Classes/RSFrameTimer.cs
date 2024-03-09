@@ -25,10 +25,10 @@ namespace Rockstar._FrameTimer
     public sealed class RSFrameTimer
     {
         // ********************************************************************************************
-        // RSGameTimer calculates the interval in milli seconds between frames
+        // RSGameTimer calculates the interval seconds between frames
         // To do so, call BeginFrame once at the start of each game loop
         //
-        // It also calculates FPS over a specified milli seconds update interval
+        // It also calculates FPS over a specified seconds update interval
         // Drops in FPS can be emphasised by setting FPS_ADJUST_FOR_DEVIATION = true
 
         // ********************************************************************************************
@@ -45,15 +45,15 @@ namespace Rockstar._FrameTimer
             _lastElapsed = 0;
             _interval = 0;
             _fps = 0;
-            _intervalBuffer = new List<long>();
+            _intervalBuffer = new List<float>();
             _timeSinceLastUpdate = 0;
         }
 
         // ********************************************************************************************
         // Class Properties
 
-        // interval in mS at which FPS is updated
-        public static long FPS_UPDATE_INTERVAL = 500;
+        // interval in S at which FPS is updated
+        public static float FPS_UPDATE_INTERVAL = 0.5f;
 
         // if true, changes (drops) to FPS will be emphasised
         // this makes it easier to visually spot frame stutter
@@ -62,18 +62,18 @@ namespace Rockstar._FrameTimer
         // ********************************************************************************************
         // Properties
 
-        public long Interval { get { return _interval; } }
+        public float Interval { get { return _interval; } }
         public double FPS { get { return _fps; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private Stopwatch _timer;
-        private long _lastElapsed;
-        private long _interval;
+        private float _lastElapsed;
+        private float _interval;
         private double _fps;
-        private long _timeSinceLastUpdate;
-        private List<long> _intervalBuffer;
+        private float _timeSinceLastUpdate;
+        private List<float> _intervalBuffer;
 
         // ********************************************************************************************
         // Methods
@@ -81,7 +81,7 @@ namespace Rockstar._FrameTimer
         public void BeginFrame()
         {
             // calculate new frame interval in mS since last frame was started
-            long elapsed = _timer.ElapsedMilliseconds;
+            float elapsed = _timer.ElapsedMilliseconds / 1000.0f;
             _interval = elapsed - _lastElapsed;
             _lastElapsed = elapsed;
 
@@ -96,7 +96,7 @@ namespace Rockstar._FrameTimer
 
                 // calculate average interval for the interval buffer
                 double sum = 0;
-                foreach (long interval in _intervalBuffer) sum += interval;
+                foreach (float interval in _intervalBuffer) sum += interval;
                 double meanInterval = sum / _intervalBuffer.Count;
 
                 // adjust mean interval for deviation

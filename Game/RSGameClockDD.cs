@@ -168,7 +168,7 @@ namespace Rockstar._GameClockDD
 
         }
 
-        public override void Update(long interval)
+        public override void Update(float interval)
         {
             UpdateHands();
         }

@@ -81,12 +81,12 @@ namespace Rockstar._CoreGame
 
         public abstract void Resize(SKSize size);
 
-        public abstract void Update(long interval);
+        public abstract void Update(float interval);
 
         // ********************************************************************************************
         // Methods
 
-        public void UpdateNodes(long interval)
+        public void UpdateNodes(float interval)
         {
             lock (_gameLock)
             {
@@ -142,7 +142,7 @@ namespace Rockstar._CoreGame
         // ********************************************************************************************
         // Internal Methods
 
-        private void UpdateNodeTree(RSNode node, long interval)
+        private void UpdateNodeTree(RSNode node, float interval)
         {
             node.Update(interval);
             foreach (RSNode child in node.Children)

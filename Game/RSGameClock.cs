@@ -313,7 +313,7 @@ namespace Rockstar._GameClock
 
         }
 
-        public override void Update(long interval)
+        public override void Update(float interval)
         {
             UpdateHands();
         }

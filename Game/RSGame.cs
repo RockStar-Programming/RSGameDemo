@@ -88,13 +88,13 @@ namespace Rockstar._Game
 
         }
 
-        public override void Update(long interval)
+        public override void Update(float interval)
         {
             _catTimer += interval;
-            if (_catTimer > 100)
+            if (_catTimer > 0.1f)
             {
                 _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
-                _catTimer -= 100;
+                _catTimer -= 0.1f;
             }
         }
 

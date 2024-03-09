@@ -71,7 +71,7 @@ namespace Rockstar._Physics
             {
                 pixelSizeInMetres = DEFAULT_PIXELSIZE_IN_METRES;
             }
-            _scale = 1.0f / pixelSizeInMetres;
+            _worldScale = 1.0f / pixelSizeInMetres;
             _world.SetContactListener(this);
             _bodyKillList = new List<Body>();
             _contactList = new Dictionary<Body, float>();
@@ -95,14 +95,42 @@ namespace Rockstar._Physics
         private const float DEFAULT_RESTITUTION = 0.1f;
 
         private const float ENERGY_INFINITE = float.MaxValue;
+
+        // IMPORTANT
+        // The gain settings for impulse and kinetic energy, sets the relationship between these
+        // They should not be changed, to set the overall "breakability" of a body
+        // For that, use the breakForce
+        //
+        // In stead they should be adjusted to you actual game needs
+        // impulse energy is used for when bodies are "under pressure"
+        // kinetic energy is used for then bodies collide "at speed"
+        //
+        // 1) if you feel the body overall breaks too easily
+        //    - increase the breakEnergy 
+        // 2) if you feel bodies break corretly when colliding, but are too hard to squeeze
+        //    - increase IMPULSE_ENERGY_GAIN
+        // 3) if you feel bodies break correctly under presser, but breaks too easily when colliding
+        //    - increase KINETIC_ENERGY_GAIN
+        //
+        // Density also matters, as more dense bodies will release more kinetic energy
+        // All in all, it is a bit of a "cut and try" matter what suits your needs
+        //
+        // Known issues
+        // - A more intuitive interface for this would be nice
+        // - Box2D bodies deeply overlapping, aught to result in high impulse forces. It sometimes does not
+        //   This sometimes results in breakable bodies being squeezed into other bodies without breaking
+        //   Problem is minimal, and most often occur when new bodies are added to already cramped positions
+        //
         private const float IMPULSE_ENERGY_GAIN = 10.0f;
         private const float KINETIC_ENERGY_GAIN = 0.25f;
 
-        private const int VELOCITY_INTERACTIONS = 4;
-        private const int POSITION_INTERACTIONS = 2;
+        // basic step settings for Box2D
+        //
+        private const int VELOCITY_INTERACTIONS = 8;
+        private const int POSITION_INTERACTIONS = 3;
 
         private World _world;
-        private float _scale;
+        private float _worldScale;
 
         private object _physicsLock;
         private List<Body> _bodyKillList;
@@ -111,7 +139,7 @@ namespace Rockstar._Physics
         // ********************************************************************************************
         // Methods
 
-        public void Update(RSNodeScene scene, long interval)
+        public void Update(RSNodeScene scene, float interval)
         {
             lock (_physicsLock)
             {
@@ -119,7 +147,7 @@ namespace Rockstar._Physics
 
                 // main world physics step
                 //
-                _world.Step((float)interval / 1000.0f, VELOCITY_INTERACTIONS, POSITION_INTERACTIONS);
+                _world.Step(interval, VELOCITY_INTERACTIONS, POSITION_INTERACTIONS);
 
                 // remove killed bodies
                 //
@@ -144,7 +172,7 @@ namespace Rockstar._Physics
                 {
                     // Update the game object's position and rotation to match the physics body
                     Vector2 position = body.GetPosition();
-                    physics.Node.Transformation.Position = new SKPoint(position.X * _scale, position.Y * _scale);
+                    physics.Node.Transformation.Position = new SKPoint(position.X * _worldScale, position.Y * _worldScale);
                     physics.Node.Transformation.Rotation = -body.GetAngle() * 180.0f / (float)Math.PI;
                     physics.Node.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
                 }
@@ -289,7 +317,7 @@ namespace Rockstar._Physics
 
                 BodyDef bodyDef = new BodyDef();
                 bodyDef.type = type;
-                bodyDef.position = new Vector2(node.Transformation.Position.X / _scale, node.Transformation.Position.Y / _scale);
+                bodyDef.position = new Vector2(node.Transformation.Position.X / _worldScale, node.Transformation.Position.Y / _worldScale);
                 node.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
                 
                 Body body = _world.CreateBody(bodyDef);
@@ -298,15 +326,15 @@ namespace Rockstar._Physics
                 if (node.IsRound == true)
                 {
                     CircleShape circle = new CircleShape();
-                    circle.Radius = node.Transformation.Size.Width * node.Transformation.Scale.X / (2.0f * _scale);
+                    circle.Radius = node.Transformation.Size.Width * node.Transformation.Scale.X / (2.0f * _worldScale);
                     fixture.shape = circle;
                 }
                 else
                 {
                     PolygonShape polygon = new PolygonShape();
                     polygon.SetAsBox(
-                        node.Transformation.Size.Width * node.Transformation.Scale.X / (2.0f * _scale), 
-                        node.Transformation.Size.Height * node.Transformation.Scale.Y / (2.0f * _scale));
+                        node.Transformation.Size.Width * node.Transformation.Scale.X / (2.0f * _worldScale), 
+                        node.Transformation.Size.Height * node.Transformation.Scale.Y / (2.0f * _worldScale));
                     fixture.shape = polygon;
                 }
 

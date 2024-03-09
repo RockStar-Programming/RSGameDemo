@@ -229,7 +229,7 @@ namespace Rockstar._Nodes
         // Should be used only to update visual apperance of a nodeToRemove descendant
         // Example could be for sprite animations, using a series of images
         //
-        public virtual void Update(long interval)
+        public virtual void Update(float interval)
         {
 
         }
