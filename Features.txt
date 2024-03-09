@@ -1,8 +1,12 @@
 ﻿
-physics
+
+
+particle system
+
+
+
 clipping
 inserting, removing, replacing nodes
-particle system
 part 9 sprite
 parallax node
 actions

@@ -142,7 +142,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(18, 18), SKColors.Cyan);
                 _motionCanvas.AddChild(solid);
-                _physics.AddDynamicNode(solid, 3.0f, 1.0f, 0.3f, 0.9f);
+                _physics.AddDynamicNode(solid, 4.0f, 1.0f, 0.3f, 0.9f);
             }    
         }
 
@@ -177,13 +177,14 @@ namespace Rockstar._Game
             _motionCanvas.Color = new SKColor(32, 32, 32, 32);
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKPoint(200, 200), new SKSize(250, 250));
+            _surface = RSNodeSurface.CreateWithSize(new SKPoint(200, 200), new SKSize(250, 300));
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
             _surface.Color = SKColors.AliceBlue;
             _scene.AddChild(_surface);
             _physics.AddStaticNode(_surface);
 
-            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -100), "Assets/blue_cat.png");
+            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
             _cat.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.AddChild(_cat);
 

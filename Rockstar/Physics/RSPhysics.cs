@@ -51,6 +51,7 @@ namespace Rockstar._Physics
         //
         // TODO:
         // When adding a node, create complex combined shapes it the node has children
+        // Implement joints
 
         // ********************************************************************************************
         // Constructors
@@ -74,6 +75,7 @@ namespace Rockstar._Physics
             _world.SetContactListener(this);
             _bodyKillList = new List<Body>();
             _contactList = new Dictionary<Body, float>();
+            _physicsLock = new object();
         }
 
         // ********************************************************************************************
@@ -101,7 +103,8 @@ namespace Rockstar._Physics
 
         private World _world;
         private float _scale;
-        private object _lockObject = new object();
+
+        private object _physicsLock;
         private List<Body> _bodyKillList;
         private Dictionary<Body, float> _contactList;
 
@@ -110,13 +113,16 @@ namespace Rockstar._Physics
 
         public void Update(RSNodeScene scene, long interval)
         {
-            lock (_lockObject)
+            lock (_physicsLock)
             {
                 _contactList.Clear();
-                _bodyKillList.Clear();
 
+                // main world physics step
+                //
                 _world.Step((float)interval / 1000.0f, VELOCITY_INTERACTIONS, POSITION_INTERACTIONS);
 
+                // remove killed bodies
+                //
                 foreach (Body bodyToKill in _bodyKillList)
                 {
                     RSPhysicsDef physics = bodyToKill.GetUserData<RSPhysicsDef>();
@@ -126,8 +132,11 @@ namespace Rockstar._Physics
                     }
                     _world.DestroyBody(bodyToKill);
                 }
+                _bodyKillList.Clear();
             }
 
+            // update node positions after step by iterating linked list
+            //
             Body body = _world.GetBodyList();
             while (body != null)
             {
@@ -146,7 +155,7 @@ namespace Rockstar._Physics
 
         public void Reset(RSNodeScene scene, RSPhysicsWorldType type = RSPhysicsWorldType.ClosedBox)
         {
-            lock (_lockObject)
+            lock (_physicsLock)
             {
                 // Safely iterate through and remove all bodies
                 Body body = _world.GetBodyList();
@@ -198,39 +207,39 @@ namespace Rockstar._Physics
             }
         }
 
-        public void AddDynamicNode(RSNode node, float breakEnergy)
+        public RSPhysicsDef AddDynamicNode(RSNode node, float breakEnergy)
         {
-            AddNode(node, BodyType.Dynamic, breakEnergy);
+            return AddNode(node, BodyType.Dynamic, breakEnergy);
         }
 
-        public void AddDynamicNode(RSNode node, float breakEnergy, float density)
+        public RSPhysicsDef AddDynamicNode(RSNode node, float breakEnergy, float density)
         {
-            AddNode(node, BodyType.Dynamic, breakEnergy, density);
+            return AddNode(node, BodyType.Dynamic, breakEnergy, density);
         }
 
-        public void AddDynamicNode(RSNode node, params object[] data)
+        public RSPhysicsDef AddDynamicNode(RSNode node, params object[] data)
         {
-            AddNode(node, BodyType.Dynamic, data);
+            return AddNode(node, BodyType.Dynamic, data);
         }
 
-        public void AddStaticNode(RSNode node, float breakEnergy)
+        public RSPhysicsDef AddStaticNode(RSNode node, float breakEnergy)
         {
-            AddNode(node, BodyType.Static, breakEnergy);
+            return AddNode(node, BodyType.Static, breakEnergy);
         }
 
-        public void AddStaticNode(RSNode node, float breakEnergy, float density)
+        public RSPhysicsDef AddStaticNode(RSNode node, float breakEnergy, float density)
         {
-            AddNode(node, BodyType.Static, breakEnergy, density);
+            return AddNode(node, BodyType.Static, breakEnergy, density);
         }
 
-        public void AddStaticNode(RSNode node, params object[] data)
+        public RSPhysicsDef AddStaticNode(RSNode node, params object[] data)
         {
-            AddNode(node, BodyType.Static, data);
+            return AddNode(node, BodyType.Static, data);
         }
 
         public void RemoveNode(RSNode node)
         {
-            lock (_lockObject)
+            lock (_physicsLock)
             {
                 // Safely iterate through all bodies
                 Body body = _world.GetBodyList();
@@ -249,15 +258,33 @@ namespace Rockstar._Physics
 
         }
 
+        public RSPhysicsDef? GetPhysics(RSNode node)
+        {
+            // Maybe maintain a <node, body> dictionary for faster access
+            //
+            // iterate linked list
+            //
+            Body body = _world.GetBodyList();
+            while (body != null)
+            {
+                if (body.GetUserData<RSPhysicsDef>() is RSPhysicsDef physics)
+                {
+                    if (physics.Node == node) return physics;
+                }
+                body = body.GetNext();
+            }
+            return null;
+        }
+
         // ********************************************************************************************
         // Event Handlers
 
         // ********************************************************************************************
         // Internal Methods
 
-        private void AddNode(RSNode node, BodyType type, params object[] data)
+        private RSPhysicsDef AddNode(RSNode node, BodyType type, params object[] data)
         {
-            lock (_lockObject)
+            lock (_physicsLock)
             {
 
                 BodyDef bodyDef = new BodyDef();
@@ -291,6 +318,8 @@ namespace Rockstar._Physics
 
                 RSPhysicsDef physics = RSPhysicsDef.CreateWithNode(node, body, fixture, breakEnergy);
                 body.SetUserData(physics);
+
+                return physics;
             }
         }
 

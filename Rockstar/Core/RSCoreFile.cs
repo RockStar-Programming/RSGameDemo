@@ -86,6 +86,11 @@ namespace Rockstar._CoreFile
             return result;
         }
 
+        public static bool FileExists(params string[] pathList)
+        {
+            return File.Exists(GetAbsolutePath(pathList));
+        }
+
         // ********************************************************************************************
         // Event Handlers
 

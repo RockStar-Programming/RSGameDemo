@@ -98,6 +98,7 @@ namespace Rockstar._Types
 
         // Texture Packer encoding keys
         //
+        public const string TP_FILENAME = "filename";
         public const string TP_FRAMES = "frames";
         public const string TP_FRAME = "frame";
         public const string TP_X = "x";

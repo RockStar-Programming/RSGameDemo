@@ -47,8 +47,8 @@ namespace Rockstar._PhysicsDef
         private RSPhysicsDef(RSNode node, Body body, FixtureDef fixture, float breakEnergy)
         {
             _node = node;
-            //_body = body;
-            //_fixture = fixture;
+            _body = body;
+            _fixture = fixture;
             _breakEnergy = breakEnergy;
         }
 
@@ -59,16 +59,15 @@ namespace Rockstar._PhysicsDef
         // Properties
 
         public RSNode Node { get { return _node; } }
-        //public Body Body { get { return _body; } }
-        //public FixtureDef Fixture { get { return _fixture; } }
         public float BreakEnergy { get { return _breakEnergy; } }
+        public float LinearVelocity { get { return _body.GetLinearVelocity().Length(); } }
 
         // ********************************************************************************************
         // Internal Data
 
         private RSNode _node;
-        //private Body _body;
-        //private FixtureDef _fixture;
+        private Body _body;
+        private FixtureDef _fixture;
         private float _breakEnergy;
 
         // ********************************************************************************************
