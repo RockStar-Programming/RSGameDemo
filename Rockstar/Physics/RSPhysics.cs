@@ -93,6 +93,8 @@ namespace Rockstar._Physics
         private const float DEFAULT_RESTITUTION = 0.1f;
 
         private const float ENERGY_INFINITE = float.MaxValue;
+        private const float IMPULSE_ENERGY_GAIN = 10.0f;
+        private const float KINETIC_ENERGY_GAIN = 0.25f;
 
         private const int VELOCITY_INTERACTIONS = 4;
         private const int POSITION_INTERACTIONS = 2;
@@ -308,7 +310,7 @@ namespace Rockstar._Physics
             var bodyB = contact.FixtureB.Body;
 
             // calculate energy of both bodies
-            float energy = (0.5f * bodyA.GetMass() * bodyA.GetLinearVelocity().LengthSquared()) + (0.5f * bodyB.GetMass() * bodyB.GetLinearVelocity().LengthSquared());
+            float energy = KINETIC_ENERGY_GAIN * (0.5f * bodyA.GetMass() * bodyA.GetLinearVelocity().LengthSquared()) + (0.5f * bodyB.GetMass() * bodyB.GetLinearVelocity().LengthSquared());
 
             // if half the energy is above breaking energy, store it
             RSPhysicsDef physicsA = bodyA.GetUserData<RSPhysicsDef>();
@@ -326,15 +328,16 @@ namespace Rockstar._Physics
 
         public override void PostSolve(in Contact contact, in ContactImpulse impulse)
         {
-            float initialEnergy;
-
             var bodyA = contact.FixtureA.Body;
             var bodyB = contact.FixtureB.Body;
 
-            // calculate energy of both bodies
-            float energy = (0.5f * bodyA.GetMass() * bodyA.GetLinearVelocity().LengthSquared()) + (0.5f * bodyB.GetMass() * bodyB.GetLinearVelocity().LengthSquared());
+            float initialEnergy = 0;
+            float impulseEnergy = IMPULSE_ENERGY_GAIN * (impulse.normalImpulses[0] + impulse.normalImpulses[1]);
 
-            if (_contactList.TryGetValue(bodyA, out initialEnergy))
+            // calculate energy of both bodies
+            float energy = KINETIC_ENERGY_GAIN * (0.5f * bodyA.GetMass() * bodyA.GetLinearVelocity().LengthSquared()) + (0.5f * bodyB.GetMass() * bodyB.GetLinearVelocity().LengthSquared());
+
+            _contactList.TryGetValue(bodyA, out initialEnergy);
             {
                 // The energy lost in A, is half of the total energy lost
                 // Now, this is not correct if one of the bodies are bouncy bouncy, but this is not the real world ...
@@ -343,18 +346,19 @@ namespace Rockstar._Physics
                 
                 // if energy is above breaking energy, the body is added to the kill list
                 RSPhysicsDef physicsA = bodyA.GetUserData<RSPhysicsDef>();
-                if ((energyA > physicsA.BreakEnergy) && (_bodyKillList.Contains(bodyA) == false))
+
+                if ((energyA + impulseEnergy > physicsA.BreakEnergy) && (_bodyKillList.Contains(bodyA) == false))
                     _bodyKillList.Add(bodyA);
 
                 // contact always removed
                 _contactList.Remove(bodyA);
             }
 
-            if (_contactList.TryGetValue(bodyB, out initialEnergy))
+            _contactList.TryGetValue(bodyB, out initialEnergy);
             {
                 float energyB = Math.Abs(initialEnergy - energy) / 2.0f;
                 RSPhysicsDef physicsB = bodyB.GetUserData<RSPhysicsDef>();
-                if ((energyB > physicsB.BreakEnergy) && (_bodyKillList.Contains(bodyB) == false))
+                if ((energyB + impulseEnergy > physicsB.BreakEnergy) && (_bodyKillList.Contains(bodyB) == false))
                     _bodyKillList.Add(bodyB);
                 _contactList.Remove(bodyB);
             }

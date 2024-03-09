@@ -142,7 +142,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(18, 18), SKColors.Cyan);
                 _motionCanvas.AddChild(solid);
-                _physics.AddDynamicNode(solid, 1.0f, 1.0f, 0.3f, 0.9f);
+                _physics.AddDynamicNode(solid, 3.0f, 1.0f, 0.3f, 0.9f);
             }    
         }
 
@@ -154,7 +154,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(18, 18), SKColors.Magenta);
                 _scene.AddChild(solid);
-                _physics.AddDynamicNode(solid, 50.0f, 25.0f, 0.5f, 0.1f);
+                _physics.AddDynamicNode(solid, 25.0f, 5.0f, 0.5f, 0.1f);
             }
         }
 
