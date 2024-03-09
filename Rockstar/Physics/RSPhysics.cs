@@ -343,7 +343,8 @@ namespace Rockstar._Physics
                 
                 // if energy is above breaking energy, the body is added to the kill list
                 RSPhysicsDef physicsA = bodyA.GetUserData<RSPhysicsDef>();
-                if (energyA > physicsA.BreakEnergy) _bodyKillList.Add(bodyA);
+                if ((energyA > physicsA.BreakEnergy) && (_bodyKillList.Contains(bodyA) == false))
+                    _bodyKillList.Add(bodyA);
 
                 // contact always removed
                 _contactList.Remove(bodyA);
@@ -353,7 +354,8 @@ namespace Rockstar._Physics
             {
                 float energyB = Math.Abs(initialEnergy - energy) / 2.0f;
                 RSPhysicsDef physicsB = bodyB.GetUserData<RSPhysicsDef>();
-                if (energyB > physicsB.BreakEnergy) _bodyKillList.Add(bodyB);
+                if ((energyB > physicsB.BreakEnergy) && (_bodyKillList.Contains(bodyB) == false))
+                    _bodyKillList.Add(bodyB);
                 _contactList.Remove(bodyB);
             }
         }
