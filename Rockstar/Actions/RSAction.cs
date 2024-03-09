@@ -1,9 +1,15 @@
-﻿using Rockstar._Lerp;
+﻿using Newtonsoft.Json.Linq;
+using Rockstar._Lerp;
+using Rockstar._LerpProperty;
 using Rockstar._Nodes;
-using Rockstar._Types;
 using Rockstar._ActionManager;
 using SkiaSharp;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -26,33 +32,36 @@ using System;
 
 namespace Rockstar._Action
 {
-    public static class RSActionInterface
+    public class RSAction
     {
         // ********************************************************************************************
-        // This defines interfaces for the RSActionProperty class
+        // Actions can be run either on variables directly, or on class properties
+        //
 
         // ********************************************************************************************
         // Constructors
 
-        public static void MoveTo(this RSNode node, SKPoint position, float duration, RSLerpType type = RSLerpType.Linear)
+        public RSAction InitAction(RSNode node, string propertyName, object newValue, float duration, RSLerpType type)
         {
-            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
-            RSActionManager.Add(node, action);
+            List<string> propertyList = new List<string>(propertyName.Split('.'));
+            object? property = node;
+            PropertyInfo? info = null;
+            while ((propertyList.Count > 0) && (property != null))
+            {
+                info = property.GetType().GetProperty(propertyList[0]);
+                if ((propertyList.Count > 1) && (info != null))
+                {
+                    property = info.GetValue(property);
+                }
+                propertyList.RemoveAt(0);
+            }
+            _lerp = RSLerpProperty.Create(property, info, node.Transformation.Position, newValue, duration, type);
+            return this;
         }
 
-        public static RSAction MoveBy(this RSNode node, SKPoint movement, float duration, RSLerpType type = RSLerpType.Linear)
-        {
-            SKPoint position = node.Transformation.Position + movement;
-            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
-            RSActionManager.Add(node, action);
-            return action;
-        }
+        // ********************************************************************************************
+        // Class Properties
 
-        public static RSAction Repeat(this RSAction action, int repeat = -1)
-        {
-            action.SetRepeatCounter(repeat);
-            return action;
-        }
 
         // ********************************************************************************************
         // Properties
@@ -60,8 +69,26 @@ namespace Rockstar._Action
         // ********************************************************************************************
         // Internal Data
 
+        private RSLerpProperty? _lerp;
+
         // ********************************************************************************************
         // Methods
+
+        public void Update(float interval)
+        {
+            if (_lerp != null) _lerp.Update(interval);
+        }
+
+        public void Start()
+        {
+            if (_lerp != null) _lerp.Start();
+        }
+
+        public void SetRepeatCounter(int count)
+        {
+            if (_lerp != null) _lerp.RepeatCounter = count;
+        }
+
 
         // ********************************************************************************************
         // Event Handlers

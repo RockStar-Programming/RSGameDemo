@@ -56,14 +56,14 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size, bool preMultiplyAlpha = true)
+        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size, RSRenderSurfaceBlendMode blendMode, bool preMultiplyAlpha = true)
         { 
-            return new RSNodeSurface(position, size, preMultiplyAlpha);
+            return new RSNodeSurface(position, size, blendMode, preMultiplyAlpha);
         }
 
         // ********************************************************************************************
 
-        private RSNodeSurface(SKPoint position, SKSize size, bool preMultiplyAlpha)
+        private RSNodeSurface(SKPoint position, SKSize size, RSRenderSurfaceBlendMode blendMode, bool preMultiplyAlpha)
         {
             InitWithData(position, size);
 
@@ -88,6 +88,7 @@ namespace Rockstar._Nodes
             _color = SKColors.Transparent;
             _frame = RSSpriteFrame.Create(SKPoint.Empty, size);
             _renderMode = RSNodeSurfaceRenderMode.Automatic;
+            _blendMode = blendMode;
         }
 
         // ********************************************************************************************

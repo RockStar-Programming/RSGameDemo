@@ -8,6 +8,9 @@ using Rockstar._Event;
 using Rockstar._Nodes;
 using Rockstar._CoreMouseButton;
 using Rockstar._NodeList;
+using Rockstar._Action;
+using Rockstar._RenderSurface;
+using Rockstar._Lerp;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -62,7 +65,7 @@ namespace Rockstar._Game
 
         float _catTimer = 0;
 
-        RSNodeSprite? _cat;
+        RSNodeSprite? _animal;
         RSNodeSurface? _surface;
         RSNodeSurface? _motionCanvas;
         RSNodeString? _loadScene;
@@ -93,7 +96,7 @@ namespace Rockstar._Game
             _catTimer += interval;
             if (_catTimer > 0.1f)
             {
-                _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
+                _animal.SetCurrentFrame(_animal.CurrentFrame + 1);
                 _catTimer -= 0.1f;
             }
         }
@@ -119,8 +122,6 @@ namespace Rockstar._Game
 
         public void OnRightMouseEvent(object sender, RSEventArgs argument)
         {
-            _surface.Transformation.Rotation += 1;
-
             if (argument.Data is SKPoint position)
             {
                 if (argument.Type is RSMouseEvent.OnReleased)
@@ -142,7 +143,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateEllipse(position, new SKSize(18, 18), SKColors.Cyan);
                 _motionCanvas.AddChild(solid);
-                _physics.AddDynamicNode(solid, 4.0f, 1.0f, 0.3f, 0.9f);
+                _physics.AddDynamicNode(solid, 5.0f, 1.0f, 0.3f, 0.9f);
             }    
         }
 
@@ -172,21 +173,27 @@ namespace Rockstar._Game
             // because alpha in this case is everything, the surface is created without pre-multiplied alpha
             // this allows for slightly better blending
             //
-            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size, false);
+            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size, RSRenderSurfaceBlendMode.BlendToColor, false);
             _motionCanvas.Transformation.Anchor = SKPoint.Empty;
             _motionCanvas.Color = new SKColor(32, 32, 32, 32);
+            _motionCanvas.Transformation.Z = -10;
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKPoint(200, 200), new SKSize(250, 300));
-            _surface.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            _surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350), RSRenderSurfaceBlendMode.None);
+            _surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
             _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
-            _surface.Color = new SKColor(128, 128, 32, 64);
+            _surface.Transformation.Z = 10;
+            _surface.Color = SKColors.Transparent; // new SKColor(96, 160, 32, 64);
             _scene.AddChild(_surface);
-            _physics.AddStaticNode(_surface);
 
-            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
-            _cat.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
-            _surface.AddChild(_cat);
+            _surface.MoveBy(new SKPoint(1000, 0), 5.0f).Repeat();
+            //_physics.AddStaticNode(_surface);
+
+            _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/blue_cat");
+            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/red_dog");
+            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
+            _animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            _surface.AddChild(_animal);
 
             _loadScene = RSNodeString.CreateString(new SKPoint(50, 50), "Reload Scene", RSFont.Create());
             _scene.AddChild(_loadScene);

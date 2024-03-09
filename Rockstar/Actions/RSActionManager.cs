@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Rockstar._Action;
+using Rockstar._Nodes;
+using System.Collections.Generic;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -19,25 +21,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar.ActionManager
+namespace Rockstar._ActionManager
 {
     public class RSActionManager
     {
         // ********************************************************************************************
-        // The automation manager maintains a list of nodes, and run any automations assigned
+        // The action manager maintains a list of actions, and run any automations assigned
         // TBD: Automations are executed in render order
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSActionManager Create()
+        public static void Create()
         {
-            return new RSActionManager();
-        }
 
-        private RSActionManager() 
-        {
-            _eventList = new Dictionary<RSNode, List<RSAction>>();
         }
 
         // ********************************************************************************************
@@ -46,34 +43,34 @@ namespace Rockstar.ActionManager
         // ********************************************************************************************
         // Internal Data
 
-        private Dictionary<RSNode, List<RSAction>> _eventList;
+        private static Dictionary<RSNode, List<RSAction>> _actionList = new Dictionary<RSNode, List<RSAction>>();
 
         // ********************************************************************************************
         // Methods
 
-        public void AddAction(RSNode node, RSAction nodeEvent)
-        { 
-
-        }
-
-        public void RemoveAction(RSNode node, RSAction nodeEvent) 
-        { 
-
-        }
-
-        public void RemoveAllActions(RSNode node) 
+        public static void Update(float interval)
         {
-            
+            foreach (List<RSAction> list in _actionList.Values) 
+            { 
+                foreach(RSAction action in list)
+                {
+                    action.Update(interval);
+                }
+            }
         }
 
-        public void RemoveAllActions() 
+        public static void Add(RSNode node, RSAction action)
         {
-            
-        }
-
-        public void Update(float interval)
-        {
-
+            if (_actionList.ContainsKey(node) == false)
+            {
+                _actionList.Add(node, new List<RSAction> { action });
+            }
+            else
+            {
+                List<RSAction> list = _actionList[node];
+                list.Add(action);
+            }
+            action.Start();
         }
 
         // ********************************************************************************************

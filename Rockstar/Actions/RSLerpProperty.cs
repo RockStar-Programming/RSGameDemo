@@ -1,9 +1,9 @@
-﻿using Rockstar._Lerp;
+﻿
+using System.Reflection;
+
+using Rockstar._Event;
+using Rockstar._Lerp;
 using Rockstar._Nodes;
-using Rockstar._Types;
-using Rockstar._ActionManager;
-using SkiaSharp;
-using System;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -24,34 +24,45 @@ using System;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Action
+namespace Rockstar._LerpProperty
 {
-    public static class RSActionInterface
+    public partial class RSLerpProperty : RSLerp
     {
         // ********************************************************************************************
-        // This defines interfaces for the RSActionProperty class
+        // RSLerpProperty handles lerps on primarily RSNodes properties
+        // supported properties are float, SKPoint, SKSize
+        //
+        // Changing properties
+        // property         the class which property to operate on 
+        // info             the actual property info
+        // lerpFrom         the value to lerp the property from
+        // lerpTo           the value to lerp the property to
+        // duration         action duration in seconds
+        // type             lerp type
 
         // ********************************************************************************************
         // Constructors
 
-        public static void MoveTo(this RSNode node, SKPoint position, float duration, RSLerpType type = RSLerpType.Linear)
+        public static RSLerpProperty Create(object? property, PropertyInfo? info, object lerpFrom, object lerpTo, float duration, RSLerpType type)
         {
-            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
-            RSActionManager.Add(node, action);
+            return new RSLerpProperty(property, info, lerpFrom, lerpTo, duration, type);
         }
 
-        public static RSAction MoveBy(this RSNode node, SKPoint movement, float duration, RSLerpType type = RSLerpType.Linear)
-        {
-            SKPoint position = node.Transformation.Position + movement;
-            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
-            RSActionManager.Add(node, action);
-            return action;
-        }
+        // ********************************************************************************************
 
-        public static RSAction Repeat(this RSAction action, int repeat = -1)
+        private RSLerpProperty(object? property, PropertyInfo? info, object lerpFrom, object lerpTo, float duration, RSLerpType type) : base(lerpFrom, lerpTo, duration, type)
         {
-            action.SetRepeatCounter(repeat);
-            return action;
+            _property = property;
+            _info = info;
+
+            if ((_property == null) || (_info == null))
+            {
+                _invalid = true;
+            }
+            else
+            { 
+                if (lerpFrom.GetType() != _info.PropertyType) _invalid = true;
+            }
         }
 
         // ********************************************************************************************
@@ -60,8 +71,38 @@ namespace Rockstar._Action
         // ********************************************************************************************
         // Internal Data
 
+        private object? _property;
+        private PropertyInfo? _info;
+
         // ********************************************************************************************
         // Methods
+
+        public override void Start()
+        {
+            if ((_invalid == false) && (_info != null))
+            {
+                base.Start();
+                _info.SetValue(_property, _value);
+            }
+        }
+
+        public override void Update(float interval)
+        {
+            base.Update(interval);
+            if ((_invalid == false) && (_info != null))
+            {
+                _info.SetValue(_property, _value);
+            }
+        }
+
+        public override void Stop()
+        {
+            if ((_invalid == false) && (_info != null))
+            {
+                base.Stop();
+                _info.SetValue(_property, _value);
+            }
+        }
 
         // ********************************************************************************************
         // Event Handlers

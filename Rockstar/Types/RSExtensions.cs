@@ -39,6 +39,30 @@ namespace Rockstar._Types
         // ********************************************************************************************
         // object Extensions
 
+        public static bool ToBool(this object value)
+        {
+            if (value is bool result) return result;
+            return false;
+        }
+
+        public static float ToFloat(this object value)
+        {
+            if (value is float result) return result;
+            return 0.0f;
+        }
+
+        public static SKPoint ToPoint(this object value)
+        {
+            if (value is SKPoint result) return result;
+            return SKPoint.Empty;
+        }
+
+        public static SKSize ToSize(this object value)
+        {
+            if (value is SKSize result) return result;
+            return SKSize.Empty;
+        }
+
         public static TEnum ToEnum<TEnum>(this object value) where TEnum : struct, Enum
         {
             if (value is string)
@@ -47,6 +71,20 @@ namespace Rockstar._Types
             }
             // Return default
             return default;
+        }
+
+        public static float ClampNormalised(this float value)
+        {
+            if (value < 0.0f) return 0.0f;
+            if (value > 1.0f) return 1.0f;
+            return value;
+        }
+
+        public static byte ClampByte(this float value)
+        {
+            if (value < 0.0f) return 0;
+            if (value > 255.0f) return 255;
+            return (byte)value;
         }
 
         // ********************************************************************************************

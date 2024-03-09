@@ -74,6 +74,7 @@ namespace Rockstar._FrameTimer
         private double _fps;
         private float _timeSinceLastUpdate;
         private List<float> _intervalBuffer;
+        private const float MIN_FRAME_RATE = 30.0f;
 
         // ********************************************************************************************
         // Methods
@@ -83,6 +84,7 @@ namespace Rockstar._FrameTimer
             // calculate new frame interval in mS since last frame was started
             float elapsed = _timer.ElapsedMilliseconds / 1000.0f;
             _interval = elapsed - _lastElapsed;
+            if (_interval > (1.0f / MIN_FRAME_RATE)) _interval = (1.0f / MIN_FRAME_RATE);
             _lastElapsed = elapsed;
 
             // add interval to buffer
@@ -105,7 +107,7 @@ namespace Rockstar._FrameTimer
                 {
                     sum = 0;
                     double squareSum = 0;
-                    foreach (long interval in _intervalBuffer)
+                    foreach (float interval in _intervalBuffer)
                     {
                         squareSum += Math.Pow(interval - meanInterval, 2);
                         sum += Math.Abs(interval - meanInterval);
@@ -115,7 +117,7 @@ namespace Rockstar._FrameTimer
                 }
 
                 // calculate new fps
-                _fps = (meanInterval > 0) ? 1000.0f / meanInterval : 0;
+                _fps = (meanInterval > 0) ? 1.0f / meanInterval : 0;
                 _intervalBuffer.Clear();
             }
         }

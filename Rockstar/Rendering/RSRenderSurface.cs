@@ -3,6 +3,7 @@ using SkiaSharp;
 
 using Rockstar._Types;
 using Rockstar._Nodes;
+using System.Xml.Linq;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -46,15 +47,15 @@ namespace Rockstar._RenderSurface
 
         public static RSRenderSurface Create(SKCanvas canvas, SKColor color, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
         {
-            return new RSRenderSurface(canvas, color, origin, false);
+            return new RSRenderSurface(canvas, color, RSRenderSurfaceBlendMode.None, origin, false);
         }
 
         public static RSRenderSurface CreateOffScreen(RSNodeSurface node, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
         {
-            return new RSRenderSurface(node.Canvas, node.Color, origin, true);
+            return new RSRenderSurface(node.Canvas, node.Color, node.BlendMode, origin, true);
         }
 
-        private RSRenderSurface(SKCanvas canvas, SKColor color, RSTransformationOrigin origin, bool offScreen)
+        private RSRenderSurface(SKCanvas canvas, SKColor color, RSRenderSurfaceBlendMode blendMode, RSTransformationOrigin origin, bool offScreen)
         {
             _canvas = canvas;
             _size = new SKSize(_canvas.DeviceClipBounds.Width, _canvas.DeviceClipBounds.Height);
@@ -62,7 +63,7 @@ namespace Rockstar._RenderSurface
             _origin = origin;
             _matrix = SKMatrix.Identity;
             _offScreen = offScreen;
-            _blendMode = RSRenderSurfaceBlendMode.BlendToColor;
+            _blendMode = blendMode;
             SetRenderQuality(SKFilterQuality.Low);
         }
 

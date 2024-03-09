@@ -8,7 +8,7 @@ using Rockstar._RenderSurface;
 using Rockstar._CoreMouse;
 using Rockstar._Nodes;
 using Rockstar._Physics;
-using System.Runtime.InteropServices.ObjectiveC;
+using Rockstar._ActionManager;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -48,6 +48,7 @@ namespace Rockstar._CoreGame
             _scene = RSNodeScene.CreateScene();
             _frameTimer = RSFrameTimer.Create();
             _debugNodeList = RSNodeList.Create();
+            RSActionManager.Create();
 
             // Adding a bit of X gravity, prevents perfect stacking of objects
             //
@@ -90,6 +91,8 @@ namespace Rockstar._CoreGame
         {
             lock (_gameLock)
             {
+                RSActionManager.Update(interval);
+
                 if (_physics != null)
                 {
                     _physics.Update(_scene, interval);
