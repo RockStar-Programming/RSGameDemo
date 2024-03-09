@@ -298,13 +298,15 @@ namespace Rockstar._Physics
                 if (node.IsRound == true)
                 {
                     CircleShape circle = new CircleShape();
-                    circle.Radius = node.Transformation.Size.Width / (2.0f * _scale);
+                    circle.Radius = node.Transformation.Size.Width * node.Transformation.Scale.X / (2.0f * _scale);
                     fixture.shape = circle;
                 }
                 else
                 {
                     PolygonShape polygon = new PolygonShape();
-                    polygon.SetAsBox(node.Transformation.Size.Width / (2.0f * _scale), node.Transformation.Size.Height / (2.0f * _scale));
+                    polygon.SetAsBox(
+                        node.Transformation.Size.Width * node.Transformation.Scale.X / (2.0f * _scale), 
+                        node.Transformation.Size.Height * node.Transformation.Scale.Y / (2.0f * _scale));
                     fixture.shape = polygon;
                 }
 
