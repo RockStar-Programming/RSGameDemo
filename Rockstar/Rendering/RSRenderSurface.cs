@@ -25,6 +25,14 @@ using Rockstar._Nodes;
 
 namespace Rockstar._RenderSurface 
 {
+    public enum RSRenderSurfaceBlendMode
+    {
+        None,               // no blending, surface is cleared
+        BlendToColor,       // surface is slowly cleared to color, depending on alpha
+        BlendToTransparent  // surface is slowly cleared to transparent, depending on alpha only
+                            // NOT support yet
+    }
+
     public class RSRenderSurface : IDisposable
     {
         // ********************************************************************************************
@@ -54,6 +62,7 @@ namespace Rockstar._RenderSurface
             _origin = origin;
             _matrix = SKMatrix.Identity;
             _offScreen = offScreen;
+            _blendMode = RSRenderSurfaceBlendMode.BlendToColor;
             SetRenderQuality(SKFilterQuality.Low);
         }
 
@@ -87,6 +96,7 @@ namespace Rockstar._RenderSurface
         private bool _antiAlias;
         private SKFilterQuality _quality;
         private bool _offScreen;
+        private RSRenderSurfaceBlendMode _blendMode;
 
         // ********************************************************************************************
         // Methods
@@ -216,11 +226,11 @@ namespace Rockstar._RenderSurface
 
         public void Clear()
         {
-            if (_color.Alpha == 255)
+            if ((_color.Alpha == 255) || (_blendMode == RSRenderSurfaceBlendMode.None))
             {
                 _canvas.Clear(_color);
             }
-            else
+            else if (_blendMode == RSRenderSurfaceBlendMode.BlendToColor)
             {
                 // only clear canvas partially
                 SKPaint paint = new SKPaint
@@ -234,6 +244,10 @@ namespace Rockstar._RenderSurface
                 // Apply the paint using SaveLayer and Restore to clear alpha partially
                 _canvas.SaveLayer(paint);
                 _canvas.Restore();
+            }
+            else if (_blendMode != RSRenderSurfaceBlendMode.BlendToTransparent) 
+            { 
+            
             }
         }
 

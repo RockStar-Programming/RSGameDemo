@@ -20,3 +20,8 @@ hot reloads
 
 in game editing?
 
+better blend mode for erasing node surfaces
+- each clear should just reduce alpha
+
+implement single render of node surfaces
+

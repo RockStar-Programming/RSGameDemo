@@ -180,7 +180,7 @@ namespace Rockstar._Game
             _surface = RSNodeSurface.CreateWithSize(new SKPoint(200, 200), new SKSize(250, 300));
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
-            _surface.Color = SKColors.AliceBlue;
+            _surface.Color = new SKColor(128, 128, 32, 64);
             _scene.AddChild(_surface);
             _physics.AddStaticNode(_surface);
 

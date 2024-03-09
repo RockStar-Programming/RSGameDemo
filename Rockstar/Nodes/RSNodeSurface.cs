@@ -100,6 +100,7 @@ namespace Rockstar._Nodes
         public SKCanvas Canvas { get { return _canvas; } }
         public SKColor Color { get { return _color; } set { _color = value; } }
         public RSNodeSurfaceRenderMode RenderMode { get { return _renderMode; } }
+        public RSRenderSurfaceBlendMode BlendMode { get { return _blendMode; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -109,6 +110,7 @@ namespace Rockstar._Nodes
         private SKColor _color;
         private RSSpriteFrame _frame;
         private RSNodeSurfaceRenderMode _renderMode;
+        private RSRenderSurfaceBlendMode _blendMode;
 
         // ********************************************************************************************
         // Methods
