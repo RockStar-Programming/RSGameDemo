@@ -137,7 +137,7 @@ namespace Rockstar._Nodes
                  (-_transformation.Size.Width * _transformation.Anchor.X) + frame.Offset.X,
                  (-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y)) + frame.Offset.Y);
 
-            surface.DrawBitmap(upperLeft, frame, _sheet.Bitmap);
+            surface.DrawBitmap(upperLeft, frame, _sheet.Bitmap, _transformation.Color);
         }
 
         public void SetCurrentFrame(int index)

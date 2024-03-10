@@ -167,23 +167,27 @@ namespace Rockstar._Game
             RSNode.RemoveChildren(_scene);
 
             _scene.Transformation.Size = size;
+            _scene.Transformation.Color = SKColors.DarkGreen;
             _physics.Reset(_scene);
 
             // create an off screen render canvas to make motion streaks on
             // because alpha in this case is everything, the surface is created without pre-multiplied alpha
             // this allows for slightly better blending
             //
-            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size, RSRenderSurfaceBlendMode.BlendToTransparent);
+            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size);
             _motionCanvas.Transformation.Anchor = SKPoint.Empty;
-            _motionCanvas.Color = SKColors.DarkGreen.WithAlpha(16);
+            //_motionCanvas.Transformation.Color = SKColors.White;
+            _motionCanvas.AlphaDecay = 60;
             _motionCanvas.Transformation.Z = -10;
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350), RSRenderSurfaceBlendMode.BlendToTransparent);
+            _surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350));
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
             _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
             _surface.Transformation.Z = 10;
-            _surface.Color = new SKColor(32, 128, 96, 64);
+            //_surface.Transformation.Color = SKColors.White;
+            _surface.ClearColor = SKColors.Red;
+            _surface.AlphaDecay = 16;
             _scene.AddChild(_surface);
 
             _surface.MoveBy(new SKPoint(1000, 0), 5.0f).Repeat();

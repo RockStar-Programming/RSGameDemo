@@ -3,7 +3,6 @@ using SkiaSharp;
 
 using Rockstar._Types;
 using Rockstar._Nodes;
-using System.Xml.Linq;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -26,13 +25,6 @@ using System.Xml.Linq;
 
 namespace Rockstar._RenderSurface 
 {
-    public enum RSRenderSurfaceBlendMode
-    {
-        None,               // no blending, surface is cleared
-        BlendToColor,       // surface is slowly cleared to color, depending on alpha (leaves trails)
-        BlendToTransparent  
-    }
-
     public class RSRenderSurface : IDisposable
     {
         // ********************************************************************************************
@@ -44,25 +36,25 @@ namespace Rockstar._RenderSurface
         // ********************************************************************************************
         // Constructors
 
-        public static RSRenderSurface Create(SKCanvas canvas, SKColor color, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
+        public static RSRenderSurface Create(SKCanvas canvas, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
         {
-            return new RSRenderSurface(canvas, color, RSRenderSurfaceBlendMode.None, origin, false);
+            return new RSRenderSurface(canvas, origin, false);
         }
 
-        public static RSRenderSurface CreateOffScreen(RSNodeSurface node, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
+        public static RSRenderSurface CreateOffScreen(SKCanvas canvas, RSTransformationOrigin origin = RSTransformationOrigin.LowerLeft)
         {
-            return new RSRenderSurface(node.Canvas, node.Color, node.BlendMode, origin, true);
+            return new RSRenderSurface(canvas, origin, true);
         }
 
-        private RSRenderSurface(SKCanvas canvas, SKColor color, RSRenderSurfaceBlendMode blendMode, RSTransformationOrigin origin, bool offScreen)
+        // ********************************************************************************************
+
+        private RSRenderSurface(SKCanvas canvas, RSTransformationOrigin origin, bool offScreen)
         {
             _canvas = canvas;
             _size = new SKSize(_canvas.DeviceClipBounds.Width, _canvas.DeviceClipBounds.Height);
-            _color = color;
             _origin = origin;
             _matrix = SKMatrix.Identity;
             _offScreen = offScreen;
-            _blendMode = blendMode;
             SetRenderQuality(SKFilterQuality.Low);
         }
 
@@ -90,13 +82,11 @@ namespace Rockstar._RenderSurface
 
         private SKCanvas _canvas;
         private SKSize _size;
-        private SKColor _color;
         private RSTransformationOrigin _origin;
         private SKMatrix _matrix;
         private bool _antiAlias;
         private SKFilterQuality _quality;
         private bool _offScreen;
-        private RSRenderSurfaceBlendMode _blendMode;
 
         // ********************************************************************************************
         // Methods
@@ -164,16 +154,16 @@ namespace Rockstar._RenderSurface
             _canvas.DrawText(text, position.X, position.Y, paint);
         }
 
-        public void DrawBitmap(SKPoint position, RSSpriteFrame frame, SKBitmap bitmap)
+        public void DrawBitmap(SKPoint position, RSSpriteFrame frame, SKBitmap bitmap, SKColor color)
         {
             SKPaint paint = new SKPaint
             {
                 FilterQuality = _quality,
                 IsAntialias = _antiAlias,
-                //ColorFilter = SKColorFilter.CreateBlendMode(
-                //    new SKColor(255, 255, 0, 255), // Tint color
-                //    SKBlendMode.Modulate // Blend mode
-                //)
+                ColorFilter = SKColorFilter.CreateBlendMode(
+                    color, // Tint color
+                    SKBlendMode.Modulate 
+                )
             };
 
             SKSize renderSize = new SKSize(frame.SheetRect.Right - frame.SheetRect.Left, frame.SheetRect.Bottom - frame.SheetRect.Top);
@@ -224,64 +214,57 @@ namespace Rockstar._RenderSurface
             _quality = quality;
         }
 
-        public void Clear()
+        public void Clear(SKColor color)
         {
-            // for anything but full alpha or no blend mode, the node itself
-            //   is responsible for clearing the canvas
-            if ((_color.Alpha == 255) || (_blendMode == RSRenderSurfaceBlendMode.None))
-            {
-                _canvas.Clear(_color);
-            }
+            _canvas.Clear(color);
         }
 
-        public void Clear(SKBitmap bitmap)
+        //
+        // TODO:
+        // When any alpha decay, ClearColor must be preserved
+        //
+        public void Clear(SKBitmap bitmap, SKColor color, Byte alphaDecay)
         {
-            if (_blendMode == RSRenderSurfaceBlendMode.None)
-            {
-                
-            }
-            else if (_blendMode == RSRenderSurfaceBlendMode.BlendToColor)
-            {
-                SKCanvas canvas = new SKCanvas(bitmap);
+            if (alphaDecay == 0) return;
 
-                // Create a paint object with the blend mode set to SrcOver, which draws the source over the destination
-                var paint = new SKPaint
+            if (alphaDecay == 255)
+            { 
+                _canvas.Clear(color);
+                return;
+            }
+
+            SKCanvas canvas = new SKCanvas(bitmap);
+
+            //var colorPaint = new SKPaint
+            //{
+            //    Color = new SKColor(0, 0, 0, 255)
+            //};
+            //canvas.DrawRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), colorPaint);
+
+            // Create a paint object for the operation
+            var paint = new SKPaint
+            {
+                Color = SKColors.Black, // Color doesn’t matter, only the alphaClear channel will be used
+                BlendMode = SKBlendMode.DstOut // This mode subtracts alphaClear from the destination
+            };
+
+            // Create a mask that represents the reduction in alphaClear
+            SKBitmap alphaMask = new SKBitmap(bitmap.Width, bitmap.Height);
+            using (var maskCanvas = new SKCanvas(alphaMask))
+            {
+                // Draw with the desired alphaClear reduction
+                var maskPaint = new SKPaint
                 {
-                    Color = _color,
-                    BlendMode = SKBlendMode.SrcOver
+                    Color = new SKColor(0, 0, 0, alphaDecay)
                 };
-                // Draw a rectangle over the entire bitmap to apply the color blend
-                canvas.DrawRect(0, 0, bitmap.Width, bitmap.Height, paint);
+                maskCanvas.DrawRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), maskPaint);
             }
-            else if (_blendMode == RSRenderSurfaceBlendMode.BlendToTransparent)
-            {
-                SKCanvas canvas = new SKCanvas(bitmap);
 
-                // Create a paint object for the operation
-                var paint = new SKPaint
-                {
-                    Color = SKColors.Black, // Color doesn’t matter, only the alpha channel will be used
-                    BlendMode = SKBlendMode.DstOut // This mode subtracts alpha from the destination
-                };
+            // Apply the mask to the original canvas
+            canvas.DrawBitmap(alphaMask, 0, 0, paint);
 
-                // Create a mask that represents the reduction in alpha
-                SKBitmap alphaMask = new SKBitmap(bitmap.Width, bitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-                using (var maskCanvas = new SKCanvas(alphaMask))
-                {
-                    // Draw with the desired alpha reduction (e.g., 50% reduction)
-                    var maskPaint = new SKPaint 
-                    { 
-                        Color = new SKColor(0, 0, 0, _color.Alpha) 
-                    }; // 50% transparent black
-                    maskCanvas.DrawRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), maskPaint);
-                }
-
-                // Apply the mask to the original canvas
-                canvas.DrawBitmap(alphaMask, 0, 0, paint);
-
-                // Dispose of the mask bitmap
-                alphaMask.Dispose();
-            }
+            // Dispose of the mask bitmap
+            alphaMask.Dispose();
         }
 
         // ********************************************************************************************

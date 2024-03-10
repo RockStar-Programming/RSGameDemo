@@ -110,7 +110,7 @@ namespace Rockstar._CoreGame
             lock (_gameLock)
             {
                 // This creates the main screen canvas
-                RSRenderSurface surface = RSRenderSurface.Create(canvas, SKColors.DarkGreen);
+                RSRenderSurface surface = RSRenderSurface.Create(canvas);
 
                 if (_scene != null)
                 {

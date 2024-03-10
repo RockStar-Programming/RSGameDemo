@@ -1,4 +1,3 @@
 ﻿Z for node surfaces doesnt seem to work
 
-Should add seperate color for node surfaces + seperate clear alpha
-- that would also get rid of the blend mode
+ClearColor for node surfaces is not used when AlphaDecay is used

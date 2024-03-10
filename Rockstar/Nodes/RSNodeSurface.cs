@@ -56,14 +56,14 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size, RSRenderSurfaceBlendMode blendMode, bool preMultiplyAlpha = true)
+        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size,  bool preMultiplyAlpha = true)
         { 
-            return new RSNodeSurface(position, size, blendMode, preMultiplyAlpha);
+            return new RSNodeSurface(position, size, preMultiplyAlpha);
         }
 
         // ********************************************************************************************
 
-        private RSNodeSurface(SKPoint position, SKSize size, RSRenderSurfaceBlendMode blendMode, bool preMultiplyAlpha)
+        private RSNodeSurface(SKPoint position, SKSize size, bool preMultiplyAlpha)
         {
             InitWithData(position, size);
 
@@ -85,10 +85,10 @@ namespace Rockstar._Nodes
             }
 
             _canvas = new SKCanvas(_bitmap);
-            _color = SKColors.Transparent;
+            _clearColor = SKColors.Transparent;
+            _alphaDecay = 255;
             _frame = RSSpriteFrame.Create(SKPoint.Empty, size);
             _renderMode = RSNodeSurfaceRenderMode.Automatic;
-            _blendMode = blendMode;
         }
 
         // ********************************************************************************************
@@ -99,20 +99,20 @@ namespace Rockstar._Nodes
 
         public SKBitmap Bitmap { get { return _bitmap; } }
         public SKCanvas Canvas { get { return _canvas; } }
-        public SKColor Color { get { return _color; } set { _color = value; } }
         public RSNodeSurfaceRenderMode RenderMode { get { return _renderMode; } }
-        public RSRenderSurfaceBlendMode BlendMode { get { return _blendMode; } }
+        public SKColor ClearColor { get { return _clearColor; } set { _clearColor = value; } }
+        public byte AlphaDecay { get { return _alphaDecay; } set { _alphaDecay = value; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private SKBitmap _bitmap;
         private SKCanvas _canvas;
-        private SKColor _color;
         private RSSpriteFrame _frame;
         private RSNodeSurfaceRenderMode _renderMode;
-        private RSRenderSurfaceBlendMode _blendMode;
-
+        private SKColor _clearColor;
+        private byte _alphaDecay;
+ 
         // ********************************************************************************************
         // Methods
 
@@ -130,7 +130,9 @@ namespace Rockstar._Nodes
                  (-_transformation.Size.Width * _transformation.Anchor.X),
                  (-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y)));
 
-            surface.DrawBitmap(upperLeft, _frame, _bitmap);
+
+
+            surface.DrawBitmap(upperLeft, _frame, _bitmap, _transformation.Color);
         }
 
         // ********************************************************************************************

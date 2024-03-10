@@ -92,7 +92,12 @@ namespace Rockstar._Renderer
 
             // set initial matrix and clear render surface
             surface.SetMatrix(matrix);
-            surface.Clear();
+
+            // node surfaces are cleared in BuildRenderList
+            if (node is RSNodeSurface == false)
+            {
+                surface.Clear(node.Transformation.Color);
+            }
 
             // transform the node tree to render
             BuildRenderList(surface, node, renderList);
@@ -170,8 +175,9 @@ namespace Rockstar._Renderer
             if ((node is RSNodeSurface nodeSurface) && (surface.Canvas != nodeSurface.Canvas))
             {
                 // Create off screen surface, and render the tree
-                RSRenderSurface renderSurface = RSRenderSurface.CreateOffScreen(nodeSurface);
-                renderSurface.Clear(nodeSurface.Bitmap);
+                RSRenderSurface renderSurface = RSRenderSurface.CreateOffScreen(nodeSurface.Canvas);
+
+                renderSurface.Clear(nodeSurface.Bitmap, nodeSurface.ClearColor, nodeSurface.AlphaDecay);
                 RenderNodeTree(renderSurface, nodeSurface);
 
                 // children was just rendered, so drop them here
