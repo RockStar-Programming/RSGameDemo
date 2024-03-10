@@ -33,7 +33,7 @@ namespace Rockstar._Nodes
     
     }
 
-    public class RSNodeParticle : RSNode
+    public class RSNodeParticle : RSNodeSprite
     {
         // ********************************************************************************************
         // Implements a single invisible particle
@@ -44,11 +44,6 @@ namespace Rockstar._Nodes
 
         // ********************************************************************************************
         // Constructors
-
-        protected RSNodeParticle()
-        { 
-        
-        }
 
         // ********************************************************************************************
         // Class Properties

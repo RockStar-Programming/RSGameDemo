@@ -12,6 +12,7 @@ using Box2D.NetStandard.Collision;
 using Rockstar._Nodes;
 using System.Diagnostics;
 using Rockstar._PhysicsDef;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -87,6 +88,9 @@ namespace Rockstar._Physics
         // ********************************************************************************************
         // Internal Data
 
+        private const bool SHOW_LOAD = true;
+        private const float SHOW_LOAD_MAGNIFICATION = 3.0f; // defines how primenet the red load color is
+
         private const float DEFAULT_PIXELSIZE_IN_METRES = 0.01f;
         private const float WORLD_EXPANSION = 100000.0f;
         private const float GROUND_THICKNESS = 50.0f;
@@ -121,13 +125,13 @@ namespace Rockstar._Physics
         //   This sometimes results in breakable bodies being squeezed into other bodies without breaking
         //   Problem is minimal, and most often occur when new bodies are added to already cramped positions
         //
-        private const float IMPULSE_ENERGY_GAIN = 10.0f;
+        private const float IMPULSE_ENERGY_GAIN = 7.5f;
         private const float KINETIC_ENERGY_GAIN = 0.25f;
 
         // basic step settings for Box2D
         //
-        private const int VELOCITY_INTERACTIONS = 8;
-        private const int POSITION_INTERACTIONS = 3;
+        private const int VELOCITY_INTERACTIONS = 16;
+        private const int POSITION_INTERACTIONS = 8;
 
         private World _world;
         private float _worldScale;
@@ -175,6 +179,16 @@ namespace Rockstar._Physics
                     physics.Node.Transformation.Position = new SKPoint(position.X * _worldScale, position.Y * _worldScale);
                     physics.Node.Transformation.Rotation = -body.GetAngle() * 180.0f / (float)Math.PI;
                     physics.Node.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
+
+                    if (SHOW_LOAD == true)
+                    {
+                        float load = SHOW_LOAD_MAGNIFICATION * (physics.StaticEnergy / physics.BreakEnergy).ClampNormalised();
+                        byte red = (physics.Color.Red + (load * (255.0f - physics.Color.Red))).ClampByte();
+                        byte green = (physics.Color.Green - (load * physics.Color.Green)).ClampByte();
+                        byte blue = (physics.Color.Blue - (load * physics.Color.Blue)).ClampByte();
+
+                        physics.Node.Transformation.Color = new SKColor(red, green, blue, physics.Node.Transformation.Color.Alpha);
+                    }
                 }
                 body = body.GetNext();
             }
@@ -346,12 +360,15 @@ namespace Rockstar._Physics
 
                 body.CreateFixture(fixture);
 
-                RSPhysicsDef physics = RSPhysicsDef.CreateWithNode(node, body, fixture, breakEnergy);
+                RSPhysicsDef physics = RSPhysicsDef.CreateWithNode(node, body, breakEnergy);
                 body.SetUserData(physics);
 
                 return physics;
             }
         }
+
+        // ********************************************************************************************
+        // Contact Callbacks
 
         public override void BeginContact(in Contact contact)
         {
@@ -390,7 +407,7 @@ namespace Rockstar._Physics
             var bodyA = contact.FixtureA.Body;
             var bodyB = contact.FixtureB.Body;
 
-            float initialEnergy = 0;
+            float initialEnergy;
             float impulseEnergy = IMPULSE_ENERGY_GAIN * (impulse.normalImpulses[0] + impulse.normalImpulses[1]);
 
             // calculate energy of both bodies
@@ -401,12 +418,13 @@ namespace Rockstar._Physics
                 // The energy lost in A, is half of the total energy lost
                 // Now, this is not correct if one of the bodies are bouncy bouncy, but this is not the real world ...
                 //
-                float energyA = Math.Abs(initialEnergy - energy) / 2.0f;
+                float collisionEnergyA = Math.Abs(initialEnergy - energy) / 2.0f;
                 
                 // if energy is above breaking energy, the body is added to the kill list
                 RSPhysicsDef physicsA = bodyA.GetUserData<RSPhysicsDef>();
+                physicsA.SaveImpuseEnergy(impulseEnergy);
 
-                if ((energyA + impulseEnergy > physicsA.BreakEnergy) && (_bodyKillList.Contains(bodyA) == false))
+                if ((collisionEnergyA + impulseEnergy + physicsA.StaticEnergy > physicsA.BreakEnergy) && (_bodyKillList.Contains(bodyA) == false))
                     _bodyKillList.Add(bodyA);
 
                 // contact always removed
@@ -415,9 +433,10 @@ namespace Rockstar._Physics
 
             _contactList.TryGetValue(bodyB, out initialEnergy);
             {
-                float energyB = Math.Abs(initialEnergy - energy) / 2.0f;
+                float collisionEnergyB = Math.Abs(initialEnergy - energy) / 2.0f;
                 RSPhysicsDef physicsB = bodyB.GetUserData<RSPhysicsDef>();
-                if ((energyB + impulseEnergy > physicsB.BreakEnergy) && (_bodyKillList.Contains(bodyB) == false))
+                physicsB.SaveImpuseEnergy(impulseEnergy);
+                if ((collisionEnergyB + impulseEnergy + physicsB.StaticEnergy > physicsB.BreakEnergy) && (_bodyKillList.Contains(bodyB) == false))
                     _bodyKillList.Add(bodyB);
                 _contactList.Remove(bodyB);
             }

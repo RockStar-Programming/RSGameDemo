@@ -56,6 +56,8 @@ namespace Rockstar._Action
         {
             action.SetRepeatCounter(repeat);
             return action;
+
+            SKRuntimeEffect filter;
         }
 
         // ********************************************************************************************

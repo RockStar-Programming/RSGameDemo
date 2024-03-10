@@ -121,7 +121,7 @@ namespace Rockstar._SpriteSheet
             if (jsonPath == null) jsonPath = Path.ChangeExtension(imagePath, "." + RSKeys.JSON);
             RSDictionary setup = RSCodecJson.CreateDictionaryWithFilePath(jsonPath);
 
-            // Load available frames from a json
+            // StaticEnergy available frames from a json
             // Currently TexturePacker Array is supported
             //
             switch (GetSpriteSheetFormat(setup))

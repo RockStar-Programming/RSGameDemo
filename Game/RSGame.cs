@@ -153,7 +153,7 @@ namespace Rockstar._Game
             {
                 position = _scene.LocalPosition(position);
 
-                RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(18, 18), SKColors.Magenta);
+                RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(18, 18), SKColors.LightGreen);
                 _scene.AddChild(solid);
                 _physics.AddDynamicNode(solid, 15.0f, 5.0f, 0.5f, 0.1f);
             }
@@ -177,7 +177,7 @@ namespace Rockstar._Game
             _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size);
             _motionCanvas.Transformation.Anchor = SKPoint.Empty;
             //_motionCanvas.Transformation.Color = SKColors.White;
-            _motionCanvas.AlphaDecay = 60;
+            _motionCanvas.AlphaDecay = 25;
             _motionCanvas.Transformation.Z = -10;
             _scene.AddChild(_motionCanvas);
 
@@ -187,7 +187,7 @@ namespace Rockstar._Game
             _surface.Transformation.Z = 10;
             //_surface.Transformation.Color = SKColors.White;
             _surface.ClearColor = SKColors.Red;
-            _surface.AlphaDecay = 16;
+            _surface.AlphaDecay = 60;
             _scene.AddChild(_surface);
 
             _surface.MoveBy(new SKPoint(1000, 0), 5.0f).Repeat();

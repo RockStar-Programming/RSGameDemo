@@ -55,25 +55,29 @@ namespace Rockstar._Nodes
 
         // ********************************************************************************************
 
-        private RSNodeSprite(SKPoint position, string filePath)
+        protected RSNodeSprite(SKPoint position, string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFile(filePath);
             InitWithData(position, new SKSize(_sheet.Bitmap.Width, _sheet.Bitmap.Height));
             _currentFrame = 0;
         }
 
-        private RSNodeSprite(SKPoint position, SKSize size, string filePath)
+        protected RSNodeSprite(SKPoint position, SKSize size, string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFileAndSize(filePath, size);
             InitWithData(position, size);
             _currentFrame = 0;
         }
 
-        private RSNodeSprite(SKPoint position, string filePath, string? jsonPath)
+        protected RSNodeSprite(SKPoint position, string filePath, string? jsonPath)
         { 
             _sheet = RSSpriteSheet.CreateFromFileAndJson(filePath, jsonPath);
             InitWithData(position, _sheet.Frame(0).Size);
             _currentFrame = 0;
+        }
+        protected RSNodeSprite()
+        { 
+            throw new NotImplementedException();
         }
 
         // ********************************************************************************************
