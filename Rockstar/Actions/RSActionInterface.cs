@@ -1,9 +1,10 @@
-﻿using Rockstar._Lerp;
+﻿
+using SkiaSharp;
+
+using Rockstar._Lerp;
 using Rockstar._Nodes;
 using Rockstar._Types;
 using Rockstar._ActionManager;
-using SkiaSharp;
-using System;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -34,10 +35,11 @@ namespace Rockstar._Action
         // ********************************************************************************************
         // Constructors
 
-        public static void MoveTo(this RSNode node, SKPoint position, float duration, RSLerpType type = RSLerpType.Linear)
+        public static RSAction MoveTo(this RSNode node, SKPoint position, float duration, RSLerpType type = RSLerpType.Linear)
         {
             RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
             RSActionManager.Add(node, action);
+            return action;
         }
 
         public static RSAction MoveBy(this RSNode node, SKPoint movement, float duration, RSLerpType type = RSLerpType.Linear)
@@ -47,6 +49,8 @@ namespace Rockstar._Action
             RSActionManager.Add(node, action);
             return action;
         }
+
+        // ********************************************************************************************
 
         public static RSAction Repeat(this RSAction action, int repeat = -1)
         {

@@ -1,1 +1,4 @@
 ﻿Z for node surfaces doesnt seem to work
+
+Should add seperate color for node surfaces + seperate clear alpha
+- that would also get rid of the blend mode

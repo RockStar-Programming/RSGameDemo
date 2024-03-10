@@ -171,6 +171,7 @@ namespace Rockstar._Renderer
             {
                 // Create off screen surface, and render the tree
                 RSRenderSurface renderSurface = RSRenderSurface.CreateOffScreen(nodeSurface);
+                renderSurface.Clear(nodeSurface.Bitmap);
                 RenderNodeTree(renderSurface, nodeSurface);
 
                 // children was just rendered, so drop them here

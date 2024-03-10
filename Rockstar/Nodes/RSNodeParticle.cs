@@ -26,17 +26,29 @@ using System.Threading.Tasks;
 
 namespace Rockstar._Nodes
 {
+    public enum RSNodeParticleType
+    { 
+
+    
+    
+    }
+
     public class RSNodeParticle : RSNode
     {
         // ********************************************************************************************
         // Implements a single invisible particle
         //
-        // This calls only functions as ancestor for
+        // This mclass in only intended as ancestor for
         // - RSNodeSolidParticle
         // - RSNodeSpriteParticle
 
         // ********************************************************************************************
         // Constructors
+
+        protected RSNodeParticle()
+        { 
+        
+        }
 
         // ********************************************************************************************
         // Class Properties
@@ -44,11 +56,14 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Properties
 
-        public SKPoint Velocity;
-
+        public SKPoint Velocity { get { return _velocity; } }
+        public SKPoint Gravity { get { return _gravity; } }
 
         // ********************************************************************************************
         // Internal Data
+
+        private SKPoint _velocity;
+        private SKPoint _gravity;
 
         // ********************************************************************************************
         // Methods

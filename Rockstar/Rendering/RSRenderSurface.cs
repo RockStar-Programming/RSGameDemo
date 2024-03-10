@@ -29,9 +29,8 @@ namespace Rockstar._RenderSurface
     public enum RSRenderSurfaceBlendMode
     {
         None,               // no blending, surface is cleared
-        BlendToColor,       // surface is slowly cleared to color, depending on alpha
-        BlendToTransparent  // surface is slowly cleared to transparent, depending on alpha only
-                            // NOT support yet
+        BlendToColor,       // surface is slowly cleared to color, depending on alpha (leaves trails)
+        BlendToTransparent  
     }
 
     public class RSRenderSurface : IDisposable
@@ -227,28 +226,61 @@ namespace Rockstar._RenderSurface
 
         public void Clear()
         {
+            // for anything but full alpha or no blend mode, the node itself
+            //   is responsible for clearing the canvas
             if ((_color.Alpha == 255) || (_blendMode == RSRenderSurfaceBlendMode.None))
             {
                 _canvas.Clear(_color);
             }
+        }
+
+        public void Clear(SKBitmap bitmap)
+        {
+            if (_blendMode == RSRenderSurfaceBlendMode.None)
+            {
+                
+            }
             else if (_blendMode == RSRenderSurfaceBlendMode.BlendToColor)
             {
-                // only clear canvas partially
-                SKPaint paint = new SKPaint
+                SKCanvas canvas = new SKCanvas(bitmap);
+
+                // Create a paint object with the blend mode set to SrcOver, which draws the source over the destination
+                var paint = new SKPaint
                 {
-                    ColorFilter = SKColorFilter.CreateBlendMode(
-                        _color,
-                        SKBlendMode.SrcOut
-                    )
+                    Color = _color,
+                    BlendMode = SKBlendMode.SrcOver
+                };
+                // Draw a rectangle over the entire bitmap to apply the color blend
+                canvas.DrawRect(0, 0, bitmap.Width, bitmap.Height, paint);
+            }
+            else if (_blendMode == RSRenderSurfaceBlendMode.BlendToTransparent)
+            {
+                SKCanvas canvas = new SKCanvas(bitmap);
+
+                // Create a paint object for the operation
+                var paint = new SKPaint
+                {
+                    Color = SKColors.Black, // Color doesn’t matter, only the alpha channel will be used
+                    BlendMode = SKBlendMode.DstOut // This mode subtracts alpha from the destination
                 };
 
-                // Apply the paint using SaveLayer and Restore to clear alpha partially
-                _canvas.SaveLayer(paint);
-                _canvas.Restore();
-            }
-            else if (_blendMode != RSRenderSurfaceBlendMode.BlendToTransparent) 
-            { 
-            
+                // Create a mask that represents the reduction in alpha
+                SKBitmap alphaMask = new SKBitmap(bitmap.Width, bitmap.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+                using (var maskCanvas = new SKCanvas(alphaMask))
+                {
+                    // Draw with the desired alpha reduction (e.g., 50% reduction)
+                    var maskPaint = new SKPaint 
+                    { 
+                        Color = new SKColor(0, 0, 0, _color.Alpha) 
+                    }; // 50% transparent black
+                    maskCanvas.DrawRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), maskPaint);
+                }
+
+                // Apply the mask to the original canvas
+                canvas.DrawBitmap(alphaMask, 0, 0, paint);
+
+                // Dispose of the mask bitmap
+                alphaMask.Dispose();
             }
         }
 

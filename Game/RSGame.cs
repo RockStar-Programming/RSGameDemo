@@ -155,7 +155,7 @@ namespace Rockstar._Game
 
                 RSNodeSolid solid = RSNodeSolid.CreateRectangle(position, new SKSize(18, 18), SKColors.Magenta);
                 _scene.AddChild(solid);
-                _physics.AddDynamicNode(solid, 25.0f, 5.0f, 0.5f, 0.1f);
+                _physics.AddDynamicNode(solid, 15.0f, 5.0f, 0.5f, 0.1f);
             }
         }
 
@@ -173,25 +173,25 @@ namespace Rockstar._Game
             // because alpha in this case is everything, the surface is created without pre-multiplied alpha
             // this allows for slightly better blending
             //
-            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size, RSRenderSurfaceBlendMode.BlendToColor, false);
+            _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size, RSRenderSurfaceBlendMode.BlendToTransparent);
             _motionCanvas.Transformation.Anchor = SKPoint.Empty;
-            _motionCanvas.Color = new SKColor(32, 32, 32, 32);
+            _motionCanvas.Color = SKColors.DarkGreen.WithAlpha(16);
             _motionCanvas.Transformation.Z = -10;
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350), RSRenderSurfaceBlendMode.None);
+            _surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350), RSRenderSurfaceBlendMode.BlendToTransparent);
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
             _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
             _surface.Transformation.Z = 10;
-            _surface.Color = SKColors.Transparent; // new SKColor(96, 160, 32, 64);
+            _surface.Color = new SKColor(32, 128, 96, 64);
             _scene.AddChild(_surface);
 
             _surface.MoveBy(new SKPoint(1000, 0), 5.0f).Repeat();
             //_physics.AddStaticNode(_surface);
 
-            _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/blue_cat");
+            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/blue_cat");
             // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/red_dog");
-            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
+            _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
             _animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.AddChild(_animal);
 

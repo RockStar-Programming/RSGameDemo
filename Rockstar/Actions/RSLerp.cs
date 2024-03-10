@@ -2,8 +2,6 @@
 using SkiaSharp;
 
 using Rockstar._Types;
-using Rockstar._Event;
-using OpenTK.Graphics.OpenGL;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
