@@ -125,7 +125,7 @@ namespace Rockstar._Physics
         //   This sometimes results in breakable bodies being squeezed into other bodies without breaking
         //   Problem is minimal, and most often occur when new bodies are added to already cramped positions
         //
-        private const float IMPULSE_ENERGY_GAIN = 7.5f;
+        private const float IMPULSE_ENERGY_GAIN = 7.50f;
         private const float KINETIC_ENERGY_GAIN = 0.25f;
 
         // basic step settings for Box2D

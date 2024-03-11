@@ -96,7 +96,7 @@ namespace Rockstar._Game
             _catTimer += interval;
             if (_catTimer > 0.1f)
             {
-                _animal.SetCurrentFrame(_animal.CurrentFrame + 1);
+                if (_animal != null) _animal.SetCurrentFrame(_animal.CurrentFrame + 1);
                 _catTimer -= 0.1f;
             }
         }
@@ -181,23 +181,23 @@ namespace Rockstar._Game
             _motionCanvas.Transformation.Z = -10;
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350));
-            _surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
-            _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
-            _surface.Transformation.Z = 10;
-            //_surface.Transformation.Color = SKColors.White;
-            _surface.ClearColor = SKColors.Red;
-            _surface.AlphaDecay = 60;
-            _scene.AddChild(_surface);
+            //_surface = RSNodeSurface.CreateWithSize(new SKPoint(-100, 200), new SKSize(280, 350));
+            //_surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
+            //_surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
+            //_surface.Transformation.Z = 10;
+            ////_surface.Transformation.Color = SKColors.White;
+            //_surface.ClearColor = SKColors.Red;
+            //_surface.AlphaDecay = 60;
+            //_scene.AddChild(_surface);
 
-            _surface.MoveBy(new SKPoint(1000, 0), 5.0f).Repeat();
-            //_physics.AddStaticNode(_surface);
+            //_surface.MoveBy(new SKPoint(1000, 0), 5.0f).Repeat();
+            ////_physics.AddStaticNode(_surface);
 
-            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/blue_cat");
-            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/red_dog");
-            _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
-            _animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
-            _surface.AddChild(_animal);
+            //// _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/blue_cat");
+            //// _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/red_dog");
+            //_animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
+            //_animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            //_surface.AddChild(_animal);
 
             _loadScene = RSNodeString.CreateString(new SKPoint(50, 50), "Reload Scene", RSFont.Create());
             _scene.AddChild(_loadScene);
