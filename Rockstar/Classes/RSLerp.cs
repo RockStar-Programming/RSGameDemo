@@ -1,7 +1,8 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._Types;
+using Rockstar._SpriteFrame;
+using System.Security.Policy;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -56,31 +57,38 @@ namespace Rockstar._Lerp
         // ********************************************************************************************
         // Constructors
 
-        public static RSLerp Create(object lerpFrom, object lerpTo, float duration, RSLerpType type, int repeat = 1)
+        public static RSLerp Empty() 
+        {
+            return new RSLerp(); ; 
+        }
+
+        public static RSLerp Create(float duration, RSLerpType type)
         { 
-            return new RSLerp(lerpFrom, lerpTo, duration, type);
+            return new RSLerp(duration, type);
         }
 
         // ********************************************************************************************
 
-        protected RSLerp(object lerpFrom, object lerpTo, float duration, RSLerpType type, int repeat = 1) 
+        protected RSLerp(float duration, RSLerpType type) 
         { 
             _value = null;
-            _lerpFrom = lerpFrom;
-            _lerpTo = lerpTo;
+            _lerpFrom = 0;
+            _lerpTo = 0;
 
             _invalid = true;
-            if ((_lerpFrom is float) && (_lerpTo is float)) _invalid = false;
-            if ((_lerpFrom is SKPoint) && (_lerpTo is SKPoint)) _invalid = false;
-            if ((_lerpFrom is SKSize) && (_lerpTo is SKSize)) _invalid = false;
-            if ((_lerpFrom is SKColor) && (_lerpTo is SKColor)) _invalid = false;
 
             _type = type;
             _duration = duration;
             _time = 0.0f;
             _completed = false;
             _state = RSLerpState.Stopped;
-            RepeatCounter = repeat;
+        }
+
+        protected RSLerp()
+        {
+            _lerpFrom = 0;
+            _lerpTo = 0;
+            _invalid = true;
         }
 
         // ********************************************************************************************
@@ -91,7 +99,7 @@ namespace Rockstar._Lerp
 
         public object? Value { get { return _value; } }
         public RSLerpState State { get { return _state; } } 
-        public int RepeatCounter { get; set; }
+        public bool Completed { get { return _completed; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -123,23 +131,59 @@ namespace Rockstar._Lerp
             }
             if (_time >= _duration)
             {
-                if (RepeatCounter > 0) RepeatCounter--;
-                if (RepeatCounter == 0)
-                {
-                    Stop();
-                } 
-                else
-                {
-                    Start();
-                }
+                Stop();
             }
         }
 
-        public virtual void Start()
+        public virtual void Start(object lerpFrom, object lerpTo, bool relative)
         {
+            _invalid = true;
+            _lerpFrom = lerpFrom;
+            _lerpTo = lerpTo;
+            _completed = false;
+
+            if ((_lerpFrom is float) && (_lerpTo is float)) _invalid = false;
+            if ((_lerpFrom is SKPoint) && (_lerpTo is SKPoint)) _invalid = false;
+            if ((_lerpFrom is SKSize) && (_lerpTo is SKSize)) _invalid = false;
+            if ((_lerpFrom is SKColor) && (_lerpTo is SKColor)) _invalid = false;
+
+            if ((_invalid == false) && (relative == true))
+            {
+                if (_lerpFrom is float)
+                {
+                    _lerpTo = (float)_lerpFrom + (float)_lerpTo;
+                }
+                else if (_lerpFrom is SKPoint)
+                {
+                    _lerpTo = (SKPoint)_lerpFrom + (SKPoint)_lerpTo;
+                }
+                else if (_lerpFrom is SKSize)
+                {
+                    _lerpTo = (SKSize)_lerpFrom + (SKSize)_lerpTo;
+                }
+                else if (_lerpFrom is SKColor)
+                {
+                    SKColor from = (SKColor)_lerpFrom;
+                    SKColor change = (SKColor)_lerpTo;
+                    _lerpTo = new SKColor(
+                        ((float)from.Red + change.Red).ClampByte(),
+                        ((float)from.Green + change.Green).ClampByte(),
+                        ((float)from.Blue + change.Blue).ClampByte(),
+                        ((float)from.Alpha + change.Alpha).ClampByte());
+                }
+            }
+                    
             _time = 0.0f;
-            _value = _lerpFrom;
-            _state = RSLerpState.Running;
+            // if duration <= 0, lerp is instant 
+            if (_duration > 0.0f)
+            {
+                _value = _lerpFrom;
+                _state = RSLerpState.Running;
+            }
+            else
+            {
+                Stop();
+            }
         }
 
         public virtual void Stop()

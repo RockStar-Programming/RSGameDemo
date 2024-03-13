@@ -26,6 +26,12 @@ using Rockstar._Nodes;
 
 namespace Rockstar._Action
 {
+    public enum RSActionType
+    {
+        Absolute,
+        Relative
+    }
+
     public class RSAction
     {
         // ********************************************************************************************
@@ -35,7 +41,7 @@ namespace Rockstar._Action
         // ********************************************************************************************
         // Constructors
 
-        public RSAction InitAction(RSNode node, string propertyName, object newValue, float duration, RSLerpType type)
+        public RSAction InitAction(RSNode node, string propertyName, object lerpValue, RSActionType actionType, float duration, RSLerpType lerpType)
         {
             List<string> propertyList = new List<string>(propertyName.Split('.'));
             object? property = node;
@@ -49,40 +55,58 @@ namespace Rockstar._Action
                 }
                 propertyList.RemoveAt(0);
             }
-            _lerp = RSLerpProperty.Create(property, info, node.Transformation.Position, newValue, duration, type);
+            _node = node;
+            _lerp = RSLerpProperty.Create(property, info, duration, lerpType);
+            _lerpValue = lerpValue;
+            _actionType = actionType;
             return this;
+        }
+
+        public RSAction()
+        {
+            _node = RSNode.Create();
+            _lerp = RSLerpProperty.Empty();
         }
 
         // ********************************************************************************************
         // Class Properties
 
+        public const float INSTANT = 0.0f;
 
         // ********************************************************************************************
         // Properties
 
+        public RSNode Node { get { return _node; } }
+        public RSLerpState State { get { return _lerp.State; } }
+        public bool Completed { get { return _lerp.Completed; } }
+
         // ********************************************************************************************
         // Internal Data
 
-        private RSLerpProperty? _lerp;
+        private RSNode _node;
+        private RSLerpProperty _lerp;
+        private RSActionType _actionType;
+        private object _lerpValue;
 
         // ********************************************************************************************
         // Methods
 
         public void Update(float interval)
         {
-            if (_lerp != null) _lerp.Update(interval);
+            _lerp.Update(interval);
         }
 
         public void Start()
         {
-            if (_lerp != null) _lerp.Start();
+            if ((_lerp.Property != null) && (_lerp.Info != null))
+            {
+                object? lerpFrom = _lerp.Info.GetValue(_lerp.Property);
+                if (lerpFrom != null)
+                {
+                    _lerp.Start(lerpFrom, _lerpValue, _actionType == RSActionType.Relative);
+                }
+            }
         }
-
-        public void SetRepeatCounter(int count)
-        {
-            if (_lerp != null) _lerp.RepeatCounter = count;
-        }
-
 
         // ********************************************************************************************
         // Event Handlers

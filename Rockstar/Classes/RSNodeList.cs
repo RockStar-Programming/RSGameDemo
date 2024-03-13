@@ -25,9 +25,9 @@ namespace Rockstar._NodeList
     public class RSNodeList : List<RSNode>
     {
         // ********************************************************************************************
-        // Encapsulates a Level and Transformation.Z sorted node list
+        // Encapsulates a Level and Transformation.Altitude sorted node list
         // 
-        // Nodes will first be sorted according to Level, then each level according to Transformation.Z 
+        // Nodes will first be sorted according to Level, then each level according to Transformation.Altitude 
         // 
 
         // ********************************************************************************************
@@ -56,7 +56,7 @@ namespace Rockstar._NodeList
 
         public new void Sort()
         {
-            this.OrderBy(item => item.Level).ThenBy(item => item.Transformation.Z).ToList();
+            this.OrderBy(item => item.Level).ThenBy(item => item.Transformation.Altitude).ToList();
         }
 
         // ********************************************************************************************

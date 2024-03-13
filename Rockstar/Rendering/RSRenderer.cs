@@ -2,7 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._NodeList;
-using Rockstar._Types;
+using Rockstar._SpriteFrame;
 using Rockstar._RenderSurface;
 using Rockstar._Nodes;
 
@@ -35,7 +35,7 @@ namespace Rockstar._Renderer
         // 1) All nodes are transformed
         //    - This causes node.RenderMatrix to be set
         //    - Visible nodes are added to render list
-        // 2) Render list is sorted according to Z (lower Z rendered first)
+        // 2) Render list is sorted according to Altitude (lower Altitude rendered first)
         // 3) Render list is rendered to canvas
         // 4) RenderNodeTree is called resursively for off screen rendering 
 
@@ -102,7 +102,7 @@ namespace Rockstar._Renderer
             // transform the node tree to render
             BuildRenderList(surface, node, renderList);
 
-            // sort the render list for Z
+            // sort the render list for Altitude
             renderList.Sort();
 
             // node list is now transformed and sorted, ready to render
@@ -193,7 +193,7 @@ namespace Rockstar._Renderer
                 //   as children might depend on it
                 node.ApplySurfaceMatrix(surface);
 
-                // Add the node to the render list if visible
+                // AddAction the node to the render list if visible
                 if (node.Transformation.Visible == true)
                 {
                     renderList.Add(node);

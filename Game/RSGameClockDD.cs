@@ -1,7 +1,7 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._Types;
+using Rockstar._SpriteFrame;
 using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;

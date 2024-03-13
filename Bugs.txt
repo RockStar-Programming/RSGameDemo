@@ -1,3 +1,4 @@
 ﻿Z for node surfaces doesnt seem to work
 
 ClearColor for node surfaces is not used when AlphaDecay is used
+Size for node surfaces doesnt affect the actual size after creation

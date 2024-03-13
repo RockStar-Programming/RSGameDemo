@@ -12,7 +12,7 @@ using Box2D.NetStandard.Collision;
 using Rockstar._Nodes;
 using System.Diagnostics;
 using Rockstar._PhysicsDef;
-using Rockstar._Types;
+using Rockstar._SpriteFrame;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

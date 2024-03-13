@@ -41,14 +41,23 @@ namespace Rockstar._LerpProperty
         // ********************************************************************************************
         // Constructors
 
-        public static RSLerpProperty Create(object? property, PropertyInfo? info, object lerpFrom, object lerpTo, float duration, RSLerpType type)
+        public new static RSLerpProperty Empty()
         {
-            return new RSLerpProperty(property, info, lerpFrom, lerpTo, duration, type);
+            return new RSLerpProperty();
+        }
+
+        public static RSLerpProperty Create(object? property, PropertyInfo? info, float duration, RSLerpType type)
+        {
+            return new RSLerpProperty(property, info, duration, type);
         }
 
         // ********************************************************************************************
 
-        private RSLerpProperty(object? property, PropertyInfo? info, object lerpFrom, object lerpTo, float duration, RSLerpType type) : base(lerpFrom, lerpTo, duration, type)
+        private RSLerpProperty() : base()
+        {
+        }
+
+        private RSLerpProperty(object? property, PropertyInfo? info, float duration, RSLerpType type) : base(duration, type)
         {
             _property = property;
             _info = info;
@@ -57,14 +66,13 @@ namespace Rockstar._LerpProperty
             {
                 _invalid = true;
             }
-            else
-            { 
-                if (lerpFrom.GetType() != _info.PropertyType) _invalid = true;
-            }
         }
 
         // ********************************************************************************************
         // Properties
+
+        public object? Property { get { return _property; } }
+        public PropertyInfo? Info { get { return _info; } }
 
         // ********************************************************************************************
         // Internal Data
@@ -75,11 +83,11 @@ namespace Rockstar._LerpProperty
         // ********************************************************************************************
         // Methods
 
-        public override void Start()
+        public override void Start(object lerpFrom, object lerpTo, bool relative)
         {
-            if ((_invalid == false) && (_info != null))
+            if ((_info != null) && (_property != null))
             {
-                base.Start();
+                base.Start(lerpFrom, lerpTo, relative);
                 _info.SetValue(_property, _value);
             }
         }

@@ -2,7 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._RenderSurface;
-using Rockstar._Types;
+using Rockstar._SpriteFrame;
 using Rockstar._NodeList;
 
 // ****************************************************************************************************

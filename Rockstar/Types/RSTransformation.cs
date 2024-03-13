@@ -20,7 +20,7 @@ using SkiaSharp;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Types
+namespace Rockstar._SpriteFrame
 {
     // Defines the overall transformation origin for the game engine
     // NOTE:
@@ -69,12 +69,12 @@ namespace Rockstar._Types
                 Scale = (data.Length > 2) && (data[2] is SKPoint scale) ? scale : DEFAULT_SCALE;
                 Rotation = (data.Length > 3) && (data[3] is float rotation) ? rotation : 0.0f;
                 Anchor = (data.Length > 4) && (data[4] is SKPoint anchor) ? anchor : DEFAULT_ANCHOR;
-                Color = (data.Length > 5) && (data[5] is SKColor color) ? color : SKColors.White;
+                Color = (data.Length > 5) && (data[5] is SKColor color) ? color : DEFAULT_COLOR;
 
                 // always reset
                 // 
                 Visible = true;
-                Z = 0;
+                Altitude = 0;
                 Origin = RSTransformationOrigin.LowerLeft;
             }
         }
@@ -83,26 +83,31 @@ namespace Rockstar._Types
         // Class Properties
 
         public static string POSITION = "Transformation.Position";
+        public static string ALTITUDE = "Transformation.Altitude";
         public static string SIZE = "Transformation.Size";
         public static string ANCHOR = "Transformation.Anchor";
         public static string ROTATION = "Transformation.Rotation";
         public static string SCALE = "Transformation.Scale";
+        public static string COLOR = "Transformation.Color";
+        public static string ALPHA = "Transformation.Alpha";
 
         public static SKSize DEFAULT_SIZE = new SKSize(100, 100);
         public static SKPoint DEFAULT_SCALE = new SKPoint(1.0f, 1.0f);
         public static SKPoint DEFAULT_ANCHOR = new SKPoint(0.5f, 0.5f);
+        public static SKColor DEFAULT_COLOR = SKColors.White;
 
         // ********************************************************************************************
         // Properties
 
         public bool Visible { get; set; }
         public SKPoint Position { get; set; }
-        public float Z { get; set; }
+        public float Altitude { get; set; }
         public SKSize Size { get; set; }
         public SKPoint Anchor { get; set; }
         public float Rotation { get; set; }
         public SKPoint Scale { get; set; }
         public SKColor Color { get; set; }
+        public float Alpha { get { return GetAlpha(); } set { SetAlpha(value); } }
         public RSTransformationOrigin Origin { set; get; }
         public SKMatrix Matrix { get { return CalculateMatrix(); } }
 
@@ -123,7 +128,7 @@ namespace Rockstar._Types
         private void CopyFrom(RSTransformation transformation)
         {
             Position = transformation.Position;
-            Z = transformation.Z;
+            Altitude = transformation.Altitude;
             Size = transformation.Size;
             Scale = transformation.Scale;
             Rotation = transformation.Rotation;
@@ -142,6 +147,20 @@ namespace Rockstar._Types
             _matrix = SKMatrix.Concat(_matrix, SKMatrix.CreateScale(Scale.X, Scale.Y));
             
             return _matrix;
+        }
+
+        private float GetAlpha()
+        {
+            return (Color.Alpha / 255.0f).ClampNormalised();
+        }
+
+        private void SetAlpha(float alpha)
+        {
+            Color = new SKColor(
+                Color.Red,
+                Color.Green,
+                Color.Blue,
+                (255.0f * alpha).ClampByte());
         }
 
         // ********************************************************************************************

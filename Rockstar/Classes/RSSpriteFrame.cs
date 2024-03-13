@@ -22,7 +22,7 @@ using Rockstar._Dictionary;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Types
+namespace Rockstar._SpriteFrame
 {
     public class RSSpriteFrame
     {

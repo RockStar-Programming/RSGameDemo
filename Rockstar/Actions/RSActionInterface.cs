@@ -3,7 +3,9 @@ using SkiaSharp;
 
 using Rockstar._Lerp;
 using Rockstar._Nodes;
-using Rockstar._Types;
+using Rockstar._SpriteFrame;
+using Rockstar._ActionList;
+using System.Collections.Generic;
 using Rockstar._ActionManager;
 
 // ****************************************************************************************************
@@ -31,33 +33,232 @@ namespace Rockstar._Action
     {
         // ********************************************************************************************
         // This defines interfaces for the RSActionProperty class
+        //
+        // Ex: creates a MoveTo followed by a ScaleTo, and saves it (does not initially run)
+        // "sequence" will be active until the actions are run, saved or repeated
+        // node.Sequence().MoveTo(pos1).ScaleTo(scale1).SaveAs("test");
+        // node.RunAction("test");
+        //
+        // Ex: simultaneously moves and scales the node. Runs instantly, and deletes action after completion
+        // node.MoveTo(pos1).ScaleTo(scale1).Run();
+        //
+        // Ex: 
+        // 
 
         // ********************************************************************************************
-        // Constructors
+        // Action Extensions
 
-        public static RSAction MoveTo(this RSNode node, SKPoint position, float duration, RSLerpType type = RSLerpType.Linear)
+        public static RSActionList MoveTo(this RSNode node, SKPoint position, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
-            RSActionManager.Add(node, action);
-            return action;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
         }
 
-        public static RSAction MoveBy(this RSNode node, SKPoint movement, float duration, RSLerpType type = RSLerpType.Linear)
+        public static RSActionList MoveTo(this RSActionList list, SKPoint position, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            SKPoint position = node.Transformation.Position + movement;
-            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, duration, type);
-            RSActionManager.Add(node, action);
-            return action;
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, position, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList MoveBy(this RSNode node, SKPoint movement, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, movement, RSActionType.Relative, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList MoveBy(this RSActionList list, SKPoint movement, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.POSITION, movement, RSActionType.Relative, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList ScaleTo(this RSNode node, SKPoint scale, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.SCALE, scale, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList ScaleTo(this RSActionList list, SKPoint scale, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.SCALE, scale, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList RotateTo(this RSNode node, float rotation, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ROTATION, rotation, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList RotateTo(this RSActionList list, float rotation, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ROTATION, rotation, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList RotateBy(this RSNode node, float angle, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ROTATION, angle, RSActionType.Relative, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList RotateBy(this RSActionList list, float angle, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ROTATION, angle, RSActionType.Relative, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList SizeTo(this RSNode node, SKSize size, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.SIZE, size, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList SizeTo(this RSActionList list, SKSize size, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.SIZE, size, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList AltitudeTo(this RSNode node, float altitude, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ALTITUDE, altitude, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList AltitudeTo(this RSActionList list, float altitude, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ALTITUDE, altitude, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList ColorTo(this RSNode node, SKColor color, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.COLOR, color, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList ColorTo(this RSActionList list, SKColor color, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.COLOR, color, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList AlphaTo(this RSNode node, float alpha, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ALPHA, alpha, RSActionType.Absolute, duration, type);
+
+            RSActionList list = node.ActionList().AddAction(action);
+            _pendingActionList[node] = list;
+            return list;
+        }
+
+        public static RSActionList AlphaTo(this RSActionList list, float alpha, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
+        {
+            RSNode node = list.Node;
+            RSAction action = new RSAction().InitAction(node, RSTransformation.ALPHA, alpha, RSActionType.Absolute, duration, type);
+            list.ActionList.Add(action);
+
+            _pendingActionList[node] = list;
+            return list;
         }
 
         // ********************************************************************************************
+        // Node Extensions
 
-        public static RSAction Repeat(this RSAction action, int repeat = -1)
+        // runs all stored actions under the name
+        public static void RunAction(this RSNode node, string name)
         {
-            action.SetRepeatCounter(repeat);
-            return action;
+            RSActionManager.RunAction(node, name);
+        }
 
-            SKRuntimeEffect filter;
+        // starts a sequence of actions
+        public static RSActionList Sequence(this RSNode node) 
+        {
+            return RSActionList.CreateSequence(node);
+        }
+
+        // ********************************************************************************************
+        // Final Action Extensions
+
+        // Saves the pending batch of actions
+        //   does not execute it
+        public static void SaveAs(this RSActionList actionList, string name)
+        {
+            RSActionManager.Save(actionList, name);
+            _pendingActionList.Remove(actionList.Node);
+        }
+
+        // saves the pending batch of actions
+        //   runs is once and removes it
+        public static void Run(this RSActionList actionList)
+        {
+            RSActionManager.Run(actionList);
+            _pendingActionList.Remove(actionList.Node);
+        }
+
+        // saves the pending batch of actions
+        //   runs is requested number of times (default forever)
+        public static void Repeat(this RSActionList actionList, int repeat = 0)
+        {
+            RSActionManager.Repeat(actionList, repeat);
+            _pendingActionList.Remove(actionList.Node);
         }
 
         // ********************************************************************************************
@@ -65,6 +266,8 @@ namespace Rockstar._Action
 
         // ********************************************************************************************
         // Internal Data
+
+        private static Dictionary<RSNode, RSActionList> _pendingActionList = new Dictionary<RSNode, RSActionList>();
 
         // ********************************************************************************************
         // Methods
@@ -74,6 +277,21 @@ namespace Rockstar._Action
 
         // ********************************************************************************************
         // Internal Methods
+
+        // retrieves the action list for the node,
+        //   otherwise returns a fresh one
+        private static RSActionList ActionList(this RSNode node)
+        {
+            if (_pendingActionList.ContainsKey(node) == true)
+            {
+                return _pendingActionList[node];
+            }
+
+            // no actions were found on that node, create and return new one
+            RSActionList newList = RSActionList.Create(node);
+            _pendingActionList.Add(node, newList);
+            return newList;
+        }
 
         // ********************************************************************************************
     }
