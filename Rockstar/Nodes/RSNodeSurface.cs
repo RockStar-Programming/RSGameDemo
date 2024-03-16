@@ -45,9 +45,9 @@ namespace Rockstar._Nodes
         // 
         // A node surface with no children added, and a visible color, will look just like a rectangle
         // Placement of children works identical to any other node, except for the clipping
-        // Node surfaces can contain other node surfaces
+        // Target surfaces can contain other node surfaces
         // 
-        // Node surfaces are used to achieve special effects when rendering. This could be:
+        // Target surfaces are used to achieve special effects when rendering. This could be:
         // - Uniform alpha blending on complex geometry (like ex. an animates character)
         // - Multi pass rendering
         // - Accumulative rendering

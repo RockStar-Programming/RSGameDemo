@@ -20,7 +20,7 @@ using SkiaSharp;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._SpriteFrame
+namespace Rockstar._Types
 {
     // Defines the overall transformation origin for the game engine
     // NOTE:

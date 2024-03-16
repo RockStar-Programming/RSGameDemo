@@ -2,13 +2,11 @@
 using SkiaSharp;
 
 using Rockstar._FrameTimer;
-using Rockstar._NodeList;
 using Rockstar._Renderer;
-using Rockstar._RenderSurface;
 using Rockstar._CoreMouse;
-using Rockstar._Nodes;
 using Rockstar._Physics;
 using Rockstar._ActionManager;
+using Rockstar._Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -47,7 +45,6 @@ namespace Rockstar._CoreGame
             _mouse = RSCoreMouse.Create(_gameLock);
             _scene = RSNodeScene.CreateScene();
             _frameTimer = RSFrameTimer.Create();
-            _debugNodeList = RSNodeList.Create();
             RSActionManager.Create();
 
             // Adding a bit of X gravity, prevents perfect stacking of objects
@@ -66,12 +63,10 @@ namespace Rockstar._CoreGame
         // ********************************************************************************************
         // Internal Data
 
-        private const bool RENDER_DEBUG_INFORMATION = true;
         protected RSRenderer _renderer;
         protected RSCoreMouse _mouse;
         protected RSNodeScene _scene;
         protected RSFrameTimer _frameTimer;
-        protected RSNodeList _debugNodeList;
         protected RSPhysics _physics;
         protected object _gameLock;
 
@@ -109,32 +104,9 @@ namespace Rockstar._CoreGame
         {
             lock (_gameLock)
             {
-                // This creates the main screen canvas
-                RSRenderSurface surface = RSRenderSurface.Create(canvas);
-
                 if (_scene != null)
                 {
-                    // scenes forces anchor point and size
-                    _scene.Transformation.Position = new SKPoint(-_scene.Transformation.Size.Width / 2.0f, -_scene.Transformation.Size.Height / 2.0f); ;
-                    _scene.Transformation.Anchor = new SKPoint(0.5f, 0.5f); // SKPoint.Empty;
-                    _scene.Transformation.Size = surface.Size;
-
-                    _renderer.RenderBegin();
-
-                    // render the entire node tree
-                    _renderer.RenderNodeTree(surface, _scene);
-
-                    // render any nodes added to debug list
-                    if (_debugNodeList != null)
-                    {
-                        _renderer.RenderDebugNodeList(surface, _debugNodeList);
-                    }
-
-                    // render right corner debug information
-                    if (RENDER_DEBUG_INFORMATION == true)
-                    {
-                        _renderer.RenderDebugString(surface, _renderer.NodeCount, _frameTimer.FPS);
-                    }
+                    _renderer.RenderScene(_scene, canvas, (float)_frameTimer.FPS);
                 }
             }
         }

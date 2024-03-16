@@ -10,9 +10,8 @@ using Box2D.NetStandard.Dynamics.Contacts;
 using Box2D.NetStandard.Collision;
 
 using Rockstar._Nodes;
-using System.Diagnostics;
 using Rockstar._PhysicsDef;
-using Rockstar._SpriteFrame;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -174,7 +173,7 @@ namespace Rockstar._Physics
             {
                 if (body.GetUserData<RSPhysicsDef>() is RSPhysicsDef physics)
                 {
-                    // Update the game object's position and rotation to match the physics body
+                    // Update the game RSNode's position and rotation to match the physics body
                     Vector2 position = body.GetPosition();
                     physics.Node.Transformation.Position = new SKPoint(position.X * _worldScale, position.Y * _worldScale);
                     physics.Node.Transformation.Rotation = -body.GetAngle() * 180.0f / (float)Math.PI;

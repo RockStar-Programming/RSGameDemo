@@ -2,8 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._RenderSurface;
-using Rockstar._SpriteFrame;
-using Rockstar._NodeList;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -235,7 +234,7 @@ namespace Rockstar._Nodes
         }
 
         // ********************************************************************************************
-        // Node positioning
+        // Target positioning
 
         // convert a screen position to a nodeToRemove position
         public SKPoint LocalPosition(SKPoint screenPosition)

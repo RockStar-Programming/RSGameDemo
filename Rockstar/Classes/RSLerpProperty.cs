@@ -46,9 +46,9 @@ namespace Rockstar._LerpProperty
             return new RSLerpProperty();
         }
 
-        public static RSLerpProperty Create(object? property, PropertyInfo? info, float duration, RSLerpType type)
+        public new static RSLerpProperty Create(float duration, RSLerpType type)
         {
-            return new RSLerpProperty(property, info, duration, type);
+            return new RSLerpProperty(duration, type);
         }
 
         // ********************************************************************************************
@@ -57,11 +57,8 @@ namespace Rockstar._LerpProperty
         {
         }
 
-        private RSLerpProperty(object? property, PropertyInfo? info, float duration, RSLerpType type) : base(duration, type)
+        private RSLerpProperty(float duration, RSLerpType type) : base(duration, type)
         {
-            _property = property;
-            _info = info;
-
             if ((_property == null) || (_info == null))
             {
                 _invalid = true;
@@ -82,6 +79,12 @@ namespace Rockstar._LerpProperty
 
         // ********************************************************************************************
         // Methods
+
+        public void SetPropertyInfo(object? property, PropertyInfo? info)
+        {
+            _property = property;
+            _info = info;
+        }
 
         public override void Start(object lerpFrom, object lerpTo, bool relative)
         {

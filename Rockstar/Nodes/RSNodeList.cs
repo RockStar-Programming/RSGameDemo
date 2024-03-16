@@ -1,10 +1,4 @@
 ﻿
-using System.Reflection;
-
-using Rockstar._Lerp;
-using Rockstar._LerpProperty;
-using Rockstar._Nodes;
-
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -24,88 +18,43 @@ using Rockstar._Nodes;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Action
+namespace Rockstar._Nodes
 {
-    public enum RSActionType
-    {
-        Absolute,
-        Relative
-    }
-
-    public class RSAction
+    public class RSNodeList : List<RSNode>
     {
         // ********************************************************************************************
-        // Actions can be run either on variables directly, or on class properties
-        //
+        // Encapsulates a Level and Transformation.Altitude sorted node list
+        // 
+        // Nodes will first be sorted according to Level, then each level according to Transformation.Altitude 
+        // 
 
         // ********************************************************************************************
         // Constructors
 
-        public RSAction InitAction(RSNode node, string propertyName, object lerpValue, RSActionType actionType, float duration, RSLerpType lerpType)
+        public static RSNodeList Create()
         {
-            List<string> propertyList = new List<string>(propertyName.Split('.'));
-            object? property = node;
-            PropertyInfo? info = null;
-            while ((propertyList.Count > 0) && (property != null))
-            {
-                info = property.GetType().GetProperty(propertyList[0]);
-                if ((propertyList.Count > 1) && (info != null))
-                {
-                    property = info.GetValue(property);
-                }
-                propertyList.RemoveAt(0);
-            }
-            _node = node;
-            _lerp = RSLerpProperty.Create(property, info, duration, lerpType);
-            _lerpValue = lerpValue;
-            _actionType = actionType;
-            return this;
+            return new RSNodeList();
         }
 
-        public RSAction()
-        {
-            _node = RSNode.Create();
-            _lerp = RSLerpProperty.Empty();
+        private RSNodeList()
+        { 
         }
 
         // ********************************************************************************************
         // Class Properties
 
-        public const float INSTANT = 0.0f;
-
         // ********************************************************************************************
         // Properties
-
-        public RSNode Node { get { return _node; } }
-        public RSLerpState State { get { return _lerp.State; } }
-        public bool Completed { get { return _lerp.Completed; } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private RSNode _node;
-        private RSLerpProperty _lerp;
-        private RSActionType _actionType;
-        private object _lerpValue;
-
         // ********************************************************************************************
         // Methods
 
-        public void Update(float interval)
+        public new void Sort()
         {
-            _lerp.Update(interval);
-        }
-
-        public void Start()
-        {
-            if ((_lerp.Property != null) && (_lerp.Info != null))
-            {
-                object? lerpFrom = _lerp.Info.GetValue(_lerp.Property);
-                if (lerpFrom != null)
-                {
-                    _lerp.Start(lerpFrom, _lerpValue, _actionType == RSActionType.Relative);
-                }
-            }
+            this.OrderBy(item => item.Level).ThenBy(item => item.Transformation.Altitude).ToList();
         }
 
         // ********************************************************************************************

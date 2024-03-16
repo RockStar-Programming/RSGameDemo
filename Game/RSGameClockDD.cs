@@ -1,7 +1,6 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._SpriteFrame;
 using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;
@@ -9,6 +8,7 @@ using Rockstar._Event;
 using Rockstar._CoreMouseButton;
 using Rockstar._CoreGame;
 using Rockstar._Nodes;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -178,17 +178,17 @@ namespace Rockstar._GameClockDD
 
         public void OnLeftMouseHandler(object sender, RSEventArgs args)
         {
-            if (args.Data is SKPoint position)
-            {
-                if (args.Type is RSMouseEvent.OnReleased)
-                {
-                    _debugNodeList.Clear();
-                }
-                else
-                {
-                    _debugNodeList = _clock.GetHitList(position);
-                }
-            }
+            //if (args.Data is SKPoint position)
+            //{
+            //    if (args.Type is RSMouseEvent.OnReleased)
+            //    {
+            //        _debugNodeList.Clear();
+            //    }
+            //    else
+            //    {
+            //        _debugNodeList = _clock.GetHitList(position);
+            //    }
+            //}
         }
 
         // ********************************************************************************************

@@ -1,12 +1,6 @@
-﻿using Rockstar._Action;
+﻿
+using Rockstar._ActionProperty;
 using Rockstar._Nodes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -27,7 +21,7 @@ using System.Threading.Tasks;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._ActionList
+namespace Rockstar._Types
 {
     public enum RSActionListState
     {
@@ -39,51 +33,41 @@ namespace Rockstar._ActionList
     public class RSActionList
     {
         // ********************************************************************************************
-        // An action list contains the node reference, and all actions associated with that node
-        // 
-        // Each entry in _actionList holds a List<RSAction>
-        // These lists of actions are executed sequentially
-        // All individual entries in the _actionList are executed simultaneously
-        // 
-        // _actionList[0]:action1               executed simultaneously with next lines
-        // _actionList[1]:action2,action3       executes in isSequence 
-        // _actionList[2]:action4               
-        //
         // 
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSActionList Create(RSNode node, RSAction? action = null)
+        public static RSActionList Create(object target, RSActionProperty? action = null)
         {
-            return new RSActionList(node, null, action, null, false, REPEAT_ONCE);
+            return new RSActionList(target, null, action, null, false, REPEAT_ONCE);
         }
 
-        public static RSActionList CreateSequence(RSNode node)
+        public static RSActionList CreateSequence(RSNode target)
         {
-            return new RSActionList(node, null, null, null, true, REPEAT_ONCE);
+            return new RSActionList(target, null, null, null, true, REPEAT_ONCE);
         }
 
-        public static RSActionList CreateWithList(RSActionList list, string name, int repeat = REPEAT_ONCE)
+        public static RSActionList CreateWithList(RSActionList list, object target, string name, int repeat = REPEAT_ONCE)
         {
-            return new RSActionList(list.Node, name, null, list.ActionList, list.IsSequence, repeat);
+            return new RSActionList(target, name, null, list.ActionList, list.IsSequence, repeat);
         }
 
         // ********************************************************************************************
 
-        private RSActionList(RSNode node, string? name, RSAction? action, List<RSAction>? list, bool isSequence, int repeat) 
+        private RSActionList(object target, string? name, RSActionProperty? action, List<RSActionProperty>? list, bool isSequence, int repeat) 
         {
-            _node = node;
+            _target = target;
             _name = name;
             _index = 0;
             _isSequence = isSequence;
             _state = RSActionListState.Stopped;
             _repeat = repeat;
 
-            _actionList = new List<RSAction>();
+            _actionList = new List<RSActionProperty>();
             if (list != null)
             { 
-                foreach (RSAction storedAction in list)
+                foreach (RSActionProperty storedAction in list)
                 {
                     _actionList.Add(storedAction);
                 }
@@ -102,28 +86,28 @@ namespace Rockstar._ActionList
 
         public const int REPEAT_ONCE = 1;
         public RSActionListState State { get { return _state; } }
-        public RSNode Node { get { return _node; } }
+        public object Target { get { return _target; } }
         public string? Name { get { return _name; } }
         public bool IsSequence { get { return _isSequence; } }
         public int Index {  get { return _index; } }
         public int Repeat { get { return _repeat; } }
-        public List<RSAction> ActionList { get { return _actionList; } }
+        public List<RSActionProperty> ActionList { get { return _actionList; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private RSActionListState _state;
-        private RSNode _node;
+        private object _target;
         private string? _name;
         private bool _isSequence;
         private int _index;
         private int _repeat;
-        private List<RSAction> _actionList;
+        private List<RSActionProperty> _actionList;
 
         // ********************************************************************************************
         // Methods
 
-        public RSActionList AddAction(RSAction action) 
+        public RSActionList AddAction(RSActionProperty action) 
         {
             _actionList.Add(action);
             return this;
@@ -145,7 +129,7 @@ namespace Rockstar._ActionList
         public void Start()
         {
             _index = 0;
-            _actionList[_index].Start();
+            _actionList[_index].Start(_target);
             _state = RSActionListState.Running;
         }
 

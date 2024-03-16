@@ -23,7 +23,7 @@ using Rockstar._Array;
 namespace Rockstar._Dictionary
 {
     // ********************************************************************************************
-    // DSDictionary wraps a Dictionary<string, object>
+    // DSDictionary wraps a Dictionary<string, RSNode>
     // Keys are NOT case sensitive and always stored as lower case
     // 
     // Main functionality is to:
@@ -187,7 +187,7 @@ namespace Rockstar._Dictionary
         // Nested keys MUST be RSDictionaries, otherwise it does not make sense
         //
         // Ex key = "clock/hands/width"
-        // Will load the RSDictionary "clock", then the RSDictionary "hands", then return the object for "width"
+        // Will load the RSDictionary "clock", then the RSDictionary "hands", then return the RSNode for "width"
         private object? GetEntry(string key)
         {
             if (key == null) return null;

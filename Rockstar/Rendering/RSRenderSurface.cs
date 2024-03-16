@@ -1,8 +1,8 @@
 ﻿
 using SkiaSharp;
 
+using Rockstar._Types;
 using Rockstar._SpriteFrame;
-using Rockstar._Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -192,10 +192,10 @@ namespace Rockstar._RenderSurface
             SKFontStyleSlant slant = (font.Italic == true) ? SKFontStyleSlant.Italic : SKFontStyleSlant.Upright;
             SKFontStyle style = new SKFontStyle(weight, SKFontStyleWidth.Normal, slant);
 
-            // Create an SKTypeface object for the font
+            // Create an SKTypeface RSNode for the font
             SKTypeface typeface = SKTypeface.FromFamilyName(font.Name, style);
 
-            // Create an SKPaint object to specify the drawing properties
+            // Create an SKPaint RSNode to specify the drawing properties
             SKPaint paint = new SKPaint
             {
                 Typeface = typeface,
@@ -241,7 +241,7 @@ namespace Rockstar._RenderSurface
             //};
             //canvas.DrawRect(new SKRect(0, 0, bitmap.Width, bitmap.Height), colorPaint);
 
-            // Create a paint object for the operation
+            // Create a paint RSNode for the operation
             var paint = new SKPaint
             {
                 Color = SKColors.Black, // Color doesn’t matter, only the alphaClear channel will be used

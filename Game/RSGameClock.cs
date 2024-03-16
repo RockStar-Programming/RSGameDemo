@@ -1,9 +1,9 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._SpriteFrame;
 using Rockstar._CoreGame;
 using Rockstar._Nodes;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

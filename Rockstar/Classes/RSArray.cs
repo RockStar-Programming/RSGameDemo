@@ -2,7 +2,7 @@
 using System.Collections;
 using SkiaSharp;
 
-using Rockstar._SpriteFrame;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -28,7 +28,7 @@ namespace Rockstar._Array
     public class RSArray : IEnumerable<object>
     {
         // ********************************************************************************************
-        // RSArray wraps an List<object>
+        // RSArray wraps an List<RSNode>
         //
         // Main functionality is to:
         // - Predictable operation and no crashes

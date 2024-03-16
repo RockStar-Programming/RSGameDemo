@@ -1,10 +1,9 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._NodeList;
-using Rockstar._SpriteFrame;
 using Rockstar._RenderSurface;
 using Rockstar._Nodes;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -48,7 +47,8 @@ namespace Rockstar._Renderer
         }
 
         private RSRenderer()
-        { 
+        {
+            _debugNodeList = RSNodeList.Create();
         }
 
 
@@ -59,22 +59,64 @@ namespace Rockstar._Renderer
         // Properties
 
         public int NodeCount { get { return _nodeCount; } }
+        public RSNodeList DebugNodeList { get { return _debugNodeList; } }
 
         // ********************************************************************************************
         // Internal Data
 
+        private const bool RENDER_DEBUG_INFORMATION = true;
         private const int RENDER_DEBUG_INSET = 5;
         private int _nodeCount;
+        protected RSNodeList _debugNodeList;
 
         // ********************************************************************************************
         // Methods
 
-        public void RenderBegin()
+        public void RenderScene(RSNodeScene scene, SKCanvas canvas, float fps)
+        {
+            // This creates the main screen canvas
+            RSRenderSurface surface = RSRenderSurface.Create(canvas);
+
+            // scenes forces anchor point and size
+            scene.Transformation.Position = new SKPoint(-surface.Size.Width / 2.0f, -surface.Size.Height / 2.0f); ;
+            scene.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
+            scene.Transformation.Size = surface.Size;
+
+            RenderBegin();
+
+            // render the entire node tree
+            RenderNodeTree(surface, scene);
+
+            // render any nodes added to debug list
+            if (_debugNodeList != null)
+            {
+                RenderDebugNodeList(surface, _debugNodeList);
+            }
+
+            // render right corner debug information
+            if (RENDER_DEBUG_INFORMATION == true)
+            {
+                RenderDebugString(surface, NodeCount, fps);
+            }
+        }
+
+        public void AssignDebugNodeList(RSNodeList debugNodeList)
+        { 
+            _debugNodeList = debugNodeList;
+        }
+
+        // ********************************************************************************************
+        // Event Handlers
+
+        // ********************************************************************************************
+        // Internal Methods
+
+        private void RenderBegin()
         {
             _nodeCount = 0;
         }
 
-        public void RenderNodeTree(RSRenderSurface surface, RSNode node)
+        private void RenderNodeTree(RSRenderSurface surface, RSNode node)
         {
             RSNodeList renderList = RSNodeList.Create();
 
@@ -110,7 +152,7 @@ namespace Rockstar._Renderer
             _nodeCount += renderList.Count;
         }
 
-        public void RenderNodeList(RSRenderSurface surface, RSNodeList renderList)
+        private void RenderNodeList(RSRenderSurface surface, RSNodeList renderList)
         {
             foreach (RSNode renderNode in renderList)
             {
@@ -119,7 +161,7 @@ namespace Rockstar._Renderer
             }
         }
 
-        public void RenderDebugNodeList(RSRenderSurface surface, RSNodeList renderList)
+        private void RenderDebugNodeList(RSRenderSurface surface, RSNodeList renderList)
         {
             foreach (RSNode renderNode in renderList)
             {
@@ -128,7 +170,7 @@ namespace Rockstar._Renderer
             }
         }
 
-        public void RenderDebugString(RSRenderSurface surface, int nodeCount, double fps)
+        private void RenderDebugString(RSRenderSurface surface, int nodeCount, double fps)
         {
             SKMatrix matrix = surface.Canvas.TotalMatrix;
             surface.SetCanvasMatrix(SKMatrix.Identity);
@@ -153,12 +195,6 @@ namespace Rockstar._Renderer
 
             surface.Canvas.SetMatrix(matrix);
         }
-
-        // ********************************************************************************************
-        // Event Handlers
-
-        // ********************************************************************************************
-        // Internal Methods
 
         // Builds a render list from a node tree
         // Called recursively for off screen rendering

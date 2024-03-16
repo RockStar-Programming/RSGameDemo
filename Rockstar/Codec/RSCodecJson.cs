@@ -41,7 +41,7 @@ namespace Rockstar._CodecJson
         // ********************************************************************************************
         // Constructors
 
-        // top level object is a Dictionary<string, object>
+        // top level RSNode is a Dictionary<string, RSNode>
         public static RSDictionary CreateDictionaryWithFilePath(string filePath)
         { 
             try
@@ -57,7 +57,7 @@ namespace Rockstar._CodecJson
             return RSDictionary.Create();
         }
 
-        // top level object is a List<object>
+        // top level RSNode is a List<RSNode>
         public static RSArray CreateArrayWithFilePath(string filePath)
         {
             try
@@ -91,10 +91,10 @@ namespace Rockstar._CodecJson
         // ********************************************************************************************
         // Internal Methods
 
-        // Recursively deserialise an object
-        // object can either be value types (no conversion), or two Json object returned from JsonConvert
-        // JObject must hold a dictionary in the format <string, object>
-        // JArray most hold a list in the format <object>
+        // Recursively deserialise an RSNode
+        // RSNode can either be value types (no conversion), or two Json RSNode returned from JsonConvert
+        // JObject must hold a dictionary in the format <string, RSNode>
+        // JArray most hold a list in the format <RSNode>
         private static object Deserialize(object? value)
         {
             object? result = value;
@@ -120,7 +120,7 @@ namespace Rockstar._CodecJson
                     // iterate keys and deserialize them
                     foreach (string newKey in keyList)
                     {
-                        // Deserialize the object of the dictionary
+                        // Deserialize the RSNode of the dictionary
                         dictionary[newKey] = Deserialize(dictionary[newKey]);
                     }
                 }
@@ -137,7 +137,7 @@ namespace Rockstar._CodecJson
                     // iterate array and deserialize it
                     for (int index = 0; index < array.Count; index++)
                     {
-                        // deserialize the object in the array
+                        // deserialize the RSNode in the array
                         array[index] = Deserialize(array[index]);
                     }
                 }
@@ -147,7 +147,7 @@ namespace Rockstar._CodecJson
             }
             else
             {
-                // the object was neither a dictionary nor an array, so no deserialization is required
+                // the RSNode was neither a dictionary nor an array, so no deserialization is required
                 if (result == null) result = 0;
 
             }

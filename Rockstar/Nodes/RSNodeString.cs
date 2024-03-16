@@ -2,7 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._RenderSurface;
-using Rockstar._SpriteFrame;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen

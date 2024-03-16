@@ -1,8 +1,6 @@
 ﻿
-using Rockstar._Action;
-using Rockstar._ActionList;
-using Rockstar._Nodes;
-using System.Collections.Generic;
+using Rockstar._ActionProperty;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -45,7 +43,8 @@ namespace Rockstar._ActionManager
         // ********************************************************************************************
         // Internal Data
 
-        private static List<RSActionList> _actionList = new List<RSActionList>();
+        private static List<RSActionList> _runningActionList = new List<RSActionList>();
+        private static List<RSActionList> _savedActionList = new List<RSActionList>();
 
         // ********************************************************************************************
         // Methods
@@ -54,13 +53,13 @@ namespace Rockstar._ActionManager
         {
             // iterate backwards through the list, so that completed entries can be removed on the fly
             //
-            for (int index = _actionList.Count - 1; index >= 0; index--) 
+            for (int index = _runningActionList.Count - 1; index >= 0; index--) 
             {
-                RSActionList list = _actionList[index];
+                RSActionList list = _runningActionList[index];
 
                 if (list.State == RSActionListState.Running)
                 {
-                    RSAction action = list.ActionList[list.Index];
+                    RSActionProperty action = list.ActionList[list.Index];
                     action.Update(interval);
 
                     if (action.Completed == true)
@@ -72,26 +71,18 @@ namespace Rockstar._ActionManager
                         //
                         if (list.Index == 0)
                         {
-                            if (list.Name != null)
+                            list.DecrementRepeat();
+                            // If repeat reached 0, list is done and removed
+                            //
+                            if (list.Repeat == 0)
                             {
-                                // if its a named list, just stop it
-                                list.Stop();
-                            }
-                            else 
-                            {
-                                list.DecrementRepeat();
-                                // If repeat reached 0, list is done and removed
-                                //
-                                if (list.Repeat == 0)
-                                {
-                                    _actionList.RemoveAt(index);
-                                }
+                                _runningActionList.RemoveAt(index);
                             }
                         }
                         else
                         {
                             // start next action
-                            list.ActionList[list.Index].Start();
+                            list.ActionList[list.Index].Start(list.Target);
                         }
                     }
                 }
@@ -100,17 +91,19 @@ namespace Rockstar._ActionManager
 
         public static void Save(RSActionList list, string name)
         {
-            RSActionList newList = RSActionList.CreateWithList(list, name);
-            _actionList.Add(newList);
+            RSActionList newList = RSActionList.CreateWithList(list, list.Target, name);
+            _savedActionList.Add(newList);
         }
 
-        public static void RunAction(RSNode node, string name)
+        public static void RunAction(object target, string name)
         {
-            foreach (RSActionList list in _actionList)
+            foreach (RSActionList list in _savedActionList)
             {
                 if ((list.Name != null) && (list.Name == name))
                 {
-                    list.Start();
+                    RSActionList newList = RSActionList.CreateWithList(list, target, name);
+                    _runningActionList.Add(newList);
+                    newList.Start();
                 }
             }
         }

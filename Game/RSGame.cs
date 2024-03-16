@@ -1,16 +1,11 @@
 ﻿using SkiaSharp;
 
-using Rockstar._SpriteFrame;
-using Rockstar._CodecJson;
 using Rockstar._CoreGame;
-using Rockstar._Dictionary;
 using Rockstar._Event;
 using Rockstar._Nodes;
 using Rockstar._CoreMouseButton;
-using Rockstar._NodeList;
-using Rockstar._Action;
-using Rockstar._RenderSurface;
-using Rockstar._Lerp;
+using Rockstar._Types;
+using Rockstar._Actions;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -65,6 +60,7 @@ namespace Rockstar._Game
 
         float _catTimer = 0;
 
+        RSNodeSprite? _cat;
         RSNodeSprite? _animal;
         RSNodeSurface? _surface;
         RSNodeSurface? _motionCanvas;
@@ -97,6 +93,7 @@ namespace Rockstar._Game
             if (_catTimer > 0.1f)
             {
                 if (_animal != null) _animal.SetCurrentFrame(_animal.CurrentFrame + 1);
+                if (_cat != null) _cat.SetCurrentFrame(_cat.CurrentFrame + 1);
                 _catTimer -= 0.1f;
             }
         }
@@ -131,12 +128,12 @@ namespace Rockstar._Game
             {
                 if (argument.Type is RSMouseEvent.OnReleased)
                 {
-                    _debugNodeList.Clear();
+                    _renderer.DebugNodeList.Clear();
                 }
                 else
                 {
-                    _surface.RunAction("color_test");
-                    _debugNodeList = _scene.GetHitList(position);
+                    _cat.RunAction("test");
+                    _renderer.AssignDebugNodeList(_scene.GetHitList(position));
                 }
             }
         }
@@ -177,8 +174,6 @@ namespace Rockstar._Game
             _physics.Reset(_scene);
 
             // create an off screen render canvas to make motion streaks on
-            // because alpha in this case is everything, the surface is created without pre-multiplied alpha
-            // this allows for slightly better blending
             //
             _motionCanvas = RSNodeSurface.CreateWithSize(SKPoint.Empty, _scene.Transformation.Size);
             _motionCanvas.Transformation.Anchor = SKPoint.Empty;
@@ -196,22 +191,22 @@ namespace Rockstar._Game
             _surface.AlphaDecay = 60;
             _scene.AddChild(_surface);
 
+            // create actions based on a node
             _surface.Sequence().MoveTo(new SKPoint(-100, 200)).MoveBy(new SKPoint(1000, 0), 5.0f).MoveTo(new SKPoint(400, 200)).SaveAs("test");
             _surface.Sequence().ScaleTo(new SKPoint(0.5f, 0.5f), 5.0f).ScaleTo(new SKPoint(0.8f, 0.8f)).SaveAs("test");
-            //_surface.Sequence().RotateTo(0, 2.5f).RotateBy(3600, 2.5f).SaveAs("test");
-            _surface.Sequence().AlphaTo(0.0f, 2.5f).AlphaTo(1.0f, 2.5f).SaveAs("test");
 
-            //_surface.Sequence().SizeTo(new SKSize(280, 100), 0.5f).SizeTo(new SKSize(280, 350), 0.5f).SaveAs("color_test");
-            //_surface.Sequence().ColorTo(SKColors.Red, 0.5f).ColorTo(SKColors.White, 0.5f).SaveAs("color_test");
+            // create a generic action sequence
+            RSActions.Sequence().AlphaTo(0.0f, 2.5f).AlphaTo(1.0f, 2.5f).SaveAs("test");
 
-
-            //_physics.AddStaticNode(_surface);
-
-            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/blue_cat");
-            // _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/red_dog");
             _animal = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, -150), "Assets/animals.png/brown_monkey_walk");
             _animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.AddChild(_animal);
+
+            _cat = RSNodeSprite.CreateWithFileAndJson(new SKPoint(0, 200), "Assets/animals.png/blue_cat");
+            _cat.Transformation.Scale = new SKPoint(0.5f, 0.5f);
+            _cat.Transformation.Anchor = new SKPoint(0.5f, -0.5f);
+            _scene.AddChild(_cat);
+
 
             _loadScene = RSNodeString.CreateString(new SKPoint(50, 50), "Reload Scene", RSFont.Create());
             _scene.AddChild(_loadScene);

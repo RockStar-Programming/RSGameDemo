@@ -6,6 +6,7 @@ using Rockstar._SpriteFrame;
 using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;
+using Rockstar._Types;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
