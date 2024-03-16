@@ -198,7 +198,7 @@ namespace Rockstar._Game
 
             _surface.Sequence().MoveTo(new SKPoint(-100, 200)).MoveBy(new SKPoint(1000, 0), 5.0f).MoveTo(new SKPoint(400, 200)).SaveAs("test");
             _surface.Sequence().ScaleTo(new SKPoint(0.5f, 0.5f), 5.0f).ScaleTo(new SKPoint(0.8f, 0.8f)).SaveAs("test");
-            _surface.Sequence().RotateTo(0, 2.5f).RotateBy(3600, 2.5f).SaveAs("test");
+            //_surface.Sequence().RotateTo(0, 2.5f).RotateBy(3600, 2.5f).SaveAs("test");
             _surface.Sequence().AlphaTo(0.0f, 2.5f).AlphaTo(1.0f, 2.5f).SaveAs("test");
 
             //_surface.Sequence().SizeTo(new SKSize(280, 100), 0.5f).SizeTo(new SKSize(280, 350), 0.5f).SaveAs("color_test");
