@@ -29,9 +29,9 @@ using Rockstar._Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._GameClockDD
+namespace Rockstar._GameClockDDP
 {
-    public class RSGameClockDD : RSCoreGame
+    public class RSGameClockDDP : RSCoreGame
     {
         // ********************************************************************************************
         // RSGameClock implements a simple clock, capable of simulating three different watch types
@@ -42,17 +42,17 @@ namespace Rockstar._GameClockDD
         //
         // Apart from that, it supports jumping minute hand, sometimes found on expensive watches
         // 
-        // RSGameClockDD is the data-driven version, loading watch setups from JSON files
+        // RSGameClockDDP is the data-driven version, loading watch setups from JSON files
 
         // ********************************************************************************************
         // Constructors
 
-        public static RSGameClockDD Create()
+        public static RSGameClockDDP Create()
         {
-            return new RSGameClockDD();
+            return new RSGameClockDDP();
         }
 
-        private RSGameClockDD()
+        private RSGameClockDDP()
         {
             // select which watch to load
             //
@@ -202,8 +202,8 @@ namespace Rockstar._GameClockDD
 
             // create basic dial
             // load dial setup
-            float radius = setup.GetFloat("radius", 120);
-            SKColor color = setup.GetArray("color").ToColor();
+            float radius = setup.GetFloat("radius", 130);
+            SKColor color = setup.GetArray("color", RSArray.CreateWithParams(0, 128, 128)).ToColor();
             RSNodeSolid dial = RSNodeSolid.CreateEllipse(new SKPoint(), new SKSize(radius * 2, radius * 2), color);
             result.AddChild(dial);
 

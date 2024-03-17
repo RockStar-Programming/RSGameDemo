@@ -2,7 +2,7 @@
 using SkiaSharp;
 
 using Rockstar._Game;
-using Rockstar._GameClockDD;
+using Rockstar._GameClockDDP;
 using Rockstar._GameClock;
 
 // ****************************************************************************************************
@@ -36,13 +36,13 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Constructors
 
-        RSGame _game;
+//        RSGame _game;
 //        RSGameClock _game;
-//        RSGameClockDD _game;
+        RSGameClockDDP _game;
 
         public RSCoreLoop()
         {
-            _game = RSGame.Create();
+            _game = RSGameClockDDP.Create();
         }
 
         // ********************************************************************************************

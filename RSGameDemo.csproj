@@ -34,6 +34,7 @@
     <None Remove="Platform\Windows\MainForm.xaml" />
     <None Remove="README.md" />
     <None Remove="Rockstar\_Lego Principle\.%24RSCoreGame.drawio.bkp" />
+    <None Remove="Rockstar\_Lego Principle\.%24RSGame.drawio.bkp" />
     <None Remove="Rockstar\_Lego Principle\.%24RSGameClock.drawio.bkp" />
     <None Remove="Rockstar\_Lego Principle\.%24RSUwpGame.drawio.bkp" />
   </ItemGroup>

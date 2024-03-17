@@ -46,6 +46,11 @@ namespace Rockstar._Array
             return new RSArray();
         }
 
+        public static RSArray CreateWithParams(params object[] array)
+        { 
+            return new RSArray(array.ToList());
+        }
+
         public static RSArray CreateWithList(List<object> list)
         { 
             return new RSArray(list);
@@ -62,7 +67,9 @@ namespace Rockstar._Array
             return RSArray.Create();
         }
 
-        public RSArray(List<object>? list = null)
+        // ********************************************************************************************
+
+        private RSArray(List<object>? list = null)
         {
             _content = new List<object>();
             if (list != null)
@@ -109,7 +116,8 @@ namespace Rockstar._Array
 
         public long GetLong(int index, long fallback)
         {
-            if (GetEntry(index) is long result) return result;
+            if (GetEntry(index) is int intResult) return intResult;
+            if (GetEntry(index) is long longResult) return longResult;
             return fallback;
         }
 
@@ -121,6 +129,7 @@ namespace Rockstar._Array
         public double GetDouble(int index, double fallback)
         {
             object? result = GetEntry(index);
+            if (result is int) return (int)result;
             if (result is long) return (long)result;
             if (result is double) return (double)result;
             return fallback;

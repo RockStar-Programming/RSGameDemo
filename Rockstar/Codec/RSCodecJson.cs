@@ -143,7 +143,7 @@ namespace Rockstar._CodecJson
                 }
 
                 // return a new RSArray
-                result = new RSArray(array);
+                result = RSArray.CreateWithList(array);
             }
             else
             {

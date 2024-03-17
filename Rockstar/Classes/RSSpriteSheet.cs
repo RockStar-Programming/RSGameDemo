@@ -180,7 +180,7 @@ namespace Rockstar._SpriteSheet
 
         private void UnpackTexturePackerArray(RSDictionary setup, string key)
         {
-            RSArray frameList = setup.GetArray(RSSpriteFrame.TP_FRAMES, new RSArray());
+            RSArray frameList = setup.GetArray(RSSpriteFrame.TP_FRAMES, RSArray.Create());
             foreach (RSDictionary frameSetup in frameList)
             {
                 string filename = frameSetup.GetString(RSSpriteFrame.TP_FILENAME, "");
