@@ -122,6 +122,45 @@ namespace Rockstar._GameClockDDP
         private const double SECONDS_PR_MINUTE = 60;
         private const double MILLISECONDS_PR_SECOND = 1000;
 
+        // Some defaults
+        //
+        private const string DEFAULT_CLOCK_TYPE = "Quartz";
+        private const int DEFAULT_BPH = 14400;
+        private const string DEFAULT_JUMPING_MINUTE = "NonJumping";
+        private const int DEFAULT_RADIUS = 130;
+        private readonly SKPoint ANCHOR_CENTER_BOTTOM = new SKPoint(0.5f, 0.0f);
+        private readonly SKPoint ANCHOR_CENTER_TOP = new SKPoint(0.5f, 1.0f);
+        private readonly RSArray COLOR_ARRAY_CYAN = RSArray.CreateWithParams(0, 128, 128); 
+
+        // Keys used in the setup files
+        //
+        private const string KEY_CLOCK_TYPE = "clock/type";
+        private const string KEY_CLOCK_BPH = "clock/beats_pr_hour";
+        private const string KEY_CLOCK_JUMPING = "clock/jumping_minute";
+
+        private const string KEY_FACE = "face";
+        private const string KEY_DIAL = "dial";
+        private const string KEY_HANDS_HOUR = "hands/hour";
+        private const string KEY_HANDS_MINUTE = "hands/minute";
+        private const string KEY_HANDS_SECOND = "hands/second";
+
+        private const string KEY_RADIUS = "radius";
+        private const string KEY_COLOR = "color";
+        private const string KEY_HOUR_MARKERS = "hourmarkers";
+        private const string KEY_SECOND_MARKERS = "secondmarkers";
+        private const string KEY_LABELS = "labels";
+        private const string KEY_TYPE = "type";
+        private const string KEY_COUNT = "count";
+        private const string KEY_RECTANGLE_SIZE = "rectangle_size";
+        private const string KEY_ELLIPSE_SIZE = "ellipse_size";
+        private const string KEY_OFFSET = "offset";
+        private const string KEY_TEXT = "text";
+        private const string KEY_POSITION = "position";
+        private const string KEY_FONT = "font";
+        private const string KEY_SIZE = "size";
+        private const string KEY_BASE = "base";
+        private const string KEY_TAIL = "tail";
+
         // ********************************************************************************************
         // Fully Data Driven Programming
         // 
@@ -134,30 +173,30 @@ namespace Rockstar._GameClockDDP
         public override void Initialise(SKSize size)
         {
             // load watch base "mechanics"
-            _clockType = _setup.GetObject("clock/type", "Quartz").ToEnum<ClockType>();
-            _bph = _setup.GetLong("clock/beats_pr_hour", 14400);
-            _jumpingMinute = _setup.GetObject("clock/jumping_minute", "NonJumping").ToEnum<MinuteHand>();
+            _clockType = _setup.GetObject(KEY_CLOCK_TYPE, DEFAULT_CLOCK_TYPE).ToEnum<ClockType>();
+            _bph = _setup.GetLong(KEY_CLOCK_BPH, DEFAULT_BPH);
+            _jumpingMinute = _setup.GetObject(KEY_CLOCK_JUMPING, DEFAULT_JUMPING_MINUTE).ToEnum<MinuteHand>();
 
             // base clock node
             _clock = RSNode.CreateWithPosition(new SKPoint(size.Width / 2,size.Height / 2));
             _scene.AddChild(_clock);
 
             // clock face
-            _clockFace = CreateFaceNode(RSDictionary.CreateWithObject(_setup.GetObject("face")));
+            _clockFace = CreateFaceNode(RSDictionary.CreateWithObject(_setup.GetObject(KEY_FACE)));
             _clock.AddChild(_clockFace);
 
             // clock dial
-            _clockDial = CreateDialNode(RSDictionary.CreateWithObject(_setup.GetObject("dial")));
+            _clockDial = CreateDialNode(RSDictionary.CreateWithObject(_setup.GetObject(KEY_DIAL)));
             _clock.AddChild(_clockDial);
 
             // hands
-            _hourHand = CreateHandNode(RSDictionary.CreateWithObject(_setup.GetObject("hands/hour")));
+            _hourHand = CreateHandNode(RSDictionary.CreateWithObject(_setup.GetObject(KEY_HANDS_HOUR)));
             _clock.AddChild(_hourHand);
 
-            _minuteHand = CreateHandNode(RSDictionary.CreateWithObject(_setup.GetObject("hands/minute")));
+            _minuteHand = CreateHandNode(RSDictionary.CreateWithObject(_setup.GetObject(KEY_HANDS_MINUTE)));
             _clock.AddChild(_minuteHand);
 
-            _secondHand = CreateHandNode(RSDictionary.CreateWithObject(_setup.GetObject("hands/second")));
+            _secondHand = CreateHandNode(RSDictionary.CreateWithObject(_setup.GetObject(KEY_HANDS_SECOND)));
             _clock.AddChild(_secondHand);
 
             UpdateHands();
@@ -202,8 +241,8 @@ namespace Rockstar._GameClockDDP
 
             // create basic dial
             // load dial setup
-            float radius = setup.GetFloat("radius", 130);
-            SKColor color = setup.GetArray("color", RSArray.CreateWithParams(0, 128, 128)).ToColor();
+            float radius = setup.GetFloat(KEY_RADIUS, DEFAULT_RADIUS);
+            SKColor color = setup.GetArray(KEY_COLOR).ToColor();
             RSNodeSolid dial = RSNodeSolid.CreateEllipse(new SKPoint(), new SKSize(radius * 2, radius * 2), color);
             result.AddChild(dial);
 
@@ -222,22 +261,22 @@ namespace Rockstar._GameClockDDP
 
             // create basic dial
             // load dial setup
-            radius = setup.GetFloat("radius", 120);
-            color = setup.GetArray("color").ToColor();
+            radius = setup.GetFloat(KEY_RADIUS, DEFAULT_RADIUS);
+            color = setup.GetArray(KEY_COLOR, COLOR_ARRAY_CYAN).ToColor();
             RSNodeSolid dial = RSNodeSolid.CreateEllipse(new SKPoint(), new SKSize(radius * 2, radius * 2), color);
             result.AddChild(dial);
 
             // create hour markers
             //
-            result.AddChild(CreateMarkerNode(RSDictionary.CreateWithObject(setup.GetObject("hourmarkers"))));
+            result.AddChild(CreateMarkerNode(RSDictionary.CreateWithObject(setup.GetObject(KEY_HOUR_MARKERS))));
 
             // create second markers
             //
-            result.AddChild(CreateMarkerNode(RSDictionary.CreateWithObject(setup.GetObject("secondmarkers"))));
+            result.AddChild(CreateMarkerNode(RSDictionary.CreateWithObject(setup.GetObject(KEY_SECOND_MARKERS))));
 
             // create dial labels
             //
-            RSArray labelList = RSArray.CreateWithObject(setup.GetObject("labels"));
+            RSArray labelList = RSArray.CreateWithObject(setup.GetObject(KEY_LABELS));
             foreach (object label in labelList)
             {
                 RSDictionary labelSetup = RSDictionary.CreateWithObject(label);
@@ -252,13 +291,13 @@ namespace Rockstar._GameClockDDP
             RSNode result = RSNode.Create();
 
             // load marker setup data
-            float radius = setup.GetFloat("radius", 110);
-            SKColor color = setup.GetArray("color").ToColor();
-            RSArray typeList = RSArray.CreateWithObject(setup.GetObject("type"));
-            long markerCount = setup.GetLong("count", 0);
-            SKSize rectangleSize = setup.GetArray("rectangle_size").ToSize();
-            SKSize ellipseSize = setup.GetArray("ellipse_size").ToSize();
-            float offset = setup.GetFloat("offset", 0);
+            float radius = setup.GetFloat(KEY_RADIUS, DEFAULT_RADIUS);
+            SKColor color = setup.GetArray(KEY_COLOR).ToColor();
+            RSArray typeList = RSArray.CreateWithObject(setup.GetObject(KEY_TYPE));
+            long markerCount = setup.GetLong(KEY_COUNT, 0);
+            SKSize rectangleSize = setup.GetArray(KEY_RECTANGLE_SIZE).ToSize();
+            SKSize ellipseSize = setup.GetArray(KEY_ELLIPSE_SIZE).ToSize();
+            float offset = setup.GetFloat(KEY_OFFSET, 0);
 
             // iterate defined markers
             float rotation = 0;
@@ -317,10 +356,10 @@ namespace Rockstar._GameClockDDP
         private RSNodeString CreateLabelNode(RSDictionary setup)
         {
             // load label setup data
-            string text = setup.GetString("text", "");
-            SKPoint position = setup.GetArray("position").ToVector2();
-            RSFont font = setup.GetArray("font").ToFont();
-            SKColor color = setup.GetArray("color").ToColor();
+            string text = setup.GetString(KEY_TEXT, "");
+            SKPoint position = setup.GetArray(KEY_POSITION).ToVector2();
+            RSFont font = setup.GetArray(KEY_FONT).ToFont();
+            SKColor color = setup.GetArray(KEY_COLOR).ToColor();
 
             // create label
             RSNodeString result = RSNodeString.CreateString(position, text, font);
@@ -337,16 +376,16 @@ namespace Rockstar._GameClockDDP
             RSNode result = RSNode.Create();
 
             // load hand setup data
-            SKSize size = setup.GetArray("size").ToSize();
-            float handBase = setup.GetFloat("base", 0);
-            SKColor color = setup.GetArray("color").ToColor();
-            SKSize tail = setup.GetArray("tail").ToSize();
+            SKSize size = setup.GetArray(KEY_SIZE).ToSize();
+            float handBase = setup.GetFloat(KEY_BASE, 0);
+            SKColor color = setup.GetArray(KEY_COLOR).ToColor();
+            SKSize tail = setup.GetArray(KEY_TAIL).ToSize();
 
             // create the hand base with requested rectangleSize and color
             // hand will rotate around anchor point, so this is placed center bottom
             //
             RSNodeSolid handBody = RSNodeSolid.CreateRectangle(new SKPoint(0, 0), new SKSize(size.Width, size.Height), color);
-            handBody.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            handBody.Transformation.Anchor = ANCHOR_CENTER_BOTTOM;
             result.AddChild(handBody);
 
             // create a top rounded point and add it to the hand base at the top
@@ -359,7 +398,7 @@ namespace Rockstar._GameClockDDP
             if (tail.Width > 0)
             {
                 RSNodeSolid tailNode = RSNodeSolid.CreateRectangle(new SKPoint(0, 0), new SKSize(tail.Width, tail.Height), color);
-                tailNode.Transformation.Anchor = new SKPoint(0.5f, 1.0f);
+                tailNode.Transformation.Anchor = ANCHOR_CENTER_TOP;
                 result.AddChild(tailNode);
             }
 
