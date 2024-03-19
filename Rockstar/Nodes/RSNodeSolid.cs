@@ -34,18 +34,18 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSolid CreateRectangle(SKPoint position, SKSize size, SKColor color)
+        public static RSNodeSolid CreateRectangle(SKSize size, SKColor color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Rectangle);
-            result.InitWithData(position, size);
+            result.InitWithData(SKPoint.Empty, size);
             result.Transformation.Color = color;
             return result;
         }
 
-        public static RSNodeSolid CreateEllipse(SKPoint position, SKSize size, SKColor color)
+        public static RSNodeSolid CreateEllipse(SKSize size, SKColor color)
         {
             RSNodeSolid result = new RSNodeSolid(SolidType.Ellipse);
-            result.InitWithData(position, size);
+            result.InitWithData(SKPoint.Empty, size);
             result.Transformation.Color = color;
             result._isRound = true;
             return result;

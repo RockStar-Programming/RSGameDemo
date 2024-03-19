@@ -1,6 +1,6 @@
 ﻿
-using Rockstar._ActionProperty;
-using Rockstar._Types;
+using Rockstar._ActionTypes;
+using Rockstar._Actions;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -43,8 +43,8 @@ namespace Rockstar._ActionManager
         // ********************************************************************************************
         // Internal Data
 
-        private static List<RSActionList> _runningActionList = new List<RSActionList>();
-        private static List<RSActionList> _savedActionList = new List<RSActionList>();
+        private static List<RSAction> _runningActionList = new List<RSAction>();
+        private static List<RSAction> _savedActionList = new List<RSAction>();
 
         // ********************************************************************************************
         // Methods
@@ -55,11 +55,11 @@ namespace Rockstar._ActionManager
             //
             for (int index = _runningActionList.Count - 1; index >= 0; index--) 
             {
-                RSActionList list = _runningActionList[index];
+                RSAction list = _runningActionList[index];
 
-                if (list.State == RSActionListState.Running)
+                if (list.State == RSActionState.Running)
                 {
-                    RSActionProperty action = list.ActionList[list.Index];
+                    RSActionBase action = list.ActionList[list.Index];
                     action.Update(interval);
 
                     if (action.Completed == true)
@@ -89,31 +89,31 @@ namespace Rockstar._ActionManager
             }
         }
 
-        public static void Save(RSActionList list, string name)
+        public static void Save(RSAction list, string name)
         {
-            RSActionList newList = RSActionList.CreateWithList(list, list.Target, name);
-            _savedActionList.Add(newList);
+            list.SetName(name);
+            _savedActionList.Add(list);
         }
 
         public static void RunAction(object target, string name)
         {
-            foreach (RSActionList list in _savedActionList)
+            foreach (RSAction action in _savedActionList)
             {
-                if ((list.Name != null) && (list.Name == name))
+                if ((action.Name != null) && (action.Name == name))
                 {
-                    RSActionList newList = RSActionList.CreateWithList(list, target, name);
-                    _runningActionList.Add(newList);
-                    newList.Start();
+                    RSAction newAction = RSAction.CreateWithAction(target, action);
+                    _runningActionList.Add(newAction);
+                    newAction.Start();
                 }
             }
         }
 
-        public static void Run(RSActionList list)
+        public static void RunAction(RSAction list)
         {
             ;
         }
 
-        public static void Repeat(RSActionList list, int repeat)
+        public static void Repeat(RSAction list, int repeat)
         {
             ;
         }

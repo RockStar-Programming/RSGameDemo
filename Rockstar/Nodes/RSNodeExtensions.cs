@@ -1,9 +1,6 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._RenderSurface;
-using Rockstar._Types;
-
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
 //
@@ -25,30 +22,14 @@ using Rockstar._Types;
 
 namespace Rockstar._Nodes
 {
-    internal class RSNodeString : RSNode
+    public static class RSNodeExtensions
     {
         // ********************************************************************************************
-        // Implementation of node based string
+        // Extensions for the RSNode class
         //
-        // IMPORTANT:
-        // The Transformation.Size of the node is ALWAYS set to the actual render size, when the node is rendered 
 
         // ********************************************************************************************
         // Constructors
-
-        public static RSNodeString CreateString(string text, RSFont font)
-        {
-            return new RSNodeString(text, font);
-        }
-
-        // ********************************************************************************************
-
-        protected RSNodeString(string text, RSFont font)
-        {
-            _text = text;
-            _font = font;
-            InitWithData();
-        }
 
         // ********************************************************************************************
         // Class Properties
@@ -56,39 +37,40 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Properties
 
-        public string Text { get { return _text; } }
-        public RSFont Font { get { return _font; } }
-
         // ********************************************************************************************
         // Internal Data
-
-        private string _text;
-        private RSFont _font;
 
         // ********************************************************************************************
         // Methods
 
-        public override bool PointInside(SKPoint screenPosition)
+        public static T AtPosition<T>(this T node, SKPoint position) where T : RSNode
         {
-            return base.PointInsizeRectangle(screenPosition);
+            node.Transformation.Position = position;
+            return node;
         }
 
-        public override void Render(RSRenderSurface surface)
+        public static T AtPosition<T>(this T node, float x, float y) where T : RSNode
         {
-            SKPaint paint = surface.GetTextPaint(_font, _transformation.Color); 
+            node.Transformation.Position = new SKPoint(x, y);
+            return node;
+        }
 
-            // NOTE: Transformation.Size must be set prior to doing any calculations
-            // Get the size of the text
-            float width = paint.MeasureText(_text);
-            SKFontMetrics metrics = paint.FontMetrics;
-            float height = metrics.Descent - metrics.Ascent;
-            _transformation.Size = new SKSize(width, height);
+        public static T WithAnchor<T>(this T node, SKPoint anchor) where T : RSNode
+        {
+            node.Transformation.Anchor = anchor;
+            return node;
+        }
 
-            float offset = metrics.XHeight / 2;
-            SKPoint center = new SKPoint(
-                -_transformation.Size.Width * _transformation.Anchor.X, 
-                (_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
-            surface.DrawText(center, _text, paint);
+        public static T WithAnchor<T>(this T node, float anchor) where T : RSNode
+        {
+            node.Transformation.Anchor = new SKPoint(anchor, anchor);
+            return node;
+        }
+
+        public static T WithAnchor<T>(this T node, float x, float y) where T : RSNode
+        {
+            node.Transformation.Anchor = new SKPoint(x, y);
+            return node;
         }
 
         // ********************************************************************************************

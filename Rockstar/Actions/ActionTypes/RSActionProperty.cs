@@ -23,15 +23,9 @@ using Rockstar._LerpProperty;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._ActionProperty
+namespace Rockstar._ActionTypes
 {
-    public enum RSActionType
-    {
-        Absolute,
-        Relative
-    }
-
-    public class RSActionProperty
+    public class RSActionProperty : RSActionBase 
     {
         // ********************************************************************************************
         // Actions can be run either on variables directly, or on class properties
@@ -40,7 +34,7 @@ namespace Rockstar._ActionProperty
         // ********************************************************************************************
         // Constructors
 
-        public RSActionProperty InitAction(string propertyName, object lerpValue, RSActionType actionType, float duration, RSLerpType lerpType)
+        public RSActionProperty InitAction(string propertyName, object lerpValue, RSActionMode actionType, float duration, RSLerpType lerpType)
         {
             _propertyName = propertyName;
             _lerp = RSLerpProperty.Create(duration, lerpType);
@@ -59,31 +53,23 @@ namespace Rockstar._ActionProperty
         // ********************************************************************************************
         // Class Properties
 
-        public const float INSTANT = 0.0f;
-
         // ********************************************************************************************
         // Properties
 
         public RSLerpState State { get { return _lerp.State; } }
-        public bool Completed { get { return _lerp.Completed; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private string _propertyName;
         private RSLerpProperty _lerp;
-        private RSActionType _actionType;
+        private RSActionMode _actionType;
         private object _lerpValue;
 
         // ********************************************************************************************
         // Methods
 
-        public void Update(float interval)
-        {
-            _lerp.Update(interval);
-        }
-
-        public void Start(object target)
+        public override void Start(object target)
         {
             List<string> propertyList = new List<string>(_propertyName.Split('.'));
             object? property = target;
@@ -104,9 +90,14 @@ namespace Rockstar._ActionProperty
                 object? lerpFrom = _lerp.Info.GetValue(_lerp.Property);
                 if (lerpFrom != null)
                 {
-                    _lerp.Start(lerpFrom, _lerpValue, _actionType == RSActionType.Relative);
+                    _lerp.Start(lerpFrom, _lerpValue, _actionType == RSActionMode.Relative);
                 }
             }
+        }
+
+        public override void Update(float interval)
+        {
+            _lerp.Update(interval);
         }
 
         // ********************************************************************************************
@@ -114,6 +105,11 @@ namespace Rockstar._ActionProperty
 
         // ********************************************************************************************
         // Internal Methods
+
+        protected override bool GetCompleted()
+        {
+            return _lerp.Completed;
+        }
 
         // ********************************************************************************************
     }

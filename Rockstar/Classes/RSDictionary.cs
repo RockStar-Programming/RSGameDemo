@@ -187,7 +187,7 @@ namespace Rockstar._Dictionary
         // Nested keys MUST be RSDictionaries, otherwise it does not make sense
         //
         // Ex key = "clock/hands/width"
-        // Will load the RSDictionary "clock", then the RSDictionary "hands", then return the RSNode for "width"
+        // Will load the RSDictionary "clock", then the RSDictionary "hands", then return the value for "width"
         private object? GetEntry(string key)
         {
             if (key == null) return null;

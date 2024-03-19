@@ -56,16 +56,16 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSurface CreateWithSize(SKPoint position, SKSize size,  bool preMultiplyAlpha = true)
+        public static RSNodeSurface CreateWithSize(SKSize size,  bool preMultiplyAlpha = true)
         { 
-            return new RSNodeSurface(position, size, preMultiplyAlpha);
+            return new RSNodeSurface(size, preMultiplyAlpha);
         }
 
         // ********************************************************************************************
 
-        private RSNodeSurface(SKPoint position, SKSize size, bool preMultiplyAlpha)
+        private RSNodeSurface(SKSize size, bool preMultiplyAlpha)
         {
-            InitWithData(position, size);
+            InitWithData(SKPoint.Empty, size);
 
             if (preMultiplyAlpha == true)
             {

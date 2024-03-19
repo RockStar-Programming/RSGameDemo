@@ -210,9 +210,9 @@ namespace Rockstar._Physics
                 float expansion = (type == RSPhysicsWorldType.Open) ? WORLD_EXPANSION : 0.0f;
 
                 RSNodeSolid ground = RSNodeSolid.CreateRectangle(
-                    new SKPoint(scene.Transformation.Size.Width / 2.0f, -GROUND_THICKNESS / 2.0f),
                     new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS),
-                    SKColors.Green);
+                    SKColors.Green).
+                    Position(scene.Transformation.Size.Width / 2.0f, -GROUND_THICKNESS / 2.0f);
                 ground.Transformation.Visible = false;
                 scene.AddChild(ground);
                 AddStaticNode(ground);
@@ -220,17 +220,17 @@ namespace Rockstar._Physics
                 if ((type == RSPhysicsWorldType.OpenBox) || (type == RSPhysicsWorldType.ClosedBox))
                 {
                     RSNodeSolid leftWall = RSNodeSolid.CreateRectangle(
-                        new SKPoint(-GROUND_THICKNESS / 2.0f, scene.Transformation.Size.Height / 2.0f),
                         new SKSize(GROUND_THICKNESS, scene.Transformation.Size.Height),
-                        SKColors.Green);
+                        SKColors.Green).
+                        Position(-GROUND_THICKNESS / 2.0f, scene.Transformation.Size.Height / 2.0f);
                     leftWall.Transformation.Visible = false;
                     scene.AddChild(leftWall);
                     AddStaticNode(leftWall);
 
                     RSNodeSolid rightWall = RSNodeSolid.CreateRectangle(
-                        new SKPoint(scene.Transformation.Size.Width + (GROUND_THICKNESS / 2.0f), scene.Transformation.Size.Height / 2.0f),
                         new SKSize(GROUND_THICKNESS, scene.Transformation.Size.Height),
-                        SKColors.Green);
+                        SKColors.Green).
+                        Position(scene.Transformation.Size.Width + (GROUND_THICKNESS / 2.0f), scene.Transformation.Size.Height / 2.0f);
                     rightWall.Transformation.Visible = false;
                     scene.AddChild(rightWall);
                     AddStaticNode(rightWall);
@@ -238,9 +238,9 @@ namespace Rockstar._Physics
                 if (type == RSPhysicsWorldType.ClosedBox)
                 {
                     RSNodeSolid roof = RSNodeSolid.CreateRectangle(
-                        new SKPoint(scene.Transformation.Size.Width / 2.0f, scene.Transformation.Size.Height + (GROUND_THICKNESS / 2.0f)),
                         new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS),
-                        SKColors.Green);
+                        SKColors.Green).
+                        Position(scene.Transformation.Size.Width / 2.0f, scene.Transformation.Size.Height + (GROUND_THICKNESS / 2.0f));
                     roof.Transformation.Visible = false;
                     scene.AddChild(roof);
                     AddStaticNode(roof);

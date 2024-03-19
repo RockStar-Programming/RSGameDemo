@@ -60,13 +60,6 @@ namespace Rockstar._Nodes
             return result;
         }
 
-        public static RSNode CreateWithPosition(SKPoint position)
-        {
-            RSNode result = new RSNode();
-            result.InitWithData(position);
-            return result;
-        }
-
         public static RSNode CreateWithNode(RSNode node)
         {
             RSNode result = new RSNode();

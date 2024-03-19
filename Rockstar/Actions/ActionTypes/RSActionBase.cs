@@ -1,8 +1,10 @@
-﻿
-using SkiaSharp;
-
-using Rockstar._RenderSurface;
-using Rockstar._Types;
+﻿using Rockstar._Lerp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,32 +25,23 @@ using Rockstar._Types;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Nodes
+namespace Rockstar._ActionTypes
 {
-    internal class RSNodeString : RSNode
+    public enum RSActionMode
+    {
+        Absolute,
+        Relative
+    }
+
+    public class RSActionBase
     {
         // ********************************************************************************************
-        // Implementation of node based string
+        // Brief Class Description
         //
-        // IMPORTANT:
-        // The Transformation.Size of the node is ALWAYS set to the actual render size, when the node is rendered 
+        //
 
         // ********************************************************************************************
         // Constructors
-
-        public static RSNodeString CreateString(string text, RSFont font)
-        {
-            return new RSNodeString(text, font);
-        }
-
-        // ********************************************************************************************
-
-        protected RSNodeString(string text, RSFont font)
-        {
-            _text = text;
-            _font = font;
-            InitWithData();
-        }
 
         // ********************************************************************************************
         // Class Properties
@@ -56,39 +49,27 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Properties
 
-        public string Text { get { return _text; } }
-        public RSFont Font { get { return _font; } }
+        public bool Completed { get { return GetCompleted(); } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private string _text;
-        private RSFont _font;
-
         // ********************************************************************************************
         // Methods
 
-        public override bool PointInside(SKPoint screenPosition)
+        public virtual void Start(object target)
         {
-            return base.PointInsizeRectangle(screenPosition);
+
         }
 
-        public override void Render(RSRenderSurface surface)
+        public virtual void Update(float interval)
         {
-            SKPaint paint = surface.GetTextPaint(_font, _transformation.Color); 
 
-            // NOTE: Transformation.Size must be set prior to doing any calculations
-            // Get the size of the text
-            float width = paint.MeasureText(_text);
-            SKFontMetrics metrics = paint.FontMetrics;
-            float height = metrics.Descent - metrics.Ascent;
-            _transformation.Size = new SKSize(width, height);
+        }
 
-            float offset = metrics.XHeight / 2;
-            SKPoint center = new SKPoint(
-                -_transformation.Size.Width * _transformation.Anchor.X, 
-                (_transformation.Size.Height * (_transformation.Anchor.Y - 0.5f)) + offset);
-            surface.DrawText(center, _text, paint);
+        public virtual void Stop()
+        {
+
         }
 
         // ********************************************************************************************
@@ -96,6 +77,11 @@ namespace Rockstar._Nodes
 
         // ********************************************************************************************
         // Internal Methods
+
+        protected virtual bool GetCompleted()
+        {
+            return true;
+        }
 
         // ********************************************************************************************
     }

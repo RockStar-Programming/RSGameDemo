@@ -39,41 +39,41 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Constructors
 
-        public static RSNodeSprite CreateWithFile(SKPoint position, string filePath)
+        public static RSNodeSprite CreateWithFile(string filePath)
         {
-            return new RSNodeSprite(position, filePath);
+            return new RSNodeSprite(filePath);
         }
 
-        public static RSNodeSprite CreateWithFileAndSize(SKPoint position, SKSize size,string filePath)
+        public static RSNodeSprite CreateWithFileAndSize(SKSize size,string filePath)
         {
-            return new RSNodeSprite(position, size, filePath);
+            return new RSNodeSprite(size, filePath);
         }
 
-        public static RSNodeSprite CreateWithFileAndJson(SKPoint position, string filePath, string? jsonPath = null)
+        public static RSNodeSprite CreateWithFileAndJson(string filePath, string? jsonPath = null)
         {
-            return new RSNodeSprite(position, filePath, jsonPath);
+            return new RSNodeSprite(filePath, jsonPath);
         }
 
         // ********************************************************************************************
 
-        protected RSNodeSprite(SKPoint position, string filePath)
+        protected RSNodeSprite(string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFile(filePath);
-            InitWithData(position, new SKSize(_sheet.Bitmap.Width, _sheet.Bitmap.Height));
+            InitWithData(SKPoint.Empty, new SKSize(_sheet.Bitmap.Width, _sheet.Bitmap.Height));
             _currentFrame = 0;
         }
 
-        protected RSNodeSprite(SKPoint position, SKSize size, string filePath)
+        protected RSNodeSprite(SKSize size, string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFileAndSize(filePath, size);
-            InitWithData(position, size);
+            InitWithData(SKPoint.Empty, size);
             _currentFrame = 0;
         }
 
-        protected RSNodeSprite(SKPoint position, string filePath, string? jsonPath)
+        protected RSNodeSprite(string filePath, string? jsonPath)
         { 
             _sheet = RSSpriteSheet.CreateFromFileAndJson(filePath, jsonPath);
-            InitWithData(position, _sheet.Frame(0).Size);
+            InitWithData(SKPoint.Empty, _sheet.Frame(0).Size);
             _currentFrame = 0;
         }
         protected RSNodeSprite()
