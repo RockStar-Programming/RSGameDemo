@@ -46,14 +46,14 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Properties
 
-        public SKPoint Velocity { get { return _velocity; } }
-        public SKPoint Gravity { get { return _gravity; } }
+        //public SKPoint Velocity { get { return _velocity; } }
+        //public SKPoint Gravity { get { return _gravity; } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private SKPoint _velocity;
-        private SKPoint _gravity;
+        //private SKPoint _velocity;
+        //private SKPoint _gravity;
 
         // ********************************************************************************************
         // Methods

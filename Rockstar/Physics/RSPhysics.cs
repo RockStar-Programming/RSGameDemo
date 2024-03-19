@@ -212,7 +212,7 @@ namespace Rockstar._Physics
                 RSNodeSolid ground = RSNodeSolid.CreateRectangle(
                     new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS),
                     SKColors.Green).
-                    Position(scene.Transformation.Size.Width / 2.0f, -GROUND_THICKNESS / 2.0f);
+                    SetPosition(scene.Transformation.Size.Width / 2.0f, -GROUND_THICKNESS / 2.0f);
                 ground.Transformation.Visible = false;
                 scene.AddChild(ground);
                 AddStaticNode(ground);
@@ -222,7 +222,7 @@ namespace Rockstar._Physics
                     RSNodeSolid leftWall = RSNodeSolid.CreateRectangle(
                         new SKSize(GROUND_THICKNESS, scene.Transformation.Size.Height),
                         SKColors.Green).
-                        Position(-GROUND_THICKNESS / 2.0f, scene.Transformation.Size.Height / 2.0f);
+                        SetPosition(-GROUND_THICKNESS / 2.0f, scene.Transformation.Size.Height / 2.0f);
                     leftWall.Transformation.Visible = false;
                     scene.AddChild(leftWall);
                     AddStaticNode(leftWall);
@@ -230,7 +230,7 @@ namespace Rockstar._Physics
                     RSNodeSolid rightWall = RSNodeSolid.CreateRectangle(
                         new SKSize(GROUND_THICKNESS, scene.Transformation.Size.Height),
                         SKColors.Green).
-                        Position(scene.Transformation.Size.Width + (GROUND_THICKNESS / 2.0f), scene.Transformation.Size.Height / 2.0f);
+                        SetPosition(scene.Transformation.Size.Width + (GROUND_THICKNESS / 2.0f), scene.Transformation.Size.Height / 2.0f);
                     rightWall.Transformation.Visible = false;
                     scene.AddChild(rightWall);
                     AddStaticNode(rightWall);
@@ -240,7 +240,7 @@ namespace Rockstar._Physics
                     RSNodeSolid roof = RSNodeSolid.CreateRectangle(
                         new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS),
                         SKColors.Green).
-                        Position(scene.Transformation.Size.Width / 2.0f, scene.Transformation.Size.Height + (GROUND_THICKNESS / 2.0f));
+                        SetPosition(scene.Transformation.Size.Width / 2.0f, scene.Transformation.Size.Height + (GROUND_THICKNESS / 2.0f));
                     roof.Transformation.Visible = false;
                     scene.AddChild(roof);
                     AddStaticNode(roof);

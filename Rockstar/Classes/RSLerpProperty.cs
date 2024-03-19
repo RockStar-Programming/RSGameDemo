@@ -27,16 +27,9 @@ namespace Rockstar._LerpProperty
     public partial class RSLerpProperty : RSLerp
     {
         // ********************************************************************************************
-        // RSLerpProperty handles lerps on primarily RSNodes properties
-        // supported properties are float, SKPoint, SKSize
+        // RSLerpProperty handles lerps on class properties
+        // supported properties are float, SKPoint, SKSize, SKColor
         //
-        // Changing properties
-        // property         the class which property to operate on 
-        // info             the actual property info
-        // lerpFrom         the value to lerp the property from
-        // lerpTo           the value to lerp the property to
-        // duration         action duration in seconds
-        // type             lerp type
 
         // ********************************************************************************************
         // Constructors
@@ -59,7 +52,7 @@ namespace Rockstar._LerpProperty
 
         private RSLerpProperty(float duration, RSLerpType type) : base(duration, type)
         {
-            if ((_property == null) || (_info == null))
+            if ((_target == null) || (_info == null))
             {
                 _invalid = true;
             }
@@ -68,30 +61,30 @@ namespace Rockstar._LerpProperty
         // ********************************************************************************************
         // Properties
 
-        public object? Property { get { return _property; } }
-        public PropertyInfo? Info { get { return _info; } }
+        public object Target { get { return _target; } }
+        public PropertyInfo Info { get { return _info; } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private object? _property;
-        private PropertyInfo? _info;
+        private object _target;
+        private PropertyInfo _info;
 
         // ********************************************************************************************
         // Methods
 
-        public void SetPropertyInfo(object? property, PropertyInfo? info)
+        public void SetPropertyInfo(object target, PropertyInfo info)
         {
-            _property = property;
+            _target = target;
             _info = info;
         }
 
         public override void Start(object lerpFrom, object lerpTo, bool relative)
         {
-            if ((_info != null) && (_property != null))
+            if ((_info != null) && (_target != null))
             {
                 base.Start(lerpFrom, lerpTo, relative);
-                _info.SetValue(_property, _value);
+                _info.SetValue(_target, _value);
             }
         }
 
@@ -100,7 +93,7 @@ namespace Rockstar._LerpProperty
             base.Update(interval);
             if ((_invalid == false) && (_info != null))
             {
-                _info.SetValue(_property, _value);
+                _info.SetValue(_target, _value);
             }
         }
 
@@ -109,7 +102,7 @@ namespace Rockstar._LerpProperty
             if ((_invalid == false) && (_info != null))
             {
                 base.Stop();
-                _info.SetValue(_property, _value);
+                _info.SetValue(_target, _value);
             }
         }
 

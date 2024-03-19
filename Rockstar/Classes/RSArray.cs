@@ -51,7 +51,7 @@ namespace Rockstar._Array
             return new RSArray(array.ToList());
         }
 
-        public static RSArray CreateWithList(List<object> list)
+        public static RSArray CreateWithList(List<object>? list)
         { 
             return new RSArray(list);
         }
@@ -61,7 +61,7 @@ namespace Rockstar._Array
             return new RSArray(array.Content);
         }
 
-        public static RSArray CreateWithObject(object value)
+        public static RSArray CreateWithObject(object? value)
         {
             if (value is RSArray result) return CreateWithArray(result);
             return RSArray.Create();

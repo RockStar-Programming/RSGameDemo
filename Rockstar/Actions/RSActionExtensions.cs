@@ -4,7 +4,7 @@ using SkiaSharp;
 using Rockstar._Lerp;
 using Rockstar._Types;
 using Rockstar._ActionManager;
-using Rockstar._ActionTypes;
+using Rockstar._Operations;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -48,118 +48,118 @@ namespace Rockstar._Actions
 
         public static RSAction MoveTo<T>(this T target, float x, float y, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.POSITION, new SKPoint(x, y), RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.POSITION, new SKPoint(x, y), RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction MoveTo(this RSAction action, float x, float y, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.POSITION, new SKPoint(x, y), RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.POSITION, new SKPoint(x, y), RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction MoveBy<T>(this T target, float x, float y, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.POSITION, new SKPoint(x, y), RSActionMode.Relative, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.POSITION, new SKPoint(x, y), RSOperationMode.Relative, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction MoveBy(this RSAction action, float x, float y, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.POSITION, new SKPoint(x, y), RSActionMode.Relative, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.POSITION, new SKPoint(x, y), RSOperationMode.Relative, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction ScaleTo<T>(this T target, float scaleX, float scaleY, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.SCALE, new SKPoint(scaleX, scaleY), RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.SCALE, new SKPoint(scaleX, scaleY), RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction ScaleTo(this RSAction action, float scaleX, float scaleY, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.SCALE, new SKPoint(scaleX, scaleY), RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.SCALE, new SKPoint(scaleX, scaleY), RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction RotateTo<T>(this T target, float rotation, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ROTATION, rotation, RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ROTATION, rotation, RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction RotateTo(this RSAction action, float rotation, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ROTATION, rotation, RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ROTATION, rotation, RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction RotateBy<T>(this T target, float angle, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ROTATION, angle, RSActionMode.Relative, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ROTATION, angle, RSOperationMode.Relative, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction RotateBy(this RSAction action, float angle, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ROTATION, angle, RSActionMode.Relative, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ROTATION, angle, RSOperationMode.Relative, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction SizeTo<T>(this T target, float width, float height, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.SIZE, new SKSize(width, height), RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.SIZE, new SKSize(width, height), RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction SizeTo(this RSAction action, float width, float height, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.SIZE, new SKSize(width, height), RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.SIZE, new SKSize(width, height), RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction AltitudeTo<T>(this T target, float altitude, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ALTITUDE, altitude, RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ALTITUDE, altitude, RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction AltitudeTo(this RSAction action, float altitude, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ALTITUDE, altitude, RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ALTITUDE, altitude, RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction ColorTo<T>(this T target, SKColor color, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.COLOR, color, RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.COLOR, color, RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction ColorTo(this RSAction action, SKColor color, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.COLOR, color, RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.COLOR, color, RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
         public static RSAction AlphaTo<T>(this T target, float alpha, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear) where T : class
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ALPHA, alpha, RSActionMode.Absolute, duration, type);
-            return RSAction.Create(target, newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ALPHA, alpha, RSOperationMode.Absolute, duration, type);
+            return RSAction.Create(target, operation);
         }
 
         public static RSAction AlphaTo(this RSAction action, float alpha, float duration = RSAction.INSTANT, RSLerpType type = RSLerpType.Linear)
         {
-            RSActionProperty newAction = new RSActionProperty().InitAction(RSTransformation.ALPHA, alpha, RSActionMode.Absolute, duration, type);
-            action.ActionList.Add(newAction);
+            RSOperationProperty operation = new RSOperationProperty().Init(RSTransformation.ALPHA, alpha, RSOperationMode.Absolute, duration, type);
+            action.OperationList.Add(operation);
             return action;
         }
 
@@ -188,11 +188,11 @@ namespace Rockstar._Actions
             RSActionManager.Save(action, name);
         }
 
-        // saves the pending batch of actions
-        //   runs is once and removes it
-        public static void Run(this RSAction action)
+        // runs the action once
+        public static RSAction Run(this RSAction action)
         {
             RSActionManager.RunAction(action);
+            return action;
         }
 
         // saves the pending batch of actions

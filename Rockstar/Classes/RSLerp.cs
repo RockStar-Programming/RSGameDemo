@@ -56,21 +56,21 @@ namespace Rockstar._Lerp
         // ********************************************************************************************
         // Constructors
 
-        public static RSLerp Empty() 
+        public static RSLerp Empty()
         {
-            return new RSLerp(); ; 
+            return new RSLerp(); ;
         }
 
         public static RSLerp Create(float duration, RSLerpType type)
-        { 
+        {
             return new RSLerp(duration, type);
         }
 
         // ********************************************************************************************
 
-        protected RSLerp(float duration, RSLerpType type) 
-        { 
-            _value = null;
+        protected RSLerp(float duration, RSLerpType type)
+        {
+            _value = 0;
             _lerpFrom = 0;
             _lerpTo = 0;
 
@@ -96,7 +96,9 @@ namespace Rockstar._Lerp
         // ********************************************************************************************
         // Properties
 
-        public object? Value { get { return _value; } }
+        public float Duration { get { return _duration; } }
+        public RSLerpType Type { get { return _type; } }
+        public object Value { get { return _value; } }
         public RSLerpState State { get { return _state; } } 
         public bool Completed { get { return _completed; } }
 
@@ -105,7 +107,7 @@ namespace Rockstar._Lerp
 
         protected object _lerpFrom;
         protected object _lerpTo;
-        protected object? _value;
+        protected object _value;
         protected RSLerpType _type;
         protected float _duration;
         protected float _time;

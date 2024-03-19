@@ -57,11 +57,11 @@ namespace Rockstar._GameClock
         // ********************************************************************************************
         // Internal Data
 
-        private RSNode? _clock;
-        private RSNode? _clockFace;
-        private RSNode? _hourHand;
-        private RSNode? _minuteHand;
-        private RSNode? _secondHand;
+        private RSNode _clock;
+        private RSNode _clockFace;
+        private RSNode _hourHand;
+        private RSNode _minuteHand;
+        private RSNode _secondHand;
 
         // ********************************************************************************************
         // Constants (do not alter for now)
@@ -288,7 +288,7 @@ namespace Rockstar._GameClock
         public override void Initialise(SKSize size)
         {
             // base node
-            _clock = RSNode.Create().Position(400, 300);
+            _clock = RSNode.Create().SetPosition(400, 300);
             _scene.AddChild(_clock);
 
             // clock face
@@ -403,11 +403,11 @@ namespace Rockstar._GameClock
             SKPoint nodePosition = new SKPoint(position.X - marker.Offset, position.Y).Rotate((float)rotation);
             if (marker.Circular == true)
             {
-                node = RSNodeSolid.CreateEllipse(marker.Size, marker.Color).AtPosition(nodePosition);
+                node = RSNodeSolid.CreateEllipse(marker.Size, marker.Color).SetPosition(nodePosition);
             }
             else
             {
-                node = RSNodeSolid.CreateRectangle(marker.Size, marker.Color).AtPosition(nodePosition);
+                node = RSNodeSolid.CreateRectangle(marker.Size, marker.Color).SetPosition(nodePosition);
             }
             node.Transformation.Rotation = (float)rotation;
             result.AddChild(node);
@@ -417,11 +417,11 @@ namespace Rockstar._GameClock
                 nodePosition = new SKPoint(position.X + marker.Offset, position.Y).Rotate((float)rotation);
                 if (marker.Circular == true)
                 {
-                    node = RSNodeSolid.CreateEllipse(marker.Size, marker.Color).AtPosition(nodePosition);
+                    node = RSNodeSolid.CreateEllipse(marker.Size, marker.Color).SetPosition(nodePosition);
                 }
                 else
                 {
-                    node = RSNodeSolid.CreateRectangle(marker.Size, marker.Color).AtPosition(nodePosition);
+                    node = RSNodeSolid.CreateRectangle(marker.Size, marker.Color).SetPosition(nodePosition);
                 }
                 node.Transformation.Rotation = (float)rotation;
                 result.AddChild(node);
@@ -448,7 +448,7 @@ namespace Rockstar._GameClock
 
             // create a top rounded point and add it to the hand base at the top
             //
-            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new SKSize(hand.Width, hand.Width), hand.Color).Position(0, hand.Length);
+            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new SKSize(hand.Width, hand.Width), hand.Color).SetPosition(0, hand.Length);
             handTop.Name = hand.Name + ".top";
             result.AddChild(handTop);
 
@@ -478,7 +478,7 @@ namespace Rockstar._GameClock
             font.Bold = setup.Bold;
 
             string name = GetTypeName(setup.Name);
-            RSNodeString result = RSNodeString.CreateString(name, font).AtPosition(setup.Position);
+            RSNodeString result = RSNodeString.CreateString(name, font).SetPosition(setup.Position);
             result.Name = "text." + name;
             result.Transformation.Color = setup.Color;
 

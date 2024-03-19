@@ -1,5 +1,5 @@
 ﻿
-using Rockstar._ActionTypes;
+using Rockstar._Operations;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -32,8 +32,8 @@ namespace Rockstar._Actions
     public class RSAction
     {
         // ********************************************************************************************
-        // An action can consist of one or more individual action types
-        // 
+        // An action can consist of one or more individual operations
+        //   these can be executed either sequentially or simultanously
 
         // ********************************************************************************************
         // Constructors
@@ -50,14 +50,14 @@ namespace Rockstar._Actions
             return new RSAction(new object(), null, true, REPEAT_ONCE);
         }
 
-        public static RSAction Create(object target, RSActionBase? action = null)
+        public static RSAction Create(object target, RSOperation? operation = null)
         {
-            return new RSAction(target, action, false, REPEAT_ONCE);
+            return new RSAction(target, operation, false, REPEAT_ONCE);
         }
 
-        public static RSAction CreateSequence(object target, RSActionBase? action = null)
+        public static RSAction CreateSequence(object target, RSOperation? operation = null)
         {
-            return new RSAction(target, action, true, REPEAT_ONCE);
+            return new RSAction(target, operation, true, REPEAT_ONCE);
         }
 
         public static RSAction CreateWithAction(object target, RSAction action)
@@ -67,7 +67,7 @@ namespace Rockstar._Actions
 
         // ********************************************************************************************
 
-        private RSAction(object target, RSActionBase? action, bool isSequence, int repeat) 
+        private RSAction(object target, RSOperation? operation, bool isSequence, int repeat) 
         {
             _target = target;
             _name = "";
@@ -75,10 +75,10 @@ namespace Rockstar._Actions
             _isSequence = isSequence;
             _state = RSActionState.Stopped;
             _repeat = repeat;
-            _actionList = new List<RSActionBase>();
-            if (action != null)
+            _operationList = new List<RSOperation>();
+            if (operation != null)
             {
-                _actionList.Add(action);
+                _operationList.Add(operation);
             }
         }
 
@@ -91,10 +91,10 @@ namespace Rockstar._Actions
             _state = RSActionState.Stopped;
             _repeat = action.Repeat;
 
-            _actionList = new List<RSActionBase>();
-            foreach (RSActionBase storedAction in action.ActionList)
+            _operationList = new List<RSOperation>();
+            foreach (RSOperation operation in action.OperationList)
             {
-                _actionList.Add(storedAction);
+                _operationList.Add(operation.Copy());
             }
         }
 
@@ -106,26 +106,26 @@ namespace Rockstar._Actions
         // Properties
 
         public const float INSTANT = 0.0f;
-
         public const int REPEAT_ONCE = 1;
+
         public RSActionState State { get { return _state; } }
         public object Target { get { return _target; } }
-        public string? Name { get { return _name; } }
+        public string Name { get { return _name; } }
         public bool IsSequence { get { return _isSequence; } }
         public int Index {  get { return _index; } }
         public int Repeat { get { return _repeat; } }
-        public List<RSActionBase> ActionList { get { return _actionList; } }
+        public List<RSOperation> OperationList { get { return _operationList; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private RSActionState _state;
         private object _target;
-        private string? _name;
+        private string _name;
         private bool _isSequence;
         private int _index;
         private int _repeat;
-        private List<RSActionBase> _actionList;
+        private List<RSOperation> _operationList;
 
         // ********************************************************************************************
         // Methods
@@ -135,15 +135,15 @@ namespace Rockstar._Actions
             _name = name;
         }
 
-        public RSAction AddAction(RSActionBase action) 
+        public RSAction AddAction(RSOperation action) 
         {
-            _actionList.Add(action);
+            _operationList.Add(action);
             return this;
         }
 
         public void StepToNextIndex()
         {
-            _index = (_index + 1) % _actionList.Count;
+            _index = (_index + 1) % _operationList.Count;
         }
 
         public void DecrementRepeat()
@@ -157,7 +157,17 @@ namespace Rockstar._Actions
         public void Start()
         {
             _index = 0;
-            _actionList[_index].Start(_target);
+            if (_isSequence == true)
+            {
+                _operationList[_index].Start(_target);
+            }
+            else
+            {
+                foreach (RSOperation operation in _operationList)
+                {
+                    operation.Start(_target);
+                }
+            }
             _state = RSActionState.Running;
         }
 

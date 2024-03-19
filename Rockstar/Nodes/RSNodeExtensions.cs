@@ -43,33 +43,51 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Methods
 
-        public static T AtPosition<T>(this T node, SKPoint position) where T : RSNode
+        public static T SetPosition<T>(this T node, SKPoint position) where T : RSNode
         {
             node.Transformation.Position = position;
             return node;
         }
 
-        public static T AtPosition<T>(this T node, float x, float y) where T : RSNode
+        public static T SetPosition<T>(this T node, float x, float y) where T : RSNode
         {
             node.Transformation.Position = new SKPoint(x, y);
             return node;
         }
 
-        public static T WithAnchor<T>(this T node, SKPoint anchor) where T : RSNode
+        public static T SetAnchor<T>(this T node, SKPoint anchor) where T : RSNode
         {
             node.Transformation.Anchor = anchor;
             return node;
         }
 
-        public static T WithAnchor<T>(this T node, float anchor) where T : RSNode
+        public static T SetAnchor<T>(this T node, float anchor) where T : RSNode
         {
             node.Transformation.Anchor = new SKPoint(anchor, anchor);
             return node;
         }
 
-        public static T WithAnchor<T>(this T node, float x, float y) where T : RSNode
+        public static T SetAnchor<T>(this T node, float anchorX, float anchorY) where T : RSNode
         {
-            node.Transformation.Anchor = new SKPoint(x, y);
+            node.Transformation.Anchor = new SKPoint(anchorX, anchorY);
+            return node;
+        }
+
+        public static T SetScale<T>(this T node, SKPoint scale) where T : RSNode
+        {
+            node.Transformation.Scale = scale;
+            return node;
+        }
+
+        public static T SetScale<T>(this T node, float scale) where T : RSNode
+        {
+            node.Transformation.Scale = new SKPoint(scale, scale);
+            return node;
+        }
+
+        public static T SetScale<T>(this T node, float scaleX, float scaleY) where T : RSNode
+        {
+            node.Transformation.Scale = new SKPoint(scaleX, scaleY);
             return node;
         }
 

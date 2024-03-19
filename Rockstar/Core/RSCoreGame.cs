@@ -45,7 +45,7 @@ namespace Rockstar._CoreGame
             _mouse = RSCoreMouse.Create(_gameLock);
             _scene = RSNodeScene.CreateScene();
             _frameTimer = RSFrameTimer.Create();
-            RSActionManager.Create();
+            RSActionManager.Initialize();
 
             // Adding a bit of X gravity, prevents perfect stacking of objects
             //

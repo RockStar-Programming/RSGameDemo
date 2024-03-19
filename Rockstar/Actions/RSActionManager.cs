@@ -1,6 +1,8 @@
 ﻿
-using Rockstar._ActionTypes;
+using Rockstar._Operations;
 using Rockstar._Actions;
+using System.Collections.Generic;
+using System.Xml.Linq;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -23,19 +25,14 @@ using Rockstar._Actions;
 
 namespace Rockstar._ActionManager
 {
-    public class RSActionManager
+    public static class RSActionManager
     {
         // ********************************************************************************************
         // The action manager maintains a list of actions, and run any automations assigned
-        // TBD: Automations are executed in render order
+        // 
 
         // ********************************************************************************************
         // Constructors
-
-        public static void Create()
-        {
-
-        }
 
         // ********************************************************************************************
         // Properties
@@ -49,40 +46,70 @@ namespace Rockstar._ActionManager
         // ********************************************************************************************
         // Methods
 
+        public static void Initialize()
+        { 
+        
+        }
+
         public static void Update(float interval)
         {
             // iterate backwards through the list, so that completed entries can be removed on the fly
             //
             for (int index = _runningActionList.Count - 1; index >= 0; index--) 
             {
-                RSAction list = _runningActionList[index];
+                RSAction action = _runningActionList[index];
 
-                if (list.State == RSActionState.Running)
+                if (action.State == RSActionState.Running)
                 {
-                    RSActionBase action = list.ActionList[list.Index];
-                    action.Update(interval);
-
-                    if (action.Completed == true)
+                    if (action.IsSequence == true)
                     {
-                        list.StepToNextIndex();
-
-                        // if StepToNextIndex resulted in Index == 0,
-                        //   the list rolled round, and is completed
+                        // execute operations sequentianlly
                         //
-                        if (list.Index == 0)
+                        RSOperation operation = action.OperationList[action.Index];
+                        operation.Update(interval);
+
+                        if (operation.Completed == true)
                         {
-                            list.DecrementRepeat();
-                            // If repeat reached 0, list is done and removed
+                            action.StepToNextIndex();
+
+                            // if StepToNextIndex resulted in Index == 0,
+                            //   the list rolled round, and is completed
                             //
-                            if (list.Repeat == 0)
+                            if (action.Index == 0)
                             {
-                                _runningActionList.RemoveAt(index);
+                                action.DecrementRepeat();
+                                // If repeat reached 0, list is done and removed
+                                //
+                                if (action.Repeat == 0)
+                                {
+                                    _runningActionList.RemoveAt(index);
+                                }
+                            }
+                            else
+                            {
+                                // start next action
+                                action.OperationList[action.Index].Start(action.Target);
                             }
                         }
-                        else
+                    }
+                    else
+                    { 
+                        // execute operations simultaneously
+                        //
+                        bool removeAction = true;
+                        
+                        foreach (RSOperation operation in action.OperationList)
                         {
-                            // start next action
-                            list.ActionList[list.Index].Start(list.Target);
+                            operation.Update(interval);
+                            if (operation.Completed == false)
+                            { 
+                                removeAction = false;
+                            }
+                        }
+
+                        if (removeAction == true)
+                        {
+                            _runningActionList.RemoveAt(index);
                         }
                     }
                 }
@@ -95,11 +122,29 @@ namespace Rockstar._ActionManager
             _savedActionList.Add(list);
         }
 
+        public static void StopAction(object target, string name)
+        {
+            // iterate backwards through the list, so that entries can be removed on the fly
+            //
+            for (int index = _runningActionList.Count - 1; index >= 0; index--)
+            {
+                RSAction action = _runningActionList[index];
+
+                if ((action.Target == target) && (action.Name == name))
+                { 
+                    action.Stop();
+                    _runningActionList.RemoveAt(index);
+                }
+            }
+        }
+
         public static void RunAction(object target, string name)
         {
+            StopAction(target, name);
+
             foreach (RSAction action in _savedActionList)
             {
-                if ((action.Name != null) && (action.Name == name))
+                if ((action.Name.Length > 0) && (action.Name == name))
                 {
                     RSAction newAction = RSAction.CreateWithAction(target, action);
                     _runningActionList.Add(newAction);
@@ -108,12 +153,29 @@ namespace Rockstar._ActionManager
             }
         }
 
-        public static void RunAction(RSAction list)
+        public static void StopAction(RSAction action)
         {
-            ;
+            // iterate backwards through the list, so that entries can be removed on the fly
+            //
+            for (int index = _runningActionList.Count - 1; index >= 0; index--)
+            {
+                if (action == _runningActionList[index])
+                {
+                    action.Stop();
+                    _runningActionList.RemoveAt(index);
+                }
+            }
         }
 
-        public static void Repeat(RSAction list, int repeat)
+        public static void RunAction(RSAction action)
+        {
+            StopAction(action);
+
+            _runningActionList.Add(action);
+            action.Start();
+        }
+
+        public static void Repeat(RSAction action, int repeat)
         {
             ;
         }

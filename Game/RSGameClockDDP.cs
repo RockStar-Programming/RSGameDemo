@@ -81,12 +81,12 @@ namespace Rockstar._GameClockDDP
         private double _bph;
         private MinuteHand _jumpingMinute;
 
-        private RSNode? _clock;
-        private RSNode? _clockFace;
-        private RSNode? _clockDial;
-        private RSNode? _hourHand;
-        private RSNode? _minuteHand;
-        private RSNode? _secondHand;
+        private RSNode _clock;
+        private RSNode _clockFace;
+        private RSNode _clockDial;
+        private RSNode _hourHand;
+        private RSNode _minuteHand;
+        private RSNode _secondHand;
 
         // ********************************************************************************************
         // Enums used in setup json
@@ -178,7 +178,7 @@ namespace Rockstar._GameClockDDP
             _jumpingMinute = _setup.GetObject(KEY_CLOCK_JUMPING, DEFAULT_JUMPING_MINUTE).ToEnum<MinuteHand>();
 
             // base clock node
-            _clock = RSNode.Create().Position(size.Width / 2,size.Height / 2);
+            _clock = RSNode.Create().SetPosition(size.Width / 2,size.Height / 2);
             _scene.AddChild(_clock);
 
             // clock face
@@ -316,7 +316,7 @@ namespace Rockstar._GameClockDDP
                         case MarkerType.Rectangle:
 
                             SKPoint rectanglePosition = new SKPoint(0, radius).Rotate(rotation);
-                            RSNodeSolid rectangle = RSNodeSolid.CreateRectangle(rectangleSize, color).AtPosition(rectanglePosition);
+                            RSNodeSolid rectangle = RSNodeSolid.CreateRectangle(rectangleSize, color).SetPosition(rectanglePosition);
                             rectangle.Transformation.Rotation = rotation;
                             result.AddChild(rectangle);
                             
@@ -324,12 +324,12 @@ namespace Rockstar._GameClockDDP
                         case MarkerType.DoubleRectangle:
                    
                             SKPoint leftPosition = new SKPoint(-offset, radius).Rotate(rotation);
-                            RSNodeSolid leftRectangle = RSNodeSolid.CreateRectangle(rectangleSize, color).AtPosition(leftPosition);
+                            RSNodeSolid leftRectangle = RSNodeSolid.CreateRectangle(rectangleSize, color).SetPosition(leftPosition);
                             leftRectangle.Transformation.Rotation = rotation;
                             result.AddChild(leftRectangle);
 
                             SKPoint rightPosition = new SKPoint(offset, radius).Rotate(rotation);
-                            RSNodeSolid rightRectangle = RSNodeSolid.CreateRectangle(rectangleSize, color).AtPosition(rightPosition);
+                            RSNodeSolid rightRectangle = RSNodeSolid.CreateRectangle(rectangleSize, color).SetPosition(rightPosition);
                             rightRectangle.Transformation.Rotation = rotation;
                             result.AddChild(rightRectangle);
 
@@ -338,7 +338,7 @@ namespace Rockstar._GameClockDDP
                         default:
 
                             SKPoint ellipsePosition = new SKPoint(0, radius).Rotate(rotation);
-                            RSNode ellipse = RSNodeSolid.CreateEllipse(ellipseSize, color).AtPosition(ellipsePosition);
+                            RSNode ellipse = RSNodeSolid.CreateEllipse(ellipseSize, color).SetPosition(ellipsePosition);
                             ellipse.Transformation.Rotation = rotation;
                             result.AddChild(ellipse);
                             
@@ -362,7 +362,7 @@ namespace Rockstar._GameClockDDP
             SKColor color = setup.GetArray(KEY_COLOR).ToColor();
 
             // create label
-            RSNodeString result = RSNodeString.CreateString(text, font).AtPosition(position);
+            RSNodeString result = RSNodeString.CreateString(text, font).SetPosition(position);
             result.Transformation.Color = color;
 
             return result;
@@ -390,7 +390,7 @@ namespace Rockstar._GameClockDDP
 
             // create a top rounded point and add it to the hand base at the top
             //
-            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new SKSize(size.Width, size.Width), color).Position(0, (float)size.Height);
+            RSNodeSolid handTop = RSNodeSolid.CreateEllipse(new SKSize(size.Width, size.Width), color).SetPosition(0, (float)size.Height);
             result.AddChild(handTop);
 
             // create a tail if any defined

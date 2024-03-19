@@ -1,10 +1,8 @@
-﻿using Rockstar._Lerp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+
+using Rockstar._Lerp;
+using Rockstar._LerpProperty;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,23 +23,32 @@ using System.Threading.Tasks;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._ActionTypes
+namespace Rockstar._Operations
 {
-    public enum RSActionMode
-    {
-        Absolute,
-        Relative
-    }
-
-    public class RSActionBase
+    public class RSOperationProperty : RSOperation 
     {
         // ********************************************************************************************
-        // Brief Class Description
-        //
+        // Actions can be run either on variables directly, or on class properties
         //
 
         // ********************************************************************************************
         // Constructors
+
+        public RSOperationProperty Init(string propertyName, object lerpValue, RSOperationMode mode, float duration, RSLerpType type)
+        {
+            _propertyName = propertyName;
+            _lerp = RSLerpProperty.Create(duration, type);
+            _lerpValue = lerpValue;
+            _mode = mode;
+            return this;
+        }
+
+        public RSOperationProperty()
+        {
+            _propertyName = "";
+            _lerp = RSLerpProperty.Empty();
+            _lerpValue = 0;
+        }
 
         // ********************************************************************************************
         // Class Properties
@@ -49,27 +56,58 @@ namespace Rockstar._ActionTypes
         // ********************************************************************************************
         // Properties
 
-        public bool Completed { get { return GetCompleted(); } }
+        public RSLerpState State { get { return _lerp.State; } }
 
         // ********************************************************************************************
         // Internal Data
 
+        private string _propertyName;
+        private RSLerpProperty _lerp;
+        private RSOperationMode _mode;
+        private object _lerpValue;
+
         // ********************************************************************************************
         // Methods
 
-        public virtual void Start(object target)
+        public override void Start(object target)
         {
+            List<string> propertyList = new List<string>(_propertyName.Split('.'));
+            object? property = target;
+            PropertyInfo? info = null;
+            while ((propertyList.Count > 0) && (property != null))
+            {
+                info = property.GetType().GetProperty(propertyList[0]);
+                if ((propertyList.Count > 1) && (info != null))
+                {
+                    property = info.GetValue(property);
+                }
+                propertyList.RemoveAt(0);
+            }
 
+            if ((property != null) && (info != null))
+            {
+                _lerp.SetPropertyInfo(property, info);
+            }
+
+            if ((_lerp.Target != null) && (_lerp.Info != null))
+            {
+                object? lerpFrom = _lerp.Info.GetValue(_lerp.Target);
+                if (lerpFrom != null)
+                {
+                    _lerp.Start(lerpFrom, _lerpValue, _mode == RSOperationMode.Relative);
+                }
+            }
         }
 
-        public virtual void Update(float interval)
+        public override void Update(float interval)
         {
-
+            _lerp.Update(interval);
         }
 
-        public virtual void Stop()
+        public override RSOperationProperty Copy()
         {
-
+            RSOperationProperty result = new RSOperationProperty().Init(_propertyName, _lerpValue, _mode, _lerp.Duration, _lerp.Type);
+            return result;
         }
 
         // ********************************************************************************************
@@ -78,9 +116,9 @@ namespace Rockstar._ActionTypes
         // ********************************************************************************************
         // Internal Methods
 
-        protected virtual bool GetCompleted()
+        protected override bool GetCompleted()
         {
-            return true;
+            return _lerp.Completed;
         }
 
         // ********************************************************************************************

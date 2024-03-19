@@ -74,7 +74,7 @@ namespace Rockstar._CoreFile
 
         public static SKBitmap ReadAsBitmap(params string[] pathList)
         {
-            SKBitmap result = null;
+            SKBitmap? result = null;
             try
             {
                 result = SKBitmap.Decode(GetAbsolutePath(pathList));

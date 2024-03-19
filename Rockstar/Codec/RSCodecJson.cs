@@ -99,7 +99,7 @@ namespace Rockstar._CodecJson
         {
             object? result = value;
 
-            if (value is JObject)
+            if (value is JObject dictionaryObject)
             {
                 // RANT
                 // See, this is why we hate all this null checking shit exception crap ...
@@ -110,7 +110,7 @@ namespace Rockstar._CodecJson
                 // /RANT
 
                 // Object is a dictionary, so deserialize it into such
-                Dictionary<string, object>? dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(value.ToString());
+                Dictionary<string, object>? dictionary = JsonConvert.DeserializeObject<Dictionary<string, object>>(dictionaryObject.ToString());
 
                 if (dictionary != null)
                 {
@@ -127,10 +127,10 @@ namespace Rockstar._CodecJson
                 // return a new RSDictionary
                 result = RSDictionary.CreateWithDictionary(dictionary);
             }
-            else if (value is JArray)
+            else if (value is JArray arrayObject)
             {
                 // Object is an array, so deserialize it into such
-                List<object>? array = JsonConvert.DeserializeObject<List<object>>(value.ToString());
+                List<object>? array = JsonConvert.DeserializeObject<List<object>>(arrayObject.ToString());
 
                 if (array != null)
                 {

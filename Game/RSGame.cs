@@ -144,7 +144,7 @@ namespace Rockstar._Game
             {
                 position = _scene.LocalPosition(position);
 
-                RSNodeSolid solid = RSNodeSolid.CreateEllipse(new SKSize(18, 18), SKColors.Cyan).AtPosition(position);
+                RSNodeSolid solid = RSNodeSolid.CreateEllipse(new SKSize(18, 18), SKColors.Cyan).SetPosition(position);
                 _motionCanvas.AddChild(solid);
                 _physics.AddDynamicNode(solid, 5.0f, 1.0f, 0.3f, 0.9f);
             }    
@@ -156,7 +156,7 @@ namespace Rockstar._Game
             {
                 position = _scene.LocalPosition(position);
 
-                RSNodeSolid solid = RSNodeSolid.CreateRectangle(new SKSize(18, 18), SKColors.LightGreen).AtPosition(position);
+                RSNodeSolid solid = RSNodeSolid.CreateRectangle(new SKSize(18, 18), SKColors.LightGreen).SetPosition(position);
                 _scene.AddChild(solid);
                 _physics.AddDynamicNode(solid, 15.0f, 5.0f, 0.5f, 0.1f);
             }
@@ -182,7 +182,7 @@ namespace Rockstar._Game
             _motionCanvas.Transformation.Altitude = -10;
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKSize(280, 350)).AtPosition(400, 200);
+            _surface = RSNodeSurface.CreateWithSize(new SKSize(280, 350)).SetPosition(400, 200);
             _surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
             _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
             _surface.Transformation.Altitude = 10;
@@ -191,24 +191,33 @@ namespace Rockstar._Game
             _surface.AlphaDecay = 60;
             _scene.AddChild(_surface);
 
-            // create actions based on a node
-            _surface.Sequence().MoveTo(-100, 200).MoveBy(1000, 0, 5.0f).MoveTo(400, 200).SaveAs("test");
-            _surface.ScaleTo(0.5f, 0.5f, 5.0f).ScaleTo(0.8f, 0.8f).SaveAs("test_4");
+            // create 
+            _surface
+                .Sequence()
+                .MoveTo(-100, 200)
+                .MoveBy(1000, 0, 5.0f)
+                .MoveTo(400, 200)
+                .Run()
+                .SaveAs("test");
+
+            RSAction.CreateSequence()
+                .ScaleTo(0.5f, 0.5f, 2.0f)
+                .ScaleTo(0.8f, 0.8f)
+                .SaveAs("test");
 
             // create a generic action sequence
-            RSAction.CreateSequence().AlphaTo(0.0f, 2.5f).AlphaTo(1.0f, 2.5f).Run();
             RSAction.Create().MoveTo(100, 100, 5.0f).SaveAs("test_2");
 
-            _animal = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/brown_monkey_walk").Position(0, -150);
+            _animal = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/brown_monkey_walk").SetPosition(0, -150);
             _animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
             _surface.AddChild(_animal);
 
-            _cat = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/blue_cat").Position(0, 200);
+            _cat = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/blue_cat").SetPosition(0, 200);
             _cat.Transformation.Scale = new SKPoint(0.5f, 0.5f);
             _cat.Transformation.Anchor = new SKPoint(0.5f, -1.0f);
             _scene.AddChild(_cat);
 
-            _loadScene = RSNodeString.CreateString("Reload Scene", RSFont.Create()).Position(50, 50);
+            _loadScene = RSNodeString.CreateString("Reload Scene", RSFont.Create()).SetPosition(50, 50);
             _scene.AddChild(_loadScene);
         }
 
