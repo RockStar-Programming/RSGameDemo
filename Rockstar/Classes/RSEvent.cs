@@ -20,7 +20,11 @@
 
 namespace Rockstar._Event
 {
-	public class RSEvent
+    // basic event handler
+    //
+    public delegate void RSEventHandler(object sender, RSEventArgs argument);
+
+    public class RSEvent
 	{
         // ********************************************************************************************
         // RSEvent replaces the default event in C#. The reason for that is:
@@ -37,7 +41,7 @@ namespace Rockstar._Event
             return new RSEvent(); 
         }
 
-        public static RSEvent CreateWithHandler(Handler handler)
+        public static RSEvent CreateWithHandler(RSEventHandler handler)
         {
             RSEvent result = RSEvent.Create();
             result.AddHandler(handler);
@@ -46,25 +50,23 @@ namespace Rockstar._Event
 
         private RSEvent()
         {
-            _handlerList = new List<Handler>();
+            _handlerList = new List<RSEventHandler>();
         }
 
         // ********************************************************************************************
         // Properties
-
-        public delegate void Handler(object sender, RSEventArgs argument);
 
         public bool Empty { get { return _handlerList.Count == 0; } }
 
         // ********************************************************************************************
         // Internal Data
 
-        private List<Handler> _handlerList;
+        private List<RSEventHandler> _handlerList;
 
         // ********************************************************************************************
         // Methods
 
-        public void AddHandler(Handler handler)
+        public void AddHandler(RSEventHandler handler)
         {
             if (_handlerList.Contains(handler) == false)
             {
@@ -72,7 +74,7 @@ namespace Rockstar._Event
             }
         }
 
-        public void RemoveHandler(Handler handler)
+        public void RemoveHandler(RSEventHandler handler)
         {
             if (_handlerList.Contains(handler) == true)
             {
@@ -94,7 +96,7 @@ namespace Rockstar._Event
                 // iterate backwards to be able to remove bad handlers on the fly
                 for (int index = _handlerList.Count - 1; index >= 0; index--)
                 {
-                    Handler handler = _handlerList[index];
+                    RSEventHandler handler = _handlerList[index];
 
                     try
                     {

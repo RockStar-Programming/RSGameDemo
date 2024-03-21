@@ -1,10 +1,6 @@
 ﻿
-using SkiaSharp;
-
-using Rockstar._Game;
-using Rockstar._GameClockDDP;
-using Rockstar._GameClock;
-using Rockstar._GameOmega;
+using Rockstar._Event;
+using Rockstar._Nodes;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -25,27 +21,17 @@ using Rockstar._GameOmega;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._CoreLoop
+namespace Rockstar._Touch
 {
-    public class RSCoreLoop
+    public static class RSTouchExtensions
     {
         // ********************************************************************************************
-        // Main game loop
+        // Brief Class Description
         //
-        // Create and initialse game instance here
+        //
 
         // ********************************************************************************************
         // Constructors
-
-        //        RSGame _game;
-        //        RSGameClock _game;
-        //        RSGameClockDDP _game;
-        RSGameOmega _game;
-
-        public RSCoreLoop()
-        {
-            _game = RSGameOmega.Create();
-        }
 
         // ********************************************************************************************
         // Class Properties
@@ -59,27 +45,10 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Methods
 
-        public void Initialise(SKSize size)
-        {
-            _game.Initialise(size);
-        }
-
-        public void Resize(SKSize size)
-        {
-            _game.Resize(size);
-        }
-
-        public void Update()
-        {
-            _game.FrameTimer.BeginFrame();
-
-            _game.UpdateNodes(_game.FrameTimer.Interval);
-            _game.Update(_game.FrameTimer.Interval);
-        }
-
-        public void Render(SKCanvas canvas)
-        {
-            _game.Render(canvas);
+        public static T AddTouchHandler<T>(this T node, RSEventHandler handler) where T : RSNode
+        { 
+            RSTouchManager.AddEventHandler(node, handler);
+            return node;
         }
 
         // ********************************************************************************************

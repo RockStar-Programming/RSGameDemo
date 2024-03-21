@@ -78,8 +78,8 @@ namespace Rockstar._Game
 
             _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseEvent);
 
-            //_mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, OnLeftMouseAddPhysics);
-            //_mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseAddPhysics);
+            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, OnLeftMouseAddPhysics);
+            _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseAddPhysics);
         }
 
         public override void Resize(SKSize size)
@@ -108,7 +108,7 @@ namespace Rockstar._Game
             {
                 if (argument.Type is RSMouseEvent.OnPressed)
                 {
-                    _surface.RunAction("test");
+                    //_surface.RunAction("test");
 
                     RSNodeList nodeList = _scene.GetHitList(position);
                     if (nodeList.Contains(_loadScene) == true)
@@ -132,7 +132,7 @@ namespace Rockstar._Game
                 }
                 else
                 {
-                    _cat.RunAction("test");
+                    //_cat.RunAction("test");
                     _renderer.AssignDebugNodeList(_scene.GetHitList(position));
                 }
             }
@@ -182,40 +182,40 @@ namespace Rockstar._Game
             _motionCanvas.Transformation.Altitude = -10;
             _scene.AddChild(_motionCanvas);
 
-            _surface = RSNodeSurface.CreateWithSize(new SKSize(280, 350)).SetPosition(400, 200);
-            _surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
-            _surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
-            _surface.Transformation.Altitude = 10;
-            //_surface.Transformation.Color = SKColors.White;
-            _surface.ClearColor = SKColors.Red;
-            _surface.AlphaDecay = 60;
-            _scene.AddChild(_surface);
+            //_surface = RSNodeSurface.CreateWithSize(new SKSize(280, 350)).SetPosition(400, 200);
+            //_surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
+            //_surface.Transformation.Scale = new SKPoint(0.8f, 0.8f);
+            //_surface.Transformation.Altitude = 10;
+            ////_surface.Transformation.Color = SKColors.White;
+            //_surface.ClearColor = SKColors.Red;
+            //_surface.AlphaDecay = 60;
+            //_scene.AddChild(_surface);
 
-            // create 
-            _surface
-                .Sequence()
-                .MoveTo(-100, 200)
-                .MoveBy(1000, 0, 5.0f)
-                .MoveTo(400, 200)
-                .Run()
-                .SaveAs("test");
+            //// create 
+            //_surface
+            //    .Sequence()
+            //    .MoveTo(-100, 200)
+            //    .MoveBy(1000, 0, 5.0f)
+            //    .MoveTo(400, 200)
+            //    .Run()
+            //    .SaveAs("test");
 
-            RSAction.CreateSequence()
-                .ScaleTo(0.5f, 0.5f, 2.0f)
-                .ScaleTo(0.8f, 0.8f)
-                .SaveAs("test");
+            //RSAction.CreateSequence()
+            //    .ScaleTo(0.5f, 0.5f, 2.0f)
+            //    .ScaleTo(0.8f, 0.8f)
+            //    .SaveAs("test");
 
-            // create a generic action sequence
-            RSAction.Create().MoveTo(100, 100, 5.0f).SaveAs("test_2");
+            //// create a generic action sequence
+            //RSAction.Create().MoveTo(100, 100, 5.0f).SaveAs("test_2");
 
-            _animal = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/brown_monkey_walk").SetPosition(0, -150);
-            _animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
-            _surface.AddChild(_animal);
+            //_animal = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/brown_monkey_walk").SetPosition(0, -150);
+            //_animal.Transformation.Anchor = new SKPoint(0.5f, 0.0f);
+            //_surface.AddChild(_animal);
 
-            _cat = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/blue_cat").SetPosition(0, 200);
-            _cat.Transformation.Scale = new SKPoint(0.5f, 0.5f);
-            _cat.Transformation.Anchor = new SKPoint(0.5f, -1.0f);
-            _scene.AddChild(_cat);
+            //_cat = RSNodeSprite.CreateWithFileAndJson("Assets/animals.png/blue_cat").SetPosition(0, 200);
+            //_cat.Transformation.Scale = new SKPoint(0.5f, 0.5f);
+            //_cat.Transformation.Anchor = new SKPoint(0.5f, -1.0f);
+            //_scene.AddChild(_cat);
 
             _loadScene = RSNodeString.CreateString("Reload Scene", RSFont.Create()).SetPosition(50, 50);
             _scene.AddChild(_loadScene);

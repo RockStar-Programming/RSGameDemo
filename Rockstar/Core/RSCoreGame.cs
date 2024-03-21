@@ -7,6 +7,8 @@ using Rockstar._CoreMouse;
 using Rockstar._Physics;
 using Rockstar._ActionManager;
 using Rockstar._Nodes;
+using Rockstar._Touch;
+using Rockstar._CoreMouseButton;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -40,12 +42,22 @@ namespace Rockstar._CoreGame
 
         protected RSCoreGame()
         {
+            // various game objects
+            //
             _gameLock = new object();
             _renderer = RSRenderer.Create();
             _mouse = RSCoreMouse.Create(_gameLock);
             _scene = RSNodeScene.CreateScene();
             _frameTimer = RSFrameTimer.Create();
+
+            // actions and touches are static manager (there can be only one)
+            //
             RSActionManager.Initialize();
+            RSTouchManager.Initialize();
+
+            // left mouse button simulates single touches
+            //
+            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, RSTouchManager.MouseEvent);
 
             // Adding a bit of X gravity, prevents perfect stacking of objects
             //

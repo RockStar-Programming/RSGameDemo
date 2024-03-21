@@ -41,12 +41,12 @@ namespace Rockstar
 
                 while (_gameRunning == true)
                 {
-                    while (stopwatch.ElapsedTicks < nextTick)
-                    {
-                        // Yield thread to prevent 100% CPU usage, but with minimum delay
-                        Thread.Sleep(0);
-                    }
-                    nextTick += ticksPerFrame;
+                    //while (stopwatch.ElapsedTicks < nextTick)
+                    //{
+                    //    // Yield thread to prevent 100% CPU usage, but with minimum delay
+                    //    Thread.Sleep(0);
+                    //}
+                    //nextTick += ticksPerFrame;
 
                     _gameLoop.Update();
                     _controller.Invalidate();

@@ -86,7 +86,7 @@ namespace Rockstar._CoreMouseButton
         // ********************************************************************************************
         // Methods
 
-        public void AddHandler(RSMouseEvent buttonEvent, RSEvent.Handler handler)
+        public void AddHandler(RSMouseEvent buttonEvent, RSEventHandler handler)
         {
             switch (buttonEvent)
             {

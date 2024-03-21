@@ -1,5 +1,6 @@
 ﻿
 using SkiaSharp;
+using System.Runtime.CompilerServices;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -34,6 +35,16 @@ namespace Rockstar._Types
             float x = ((float)Math.Cos(phi) * vector.X) - ((float)Math.Sin(phi) * vector.Y);
             float y = ((float)Math.Sin(phi) * vector.X) + ((float)Math.Cos(phi) * vector.Y);
             return new SKPoint(x, y);
+        }
+
+        public static float Rotation(this SKPoint vector)
+        {
+            float rotation = 90.0f - (float)(Math.Atan2(vector.Y, vector.X) * 180 / Math.PI);
+            if (rotation < 0) 
+            {
+                rotation += 360.0f;
+            }
+            return rotation;
         }
 
         // ********************************************************************************************

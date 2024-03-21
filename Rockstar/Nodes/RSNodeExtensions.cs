@@ -91,6 +91,18 @@ namespace Rockstar._Nodes
             return node;
         }
 
+        public static T SetAlpha<T>(this T node, float alpha) where T : RSNode
+        {
+            node.Transformation.Alpha = alpha;
+            return node;
+        }
+
+        public static T SetAltitude<T>(this T node, float altitude) where T : RSNode
+        {
+            node.Transformation.Altitude = altitude;
+            return node;
+        }
+
         // ********************************************************************************************
         // Event Handlers
 
