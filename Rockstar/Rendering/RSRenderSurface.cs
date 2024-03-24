@@ -183,6 +183,35 @@ namespace Rockstar._RenderSurface
             _canvas.DrawBitmap(bitmap, frame.SheetRect, destination, paint);
         }
 
+        public void DrawImage(SKPoint position, RSSpriteFrame frame, SKImage image, SKColor color)
+        {
+            SKPaint paint = new SKPaint
+            {
+                FilterQuality = _quality,
+                IsAntialias = _antiAlias,
+                ColorFilter = SKColorFilter.CreateBlendMode(
+                    color, // Tint color
+                    SKBlendMode.Modulate
+                )
+            };
+
+            SKSize renderSize = new SKSize(frame.SheetRect.Right - frame.SheetRect.Left, frame.SheetRect.Bottom - frame.SheetRect.Top);
+            SKRect destination = new SKRect(position.X, position.Y, position.X + renderSize.Width, position.Y + renderSize.Height);
+
+            if (frame.Rotation != 0)
+            {
+                // this calculates the rotation point on the screen
+                SKPoint offset = new SKPoint(position.X + (frame.SheetRect.Width / 2), position.Y + (frame.SheetRect.Width / 2));
+
+                // translate, rotate and translate back
+                _canvas.Translate(offset.X, offset.Y);
+                _canvas.RotateDegrees(-frame.Rotation);
+                _canvas.Translate(-offset.X, -offset.Y);
+            }
+
+            _canvas.DrawImage(image, frame.SheetRect, destination, paint);
+        }
+
         // ********************************************************************************************
 
         public SKPaint GetTextPaint(RSFont font, SKColor color)

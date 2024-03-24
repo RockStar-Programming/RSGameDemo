@@ -61,7 +61,8 @@ namespace Rockstar._CoreGame
 
             // Adding a bit of X gravity, prevents perfect stacking of objects
             //
-            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
+            //_physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
+            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -0.9f), 0.2f);
         }
 
         // ********************************************************************************************

@@ -10,7 +10,7 @@
 },
 {
 	"filename": "bottom_button.png",
-	"frame": {"x":859,"y":1156,"w":64,"h":72},
+	"frame": {"x":845,"y":1156,"w":64,"h":72},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":72},
@@ -34,11 +34,11 @@
 },
 {
 	"filename": "hexalite.png",
-	"frame": {"x":495,"y":1156,"w":239,"h":140},
+	"frame": {"x":495,"y":1156,"w":225,"h":145},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":17,"y":0,"w":239,"h":140},
-	"sourceSize": {"w":434,"h":434}
+	"spriteSourceSize": {"x":20,"y":2,"w":225,"h":145},
+	"sourceSize": {"w":436,"h":436}
 },
 {
 	"filename": "hour_hand.png",
@@ -58,7 +58,7 @@
 },
 {
 	"filename": "light.png",
-	"frame": {"x":736,"y":1156,"w":121,"h":121},
+	"frame": {"x":722,"y":1156,"w":121,"h":121},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":7,"w":121,"h":121},
@@ -147,10 +147,10 @@
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
-	"image": "omega.png",
+	"image": "speedmaster.png",
 	"format": "RGBA8888",
-	"size": {"w":982,"h":1297},
+	"size": {"w":982,"h":1302},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:8ce99cc4865c474fec325653e6d705c9:607a7bdb67124a236601a6b4027f55cf:d0c6de8c1e634f0ba9f6dd5172fcedbf$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d065945268b4945ad1f81182ff4d389a:3ba6cc0fcf8b5e20534e00caa070d997:7c7883563bda286dd1e732aa61f55ed1$"
 }
 }

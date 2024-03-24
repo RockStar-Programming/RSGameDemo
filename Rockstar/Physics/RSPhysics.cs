@@ -87,8 +87,11 @@ namespace Rockstar._Physics
         // ********************************************************************************************
         // Internal Data
 
-        private const bool SHOW_LOAD = true;
-        private const float SHOW_LOAD_MAGNIFICATION = 3.0f; // defines how primenet the red load color is
+        public const bool SHOW_WORLD = false;
+        public const float ENERGY_INFINITE = float.MaxValue;
+
+        private const bool SHOW_LOAD = false;
+        private const float SHOW_LOAD_MAGNIFICATION = 3.0f; // defines how prominent the red load color is
 
         private const float DEFAULT_PIXELSIZE_IN_METRES = 0.01f;
         private const float WORLD_EXPANSION = 100000.0f;
@@ -97,7 +100,6 @@ namespace Rockstar._Physics
         private const float DEFAULT_FRICTION = 0.1f;
         private const float DEFAULT_RESTITUTION = 0.1f;
 
-        private const float ENERGY_INFINITE = float.MaxValue;
 
         // IMPORTANT
         // The gain settings for impulse and kinetic energy, sets the relationship between these
@@ -129,8 +131,8 @@ namespace Rockstar._Physics
 
         // basic step settings for Box2D
         //
-        private const int VELOCITY_INTERACTIONS = 16;
-        private const int POSITION_INTERACTIONS = 8;
+        private const int VELOCITY_INTERACTIONS = 8;
+        private const int POSITION_INTERACTIONS = 3;
 
         private World _world;
         private float _worldScale;
@@ -176,7 +178,14 @@ namespace Rockstar._Physics
                     // Update the game RSNode's position and rotation to match the physics body
                     Vector2 position = body.GetPosition();
                     physics.Node.Transformation.Position = new SKPoint(position.X * _worldScale, position.Y * _worldScale);
-                    physics.Node.Transformation.Rotation = -body.GetAngle() * 180.0f / (float)Math.PI;
+                    if (physics.FixedRotation >= 0)
+                    {
+                        physics.Node.Transformation.Rotation = physics.FixedRotation;
+                    }
+                    else 
+                    {
+                        physics.Node.Transformation.Rotation = body.GetAngle().ToRotation();
+                    }
                     physics.Node.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
 
                     if (SHOW_LOAD == true)
@@ -210,38 +219,38 @@ namespace Rockstar._Physics
                 float expansion = (type == RSPhysicsWorldType.Open) ? WORLD_EXPANSION : 0.0f;
 
                 RSNodeSolid ground = RSNodeSolid.CreateRectangle(
-                    new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS),
-                    SKColors.Green).
-                    SetPosition(scene.Transformation.Size.Width / 2.0f, -GROUND_THICKNESS / 2.0f);
-                ground.Transformation.Visible = false;
+                    new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS + 2), SKColors.Green)
+                    .SetPosition(scene.Transformation.Size.Width / 2.0f, -GROUND_THICKNESS / 2.0f)
+                    .SetVisible(SHOW_WORLD);
+                
                 scene.AddChild(ground);
                 AddStaticNode(ground);
 
                 if ((type == RSPhysicsWorldType.OpenBox) || (type == RSPhysicsWorldType.ClosedBox))
                 {
                     RSNodeSolid leftWall = RSNodeSolid.CreateRectangle(
-                        new SKSize(GROUND_THICKNESS, scene.Transformation.Size.Height),
-                        SKColors.Green).
-                        SetPosition(-GROUND_THICKNESS / 2.0f, scene.Transformation.Size.Height / 2.0f);
-                    leftWall.Transformation.Visible = false;
+                        new SKSize(GROUND_THICKNESS + 2, scene.Transformation.Size.Height), SKColors.Green)
+                        .SetPosition(-GROUND_THICKNESS / 2.0f, scene.Transformation.Size.Height / 2.0f)
+                        .SetVisible(SHOW_WORLD);
+                
                     scene.AddChild(leftWall);
                     AddStaticNode(leftWall);
 
                     RSNodeSolid rightWall = RSNodeSolid.CreateRectangle(
-                        new SKSize(GROUND_THICKNESS, scene.Transformation.Size.Height),
-                        SKColors.Green).
-                        SetPosition(scene.Transformation.Size.Width + (GROUND_THICKNESS / 2.0f), scene.Transformation.Size.Height / 2.0f);
-                    rightWall.Transformation.Visible = false;
+                        new SKSize(GROUND_THICKNESS + 2, scene.Transformation.Size.Height), SKColors.Green)
+                        .SetPosition(scene.Transformation.Size.Width + (GROUND_THICKNESS / 2.0f), scene.Transformation.Size.Height / 2.0f)
+                        .SetVisible(SHOW_WORLD);
+
                     scene.AddChild(rightWall);
                     AddStaticNode(rightWall);
                 }
                 if (type == RSPhysicsWorldType.ClosedBox)
                 {
                     RSNodeSolid roof = RSNodeSolid.CreateRectangle(
-                        new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS),
-                        SKColors.Green).
-                        SetPosition(scene.Transformation.Size.Width / 2.0f, scene.Transformation.Size.Height + (GROUND_THICKNESS / 2.0f));
-                    roof.Transformation.Visible = false;
+                        new SKSize(scene.Transformation.Size.Width + expansion, GROUND_THICKNESS + 2), SKColors.Green)
+                        .SetPosition(scene.Transformation.Size.Width / 2.0f, scene.Transformation.Size.Height + (GROUND_THICKNESS / 2.0f))
+                        .SetVisible(SHOW_WORLD);
+
                     scene.AddChild(roof);
                     AddStaticNode(roof);
                 }
@@ -317,6 +326,22 @@ namespace Rockstar._Physics
             return null;
         }
 
+        public void ApplyForceToGroup(SKPoint force, byte group)
+        {
+            lock (_physicsLock)
+            {
+                Body body = _world.GetBodyList();
+                while (body != null)
+                {
+                    if ((body.GetUserData<RSPhysicsDef>() is RSPhysicsDef physics) && (physics.Group == group))   
+                    {
+                        body.ApplyForceToCenter(new Vector2(force.X, force.Y));
+                    }
+                    body = body.GetNext();
+                }
+            }
+        }
+
         // ********************************************************************************************
         // Event Handlers
 
@@ -331,8 +356,12 @@ namespace Rockstar._Physics
                 BodyDef bodyDef = new BodyDef();
                 bodyDef.type = type;
                 bodyDef.position = new Vector2(node.Transformation.Position.X / _worldScale, node.Transformation.Position.Y / _worldScale);
+                bodyDef.angle = node.Transformation.Rotation.ToRadians();
+
+                // anchor of nodes added to physics, is forced to center
+                //
                 node.Transformation.Anchor = new SKPoint(0.5f, 0.5f);
-                
+
                 Body body = _world.CreateBody(bodyDef);
                 FixtureDef fixture = new FixtureDef();
 
@@ -387,18 +416,40 @@ namespace Rockstar._Physics
             // calculate energy of both bodies
             float energy = KINETIC_ENERGY_GAIN * (0.5f * bodyA.GetMass() * bodyA.GetLinearVelocity().LengthSquared()) + (0.5f * bodyB.GetMass() * bodyB.GetLinearVelocity().LengthSquared());
 
-            // if half the energy is above breaking energy, store it
             RSPhysicsDef physicsA = bodyA.GetUserData<RSPhysicsDef>();
-            if ((energy / 2.0f) >= physicsA.BreakEnergy)
+            RSPhysicsDef physicsB = bodyB.GetUserData<RSPhysicsDef>();
+
+            Vector2 positionA = bodyA.GetPosition();
+            Vector2 positionB = bodyB.GetPosition();
+
+            // check for directional collision
+            bool acceptCollision = true;
+            if (physicsA.CollisionType != RSCollisionType.Normal)
             {
-                _contactList[bodyA] = energy;
+                if ((physicsA.CollisionType == RSCollisionType.Above) && (positionB.Y < positionA.Y)) acceptCollision = false;
+                if ((physicsA.CollisionType == RSCollisionType.Below) && (positionB.Y > positionA.Y)) acceptCollision = false;
+            }
+            if (physicsB.CollisionType != RSCollisionType.Normal)
+            {
+                if ((physicsB.CollisionType == RSCollisionType.Above) && (positionA.Y < positionB.Y)) acceptCollision = false;
+                if ((physicsB.CollisionType == RSCollisionType.Below) && (positionA.Y > positionB.Y)) acceptCollision = false;
             }
 
-            RSPhysicsDef physicsB = bodyB.GetUserData<RSPhysicsDef>();
-            if ((energy / 2.0f) >= physicsB.BreakEnergy)
+            if (acceptCollision == true)
             {
-                _contactList[bodyB] = energy;
+                // if half the energy is above breaking energy, store it
+                if ((energy / 2.0f) >= physicsA.BreakEnergy)
+                {
+                    _contactList[bodyA] = energy;
+                }
+
+                if ((energy / 2.0f) >= physicsB.BreakEnergy)
+                {
+                    _contactList[bodyB] = energy;
+                }
             }
+
+            contact.Enabled = acceptCollision;
         }
 
         public override void PostSolve(in Contact contact, in ContactImpulse impulse)

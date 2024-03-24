@@ -7,6 +7,7 @@ using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;
 using Rockstar._Types;
+using Rockstar._SpriteSHeetManager;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -70,7 +71,7 @@ namespace Rockstar._SpriteSheet
         private RSSpriteSheet(string filePath, SKSize size) : base()
         {
             _frameList = new List<RSSpriteFrame>();
-            _bitmap = RSCoreFile.ReadAsBitmap(filePath);
+            _image = RSSpriteSheetManager.LoadBitmap(filePath);
             if (size.IsEmpty == false)
             {
                 // automatically create frames
@@ -78,9 +79,9 @@ namespace Rockstar._SpriteSheet
                 // bitmap can be slightly oversized
                 //
                 SKPoint pos = SKPoint.Empty;
-                while ((pos.Y + size.Height) <= _bitmap.Height)
+                while ((pos.Y + size.Height) <= _image.Height)
                 {
-                    while ((pos.X + size.Width) <= _bitmap.Width)
+                    while ((pos.X + size.Width) <= _image.Width)
                     {
                         RSSpriteFrame frame = RSSpriteFrame.Create(pos, size);
                         _frameList.Add(frame);
@@ -94,7 +95,7 @@ namespace Rockstar._SpriteSheet
             // if no frames has been added, create a single frame of the entire bitmap
             if (_frameList.Count == 0)
             {
-                size = new SKSize(_bitmap.Width, _bitmap.Height);
+                size = new SKSize(_image.Width, _image.Height);
                 RSSpriteFrame frame = RSSpriteFrame.Create(SKPoint.Empty, size);
                 _frameList.Add(frame);
             }
@@ -116,7 +117,7 @@ namespace Rockstar._SpriteSheet
             key = (position >= 0) ? filePath.Substring(position) : "";
 
             _frameList = new List<RSSpriteFrame>();
-            _bitmap = RSCoreFile.ReadAsBitmap(imagePath);
+            _image = RSSpriteSheetManager.LoadBitmap(imagePath);
 
             // if json path is null, get it from the image path
             if (jsonPath == null) jsonPath = Path.ChangeExtension(imagePath, "." + RSKeys.JSON);
@@ -138,7 +139,7 @@ namespace Rockstar._SpriteSheet
             // if no frames has been added, create a single frame of the entire bitmap
             if (_frameList.Count == 0)
             {
-                SKSize size = new SKSize(_bitmap.Width, _bitmap.Height);
+                SKSize size = new SKSize(_image.Width, _image.Height);
                 RSSpriteFrame frame = RSSpriteFrame.Create(SKPoint.Empty, size);
                 _frameList.Add(frame);
             }
@@ -151,13 +152,13 @@ namespace Rockstar._SpriteSheet
         // Properties
 
         public int FrameCount { get { return _frameList.Count; } }
-        public SKBitmap Bitmap { get { return _bitmap; } }
+        public SKImage Image { get { return _image; } }
 
         // ********************************************************************************************
         // Internal Data
 
         private List<RSSpriteFrame> _frameList;
-        private SKBitmap _bitmap;
+        private SKImage _image;
 
         // ********************************************************************************************
         // Methods

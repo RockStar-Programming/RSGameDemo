@@ -59,7 +59,7 @@ namespace Rockstar._Nodes
         protected RSNodeSprite(string filePath)
         {
             _sheet = RSSpriteSheet.CreateFromFile(filePath);
-            InitWithData(SKPoint.Empty, new SKSize(_sheet.Bitmap.Width, _sheet.Bitmap.Height));
+            InitWithData(SKPoint.Empty, new SKSize(_sheet.Image.Width, _sheet.Image.Height));
             _currentFrame = 0;
         }
 
@@ -105,33 +105,35 @@ namespace Rockstar._Nodes
         {
             if (_touchMode != RSNodeTouchMode.Accurate) return base.PointInside(screenPosition);
 
-            // check if inside rectangle
-            if (PointInsizeRectangle(screenPosition) == false) return false;
+            return false;
 
-            RSSpriteFrame frame = _sheet.Frame(_currentFrame);
+            //// check if inside rectangle
+            //if (PointInsizeRectangle(screenPosition) == false) return false;
 
-            // calculate texture coordinate
-            SKPoint point = LocalPosition(screenPosition);
-            SKPoint textureCoordinate = new SKPoint(point.X + (frame.Size.Width / 2.0f), -point.Y + (frame.Size.Height / 2.0f));
-            textureCoordinate = textureCoordinate - frame.Offset;
+            //RSSpriteFrame frame = _sheet.Frame(_currentFrame);
 
-            if (frame.Rotation != 0)
-            {
-                SKPoint rotationCenter = new SKPoint(frame.SheetRect.Width / 2.0f, frame.SheetRect.Width / 2.0f);
+            //// calculate texture coordinate
+            //SKPoint point = LocalPosition(screenPosition);
+            //SKPoint textureCoordinate = new SKPoint(point.X + (frame.Size.Width / 2.0f), -point.Y + (frame.Size.Height / 2.0f));
+            //textureCoordinate = textureCoordinate - frame.Offset;
 
-                textureCoordinate = textureCoordinate - rotationCenter;
-                textureCoordinate = textureCoordinate.Rotate(-frame.Rotation);
-                textureCoordinate = textureCoordinate + rotationCenter;
-            }
+            //if (frame.Rotation != 0)
+            //{
+            //    SKPoint rotationCenter = new SKPoint(frame.SheetRect.Width / 2.0f, frame.SheetRect.Width / 2.0f);
 
-            textureCoordinate = textureCoordinate + new SKPoint(frame.SheetRect.Left, frame.SheetRect.Top);
-            if ((int)textureCoordinate.X < 0) return false;
-            if ((int)textureCoordinate.X >= _sheet.Bitmap.Width) return false;
-            if ((int)textureCoordinate.Y < 0) return false;
-            if ((int)textureCoordinate.Y >= _sheet.Bitmap.Height) return false;
+            //    textureCoordinate = textureCoordinate - rotationCenter;
+            //    textureCoordinate = textureCoordinate.Rotate(-frame.Rotation);
+            //    textureCoordinate = textureCoordinate + rotationCenter;
+            //}
 
-            SKColor color = _sheet.Bitmap.GetPixel((int)textureCoordinate.X, (int)textureCoordinate.Y);
-            return (color.Alpha > ALPHA_THRESHOLD);
+            //textureCoordinate = textureCoordinate + new SKPoint(frame.SheetRect.Left, frame.SheetRect.Top);
+            //if ((int)textureCoordinate.X < 0) return false;
+            //if ((int)textureCoordinate.X >= _sheet.Image.Width) return false;
+            //if ((int)textureCoordinate.Y < 0) return false;
+            //if ((int)textureCoordinate.Y >= _sheet.Image.Height) return false;
+
+            //SKColor color = _sheet.Image.GetPixel((int)textureCoordinate.X, (int)textureCoordinate.Y);
+            //return (color.Alpha > ALPHA_THRESHOLD);
         }
 
         public override void Render(RSRenderSurface surface)
@@ -142,7 +144,7 @@ namespace Rockstar._Nodes
                  (-_transformation.Size.Width * _transformation.Anchor.X) + frame.Offset.X,
                  (-_transformation.Size.Height * (1.0f - _transformation.Anchor.Y)) + frame.Offset.Y);
 
-            surface.DrawBitmap(upperLeft, frame, _sheet.Bitmap, _transformation.Color);
+            surface.DrawImage(upperLeft, frame, _sheet.Image, _transformation.Color);
         }
 
         public void SetCurrentFrame(int index)

@@ -4,7 +4,8 @@ using SkiaSharp;
 using Rockstar._Game;
 using Rockstar._GameClockDDP;
 using Rockstar._GameClock;
-using Rockstar._GameOmega;
+using Rockstar._GameSpeedMaster;
+using RSGameDemo._GameSnowGlobe;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -37,14 +38,15 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Constructors
 
-        //        RSGame _game;
-        //        RSGameClock _game;
-        //        RSGameClockDDP _game;
-        RSGameOmega _game;
+        // RSGame _game;
+        // RSGameClock _game;
+        // RSGameClockDDP _game;
+        // RSGameSpeedMaster _game;
+        RSGameSnowGlobe _game;
 
         public RSCoreLoop()
         {
-            _game = RSGameOmega.Create();
+            _game = RSGameSnowGlobe.Create();
         }
 
         // ********************************************************************************************

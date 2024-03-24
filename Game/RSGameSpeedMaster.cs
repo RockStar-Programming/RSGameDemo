@@ -34,9 +34,9 @@ using System.Threading.Tasks;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._GameOmega
+namespace Rockstar._GameSpeedMaster
 {
-    public class RSGameOmega : RSCoreGame
+    public class RSGameSpeedMaster : RSCoreGame
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -46,12 +46,12 @@ namespace Rockstar._GameOmega
         // ********************************************************************************************
         // Constructors
 
-        public static RSGameOmega Create()
+        public static RSGameSpeedMaster Create()
         {
-            return new RSGameOmega();
+            return new RSGameSpeedMaster();
         }
 
-        private RSGameOmega()
+        private RSGameSpeedMaster()
         {
             // Load Omega SpeedMaster
             //
@@ -134,92 +134,92 @@ namespace Rockstar._GameOmega
         {
             _scene.Transformation.Color = SKColors.LightGray;
 
-            _case = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/case")
+            _case = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/case")
                 .SetPosition(CLOCK_POSITION);
             _scene.AddChild(_case);
 
-            _startButton = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/top_button")
+            _startButton = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/top_button")
                 .SetPosition(START_BUTTON_POSITION)
                 .SetAltitude(-10)
                 .AddTouchHandler(OnStartButtonTouched);
             _case.AddChild(_startButton);
 
-            _resetButton = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/bottom_button")
+            _resetButton = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/bottom_button")
                 .SetPosition(RESET_BUTTON_POSITION)
                 .SetAltitude(-10)
                 .AddTouchHandler(OnResetButtonTouched);
             _case.AddChild(_resetButton);
 
-            _secondDialEdge = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/mini_dial").SetPosition(-DIAL_OFFSET, 0);
+            _secondDialEdge = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/mini_dial").SetPosition(-DIAL_OFFSET, 0);
             _case.AddChild(_secondDialEdge);
 
-            _chronoHourDialEdge = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/mini_dial").SetPosition(0, -DIAL_OFFSET);
+            _chronoHourDialEdge = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/mini_dial").SetPosition(0, -DIAL_OFFSET);
             _case.AddChild(_chronoHourDialEdge);
 
-            _chronoMinuteDialEdge = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/mini_dial").SetPosition(DIAL_OFFSET, 0);
+            _chronoMinuteDialEdge = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/mini_dial").SetPosition(DIAL_OFFSET, 0);
             _case.AddChild(_chronoMinuteDialEdge);
 
-            _raise = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/raise");
+            _raise = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/raise");
             _case.AddChild(_raise);
 
-            _dial = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/dial");
+            _dial = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/dial");
             _case.AddChild(_dial);
 
-            _bezel = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/bezel");
+            _bezel = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/bezel");
             _case.AddChild(_bezel);
 
-            _rim = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/rim");
+            _rim = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/rim");
             _case.AddChild(_rim);
 
-            _secondHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/small_hand_shadow")
+            _secondHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/small_hand_shadow")
                 .SetPosition(new SKPoint(-DIAL_OFFSET, 0))
                 .SetAlpha(SHADOW_ALPHA);
             _case.AddChild(_secondHandShadow);
 
-            _secondHand = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/small_hand")
+            _secondHand = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/small_hand")
                 .SetPosition(-DIAL_OFFSET, 0);
             _case.AddChild(_secondHand);
 
-            _chronoHourHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/small_hand_shadow")
+            _chronoHourHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/small_hand_shadow")
                 .SetPosition(new SKPoint(0, -DIAL_OFFSET))
                 .SetAlpha(SHADOW_ALPHA);
             _case.AddChild(_chronoHourHandShadow);
 
-            _chronoHourHand = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/small_hand")
+            _chronoHourHand = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/small_hand")
                 .SetPosition(0, -DIAL_OFFSET);
             _case.AddChild(_chronoHourHand);
 
-            _chronoMinuteHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/small_hand_shadow")
+            _chronoMinuteHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/small_hand_shadow")
                 .SetPosition(new SKPoint(DIAL_OFFSET, 0))
                 .SetAlpha(SHADOW_ALPHA);
             _case.AddChild(_chronoMinuteHandShadow);
 
-            _chronoMinuteHand = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/small_hand")
+            _chronoMinuteHand = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/small_hand")
                 .SetPosition(DIAL_OFFSET, 0);
             _case.AddChild(_chronoMinuteHand);
 
-            _hourHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/hour_hand_shadow")
+            _hourHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/hour_hand_shadow")
                 .SetAlpha(SHADOW_ALPHA);
             _case.AddChild(_hourHandShadow);
-            _hourHand = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/hour_hand");
+            _hourHand = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/hour_hand");
             _case.AddChild(_hourHand);
 
-            _minuteHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/minute_hand_shadow")
+            _minuteHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/minute_hand_shadow")
                 .SetAlpha(SHADOW_ALPHA);
             _case.AddChild(_minuteHandShadow);
-            _minuteHand = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/minute_hand");
+            _minuteHand = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/minute_hand");
             _case.AddChild(_minuteHand);
 
-            _chronoSecondHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/second_hand_shadow")
+            _chronoSecondHandShadow = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/second_hand_shadow")
                 .SetAlpha(SHADOW_ALPHA);
             _case.AddChild(_chronoSecondHandShadow);
-            _chronoSecondHand = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/second_hand");
+            _chronoSecondHand = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/second_hand");
             _case.AddChild(_chronoSecondHand);
 
-            _hexalite = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/hexalite");
+            _hexalite = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/hexalite");
             _case.AddChild(_hexalite);
 
-            _light = RSNodeSprite.CreateWithFileAndJson("Assets/omega.png/light")
+            _light = RSNodeSprite.CreateWithFileAndJson("Assets/speedmaster.png/light")
                 .SetPosition(LIGHT_POSITION)
                 .AddTouchHandler(OnLightTouched);
             _case.AddChild(_light);

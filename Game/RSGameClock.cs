@@ -157,7 +157,7 @@ namespace Rockstar._GameClock
         // defining the "mechanics" of the watch
         //
         private ClockType CLOCK_TYPE = ClockType.Mechanical;
-        private BPH BEATS_PR_HOUR = BPH.VintageHamilton;
+        private BPH BEATS_PR_HOUR = BPH.OmegaSpeedMaster;
         private MinuteHand MINUTE_HAND_JUMPING = MinuteHand.NonJumping;
 
         // defining the clock face,
@@ -184,7 +184,7 @@ namespace Rockstar._GameClock
             Radius = 240,
             HourRadius = 200,
             SecondRadius = 228,
-            SecondMarkerCount = 120,
+            SecondMarkerCount = 180,
             Color = new SKColor(128, 150, 235, 32)
         };
 

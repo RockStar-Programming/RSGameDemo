@@ -6,6 +6,8 @@ using Rockstar._Nodes;
 using Rockstar._CoreMouseButton;
 using Rockstar._Types;
 using Rockstar._Actions;
+using Rockstar._Physics;
+using Rockstar._PhysicsDef;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -181,6 +183,11 @@ namespace Rockstar._Game
             _motionCanvas.AlphaDecay = 25;
             _motionCanvas.Transformation.Altitude = -10;
             _scene.AddChild(_motionCanvas);
+
+            // add some one way platforms
+            RSNodeSolid platform = RSNodeSolid.CreateRectangle(new SKSize(200, 20), SKColors.White).SetPosition(200, 120);
+            _physics.AddStaticNode(platform).SetCollisionType(RSCollisionType.Above);
+            _scene.AddChild(platform);
 
             //_surface = RSNodeSurface.CreateWithSize(new SKSize(280, 350)).SetPosition(400, 200);
             //_surface.Transformation.Anchor = new SKPoint(0.5f, 0.5f);

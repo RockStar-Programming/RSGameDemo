@@ -1,5 +1,13 @@
-﻿
+﻿using Rockstar._CoreFile;
+using Rockstar._Dictionary;
 using SkiaSharp;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Security.Policy;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -20,12 +28,13 @@ using SkiaSharp;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Nodes
+namespace Rockstar._SpriteSHeetManager
 {
-    public static class RSNodeExtensions
+    public static class RSSpriteSheetManager
     {
         // ********************************************************************************************
-        // Extensions for the RSNode class
+        // Brief Class Description
+        //
         //
 
         // ********************************************************************************************
@@ -40,79 +49,19 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Internal Data
 
+        private static Dictionary<string, SKImage> _imageList = new Dictionary<string, SKImage>();
+
         // ********************************************************************************************
         // Methods
 
-        public static T SetPosition<T>(this T node, SKPoint position) where T : RSNode
-        {
-            node.Transformation.Position = position;
-            return node;
-        }
+        public static SKImage LoadBitmap(string filePath)
+        { 
+            if (_imageList.ContainsKey(filePath)) return _imageList[filePath];
 
-        public static T SetPosition<T>(this T node, float x, float y) where T : RSNode
-        {
-            node.Transformation.Position = new SKPoint(x, y);
-            return node;
-        }
-
-        public static T SetAnchor<T>(this T node, SKPoint anchor) where T : RSNode
-        {
-            node.Transformation.Anchor = anchor;
-            return node;
-        }
-
-        public static T SetAnchor<T>(this T node, float anchor) where T : RSNode
-        {
-            node.Transformation.Anchor = new SKPoint(anchor, anchor);
-            return node;
-        }
-
-        public static T SetAnchor<T>(this T node, float anchorX, float anchorY) where T : RSNode
-        {
-            node.Transformation.Anchor = new SKPoint(anchorX, anchorY);
-            return node;
-        }
-
-        public static T SetScale<T>(this T node, SKPoint scale) where T : RSNode
-        {
-            node.Transformation.Scale = scale;
-            return node;
-        }
-
-        public static T SetScale<T>(this T node, float scale) where T : RSNode
-        {
-            node.Transformation.Scale = new SKPoint(scale, scale);
-            return node;
-        }
-
-        public static T SetScale<T>(this T node, float scaleX, float scaleY) where T : RSNode
-        {
-            node.Transformation.Scale = new SKPoint(scaleX, scaleY);
-            return node;
-        }
-
-        public static T SetAlpha<T>(this T node, float alpha) where T : RSNode
-        {
-            node.Transformation.Alpha = alpha;
-            return node;
-        }
-
-        public static T SetAltitude<T>(this T node, float altitude) where T : RSNode
-        {
-            node.Transformation.Altitude = altitude;
-            return node;
-        }
-
-        public static T SetRotation<T>(this T node, float rotation) where T : RSNode
-        {
-            node.Transformation.Rotation = rotation;
-            return node;
-        }
-
-        public static T SetVisible<T>(this T node, bool visible) where T : RSNode
-        {
-            node.Transformation.Visible = visible;
-            return node;
+            SKBitmap bitmap = RSCoreFile.ReadAsBitmap(filePath);
+            SKImage newImage = SKImage.FromBitmap(bitmap);
+            _imageList[filePath] = newImage;
+            return newImage;
         }
 
         // ********************************************************************************************

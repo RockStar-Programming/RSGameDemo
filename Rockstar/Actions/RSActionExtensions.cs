@@ -163,6 +163,20 @@ namespace Rockstar._Actions
             return action;
         }
 
+        public static RSAction Delay<T>(this T target, float duration) where T : class
+        {
+            RSOperation operation = RSOperation.Create(duration);
+            return RSAction.Create(target, operation);
+        }
+
+        public static RSAction Delay(this RSAction action, float duration)
+        {
+            RSOperation operation = RSOperation.Create(duration);
+            action.OperationList.Add(operation);
+            return action;
+        }
+
+
         // ********************************************************************************************
         // Target Extensions (First extension on a node)
 
@@ -200,6 +214,14 @@ namespace Rockstar._Actions
         public static void Repeat(this RSAction action, int repeat = 0)
         {
             RSActionManager.Repeat(action, repeat);
+        }
+
+        // ********************************************************************************************
+        // misc
+
+        public static int NumberOfRunningActions<T>(this T target) where T : class
+        { 
+            return RSActionManager.NumberOfRunningActions(target);
         }
 
         // ********************************************************************************************

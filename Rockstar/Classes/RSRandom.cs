@@ -1,9 +1,6 @@
-﻿using Rockstar._Lerp;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,15 +23,9 @@ using System.Threading.Tasks;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Operations
+namespace Rockstar._Random
 {
-    public enum RSOperationMode
-    {
-        Absolute,
-        Relative
-    }
-
-    public class RSOperation
+    public static class RSRandom
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -44,66 +35,32 @@ namespace Rockstar._Operations
         // ********************************************************************************************
         // Constructors
 
-        public static RSOperation Create(float duration)
-        { 
-            return new RSOperation(duration);
-        }
-
-
-        // ********************************************************************************************
-
-        protected RSOperation()
-        {
-            _duration = 1.0f;
-            _time = 0;
-            _completed = false;
-        }
-
-        protected RSOperation(float duration)
-        {
-            _duration = duration;
-            _time = 0;
-            _completed = false;
-        }
-
         // ********************************************************************************************
         // Class Properties
 
         // ********************************************************************************************
         // Properties
 
-        public bool Completed { get { return GetCompleted(); } }
-
         // ********************************************************************************************
         // Internal Data
 
-        protected float _duration;
-        protected float _time;
-        protected bool _completed;
+        private const int RANDOM_RESOLUTION = 1000;
+
+        private static Random _random = new Random(DateTime.Now.GetHashCode());
 
         // ********************************************************************************************
         // Methods
 
-        public virtual void Start(object target)
+        public static float RandomNormalised()
         {
-            _time = 0;
-            _completed = false;
+            float result = _random.Next(0, RANDOM_RESOLUTION + 1);
+            return result / RANDOM_RESOLUTION;
         }
 
-        public virtual void Update(float interval)
+        public static float RandomRange(float min, float max)
         {
-            _time += interval;
-            _completed = (_time >= _duration);
-        }
-
-        public virtual void Stop()
-        {
-            _completed = true;
-        }
-
-        public virtual RSOperation Copy()
-        {
-            return this;
+            float result = RandomNormalised();
+            return min + (result * (max - min));
         }
 
         // ********************************************************************************************
@@ -111,11 +68,6 @@ namespace Rockstar._Operations
 
         // ********************************************************************************************
         // Internal Methods
-
-        protected virtual bool GetCompleted()
-        {
-            return _completed;
-        }
 
         // ********************************************************************************************
     }

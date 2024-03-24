@@ -180,6 +180,18 @@ namespace Rockstar._ActionManager
             ;
         }
 
+        public static int NumberOfRunningActions(object target)
+        {
+            int result = 0;
+
+            foreach (RSAction action in _runningActionList)
+            {
+                if (action.Target == target) result++;
+            }
+
+            return result;
+        }
+        
         // ********************************************************************************************
         // Event Handlers
 

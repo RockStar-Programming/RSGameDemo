@@ -69,6 +69,7 @@ namespace Rockstar._Touch
         public static void Initialize()
         {
             _eventList.Clear();
+            _activeNodes.Clear();
         }
 
         public static void AddEventHandler(RSNode node, RSEventHandler handler) 

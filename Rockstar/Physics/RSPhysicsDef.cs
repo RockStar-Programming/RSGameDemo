@@ -24,6 +24,13 @@ using Rockstar._Nodes;
 
 namespace Rockstar._PhysicsDef
 {
+    public enum RSCollisionType
+    {
+        Normal,         // normal collisions
+        Above,          // only collisions from above
+        Below,          // only collisions from below
+    }
+
     public class RSPhysicsDef
     {
         // ********************************************************************************************
@@ -48,6 +55,9 @@ namespace Rockstar._PhysicsDef
             _breakEnergy = breakEnergy;
             _bufferPointer = 0;
             _staticEnergyBuffer = new float[ENERGY_BUFFER_SIZE];
+            _group = 0;
+            _collisionType = RSCollisionType.Normal;
+            FixedRotation = -1;
         }
 
         // ********************************************************************************************
@@ -61,6 +71,9 @@ namespace Rockstar._PhysicsDef
         public float StaticEnergy { get { return GetStaticEnergy(); } }
         public SKColor Color { get { return _color; } } 
         public float LinearVelocity { get { return _body.GetLinearVelocity().Length(); } }
+        public byte Group { get { return _group; } }
+        public RSCollisionType CollisionType { get { return _collisionType; } } 
+        public float FixedRotation { get; set; }
 
         // ********************************************************************************************
         // Internal Data
@@ -73,6 +86,8 @@ namespace Rockstar._PhysicsDef
         private SKColor _color;
         private int _bufferPointer = 0;
         private float[] _staticEnergyBuffer;
+        private byte _group;
+        private RSCollisionType _collisionType;
 
         // ********************************************************************************************
         // Methods
@@ -81,6 +96,23 @@ namespace Rockstar._PhysicsDef
         {
             _staticEnergyBuffer[_bufferPointer] = load;
             _bufferPointer = (_bufferPointer + 1) % ENERGY_BUFFER_SIZE;
+        }
+
+        public void SetCollisionData(byte group, RSCollisionType type)
+        {
+            _collisionType = type;
+            _group = group;
+
+            var fixture = _body.GetFixtureList();
+            if (fixture != null)
+            {
+                // Get the current filter
+                var filter = fixture.FilterData;
+                // Set the group
+                filter.groupIndex = (short)-_group;
+                // Apply the updated filter to the fixture
+                fixture.FilterData = filter;
+            }
         }
 
         // ********************************************************************************************

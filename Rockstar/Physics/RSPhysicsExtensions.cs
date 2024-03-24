@@ -1,5 +1,9 @@
-﻿
-using SkiaSharp;
+﻿using Rockstar._PhysicsDef;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -20,12 +24,13 @@ using SkiaSharp;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._Nodes
+namespace Rockstar._Physics
 {
-    public static class RSNodeExtensions
+    public static class RSPhysicsExtensions
     {
         // ********************************************************************************************
-        // Extensions for the RSNode class
+        // Brief Class Description
+        //
         //
 
         // ********************************************************************************************
@@ -43,76 +48,25 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Methods
 
-        public static T SetPosition<T>(this T node, SKPoint position) where T : RSNode
+        // If no collision group is set (group = 0), everything will collide with everything
+        // If a group is set, bodies of that group will not collide with each other
+        //
+        public static RSPhysicsDef SetCollisionGroup(this RSPhysicsDef def, byte group)
         {
-            node.Transformation.Position = position;
-            return node;
+            def.SetCollisionData(group, def.CollisionType);
+            return def;
         }
 
-        public static T SetPosition<T>(this T node, float x, float y) where T : RSNode
+        public static RSPhysicsDef SetCollisionType(this RSPhysicsDef def, RSCollisionType type)
         {
-            node.Transformation.Position = new SKPoint(x, y);
-            return node;
+            def.SetCollisionData(def.Group, type);
+            return def;
         }
 
-        public static T SetAnchor<T>(this T node, SKPoint anchor) where T : RSNode
+        public static RSPhysicsDef SetFixedRotation(this RSPhysicsDef def, float rotation)
         {
-            node.Transformation.Anchor = anchor;
-            return node;
-        }
-
-        public static T SetAnchor<T>(this T node, float anchor) where T : RSNode
-        {
-            node.Transformation.Anchor = new SKPoint(anchor, anchor);
-            return node;
-        }
-
-        public static T SetAnchor<T>(this T node, float anchorX, float anchorY) where T : RSNode
-        {
-            node.Transformation.Anchor = new SKPoint(anchorX, anchorY);
-            return node;
-        }
-
-        public static T SetScale<T>(this T node, SKPoint scale) where T : RSNode
-        {
-            node.Transformation.Scale = scale;
-            return node;
-        }
-
-        public static T SetScale<T>(this T node, float scale) where T : RSNode
-        {
-            node.Transformation.Scale = new SKPoint(scale, scale);
-            return node;
-        }
-
-        public static T SetScale<T>(this T node, float scaleX, float scaleY) where T : RSNode
-        {
-            node.Transformation.Scale = new SKPoint(scaleX, scaleY);
-            return node;
-        }
-
-        public static T SetAlpha<T>(this T node, float alpha) where T : RSNode
-        {
-            node.Transformation.Alpha = alpha;
-            return node;
-        }
-
-        public static T SetAltitude<T>(this T node, float altitude) where T : RSNode
-        {
-            node.Transformation.Altitude = altitude;
-            return node;
-        }
-
-        public static T SetRotation<T>(this T node, float rotation) where T : RSNode
-        {
-            node.Transformation.Rotation = rotation;
-            return node;
-        }
-
-        public static T SetVisible<T>(this T node, bool visible) where T : RSNode
-        {
-            node.Transformation.Visible = visible;
-            return node;
+            def.FixedRotation = rotation;
+            return def;
         }
 
         // ********************************************************************************************

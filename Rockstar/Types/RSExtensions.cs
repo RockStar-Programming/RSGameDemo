@@ -47,6 +47,23 @@ namespace Rockstar._Types
             return rotation;
         }
 
+        public static float ToRadians(this float rotation)
+        {
+            return (float)Math.PI / 180 * - rotation;
+        }
+
+        public static float ToRotation(this float radians)
+        {
+            return -radians * 180.0f / (float)Math.PI;
+        }
+
+        public static SKPoint Vector(this float rotation) 
+        { 
+            float radians = rotation.ToRadians();
+            SKPoint result = new SKPoint((float)Math.Cos(radians), (float)Math.Sin(radians));
+            return result;
+        }
+
         // ********************************************************************************************
         // RSNode Extensions
 
