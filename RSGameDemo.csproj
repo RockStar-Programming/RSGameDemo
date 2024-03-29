@@ -50,7 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RSRockstar\RSRockstar.csproj" />
+    <ProjectReference Include="..\RSRockstar\RSRockstarEngine.csproj" />
   </ItemGroup>
 
 </Project>

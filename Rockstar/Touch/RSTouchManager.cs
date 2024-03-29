@@ -1,4 +1,4 @@
-﻿using Rockstar._CoreMouseButton;
+﻿using Rockstar._MouseButton;
 using Rockstar._Event;
 using Rockstar._Nodes;
 using Rockstar._Physics;

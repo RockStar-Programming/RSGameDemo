@@ -1,7 +1,7 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._CoreFile;
+using Rockstar._File;
 using Rockstar._SpriteFrame;
 using Rockstar._Dictionary;
 using Rockstar._CodecJson;
@@ -106,7 +106,7 @@ namespace Rockstar._SpriteSheet
             string? imagePath = filePath;
             string key = "";
 
-            while ((imagePath != null) && (RSCoreFile.FileExists(imagePath) == false))
+            while ((imagePath != null) && (RSFile.FileExists(imagePath) == false))
             {
                 key = Path.GetFileName(imagePath);
                 imagePath = Path.GetDirectoryName(imagePath);

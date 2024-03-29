@@ -90,7 +90,7 @@ namespace Rockstar._Physics
         public const bool SHOW_WORLD = false;
         public const float ENERGY_INFINITE = float.MaxValue;
 
-        private const bool SHOW_LOAD = false;
+        private const bool SHOW_LOAD = true;
         private const float SHOW_LOAD_MAGNIFICATION = 3.0f; // defines how prominent the red load color is
 
         private const float DEFAULT_PIXELSIZE_IN_METRES = 0.01f;

@@ -8,7 +8,7 @@ using Rockstar._Physics;
 using Rockstar._ActionManager;
 using Rockstar._Nodes;
 using Rockstar._Touch;
-using Rockstar._CoreMouseButton;
+using Rockstar._MouseButton;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -29,9 +29,9 @@ using Rockstar._CoreMouseButton;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._CoreGame
+namespace Rockstar._Game
 {
-    public abstract class RSCoreGame
+    public abstract class RSGame
     {
         // ********************************************************************************************
         // Game instances should inherit from this class
@@ -40,13 +40,13 @@ namespace Rockstar._CoreGame
         // ********************************************************************************************
         // Constructors
 
-        protected RSCoreGame()
+        protected RSGame()
         {
             // various game objects
             //
             _gameLock = new object();
             _renderer = RSRenderer.Create();
-            _mouse = RSCoreMouse.Create(_gameLock);
+            _mouse = RSMouse.Create(_gameLock);
             _scene = RSNodeScene.CreateScene();
             _frameTimer = RSFrameTimer.Create();
 
@@ -74,7 +74,7 @@ namespace Rockstar._CoreGame
         // Internal Data
 
         protected RSRenderer _renderer;
-        protected RSCoreMouse _mouse;
+        protected RSMouse _mouse;
         protected RSNodeScene _scene;
         protected RSFrameTimer _frameTimer;
         protected RSPhysics _physics;

@@ -125,10 +125,10 @@ namespace Rockstar._Nodes
         {
             if (_touchMode != RSNodeTouchMode.Accurate) return base.PointInside(screenPosition);
 
-            return false;
+            // check if inside rectangle
+            if (PointInsizeRectangle(screenPosition) == false) return false;
 
-            //// check if inside rectangle
-            //if (PointInsizeRectangle(screenPosition) == false) return false;
+            return true;
 
             //RSSpriteFrame frame = _sheet.Frame(_currentFrame);
 

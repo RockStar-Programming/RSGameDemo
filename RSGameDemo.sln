@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSGameDemo", "RSGameDemo.csproj", "{281652E7-0E0A-4D15-807A-0D939E96C953}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RSRockstar", "..\RSRockstar\RSRockstar.csproj", "{6FEB6561-6F34-4940-ABF4-B4ECFB5EA674}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RSRockstarEngine", "..\RSRockstar\RSRockstarEngine.csproj", "{6FEB6561-6F34-4940-ABF4-B4ECFB5EA674}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,7 +6,7 @@ using Platform._Windows;
 using Platform._OSX;
 #endif
 
-using Rockstar._CoreMouseButton;
+using Rockstar._MouseButton;
 using Rockstar._Event;
 
 // ****************************************************************************************************
@@ -31,7 +31,7 @@ using Rockstar._Event;
 namespace Rockstar._CoreMouse
 {
 #if WINDOWS
-    public class RSCoreMouse : RSMouseWindows
+    public class RSMouse : RSMouseWindows
 #elif OSX
     public class RSCoreMouse : RSMouseOSX
 #endif
@@ -47,17 +47,17 @@ namespace Rockstar._CoreMouse
         // ********************************************************************************************
         // Constructors
 
-        public static RSCoreMouse Create(object gameLock)
+        public static RSMouse Create(object gameLock)
         { 
-            return new RSCoreMouse(gameLock);
+            return new RSMouse(gameLock);
         }
 
-        private RSCoreMouse(object gameLock) : base()
+        private RSMouse(object gameLock) : base()
         {
             _gameLock = gameLock;
-            _leftButton = RSCoreMouseButton.Create();
-            _middleButton = RSCoreMouseButton.Create();
-            _rightButton = RSCoreMouseButton.Create();
+            _leftButton = RSMouseButton.Create();
+            _middleButton = RSMouseButton.Create();
+            _rightButton = RSMouseButton.Create();
 
             LeftMouseEvent.AddHandler(OnLeftMouseButtonHandler);
             MiddleMouseEvent.AddHandler(OnMiddleMouseButtonHandler);
@@ -71,24 +71,24 @@ namespace Rockstar._CoreMouse
         // Internal Data
 
         private object _gameLock;
-        private RSCoreMouseButton _leftButton;
-        private RSCoreMouseButton _middleButton;
-        private RSCoreMouseButton _rightButton;
+        private RSMouseButton _leftButton;
+        private RSMouseButton _middleButton;
+        private RSMouseButton _rightButton;
 
         // ********************************************************************************************
         // Methods
 
-        public void AddHandler(RSMouseButton button, RSMouseEvent buttonEvent, RSEventHandler handler)
+        public void AddHandler(RSMouseButtonType button, RSMouseEvent buttonEvent, RSEventHandler handler)
         {
             switch (button)
             {
-                case RSMouseButton.Left:
+                case RSMouseButtonType.Left:
                     _leftButton.AddHandler(buttonEvent, handler);
                     break;
-                case RSMouseButton.Middle:
+                case RSMouseButtonType.Middle:
                     _middleButton.AddHandler(buttonEvent, handler);
                     break;
-                case RSMouseButton.Right:
+                case RSMouseButtonType.Right:
                     _rightButton.AddHandler(buttonEvent, handler);
                     break;
                 default:

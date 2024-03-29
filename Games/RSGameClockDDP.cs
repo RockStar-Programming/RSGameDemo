@@ -5,8 +5,8 @@ using Rockstar._Dictionary;
 using Rockstar._CodecJson;
 using Rockstar._Array;
 using Rockstar._Event;
-using Rockstar._CoreMouseButton;
-using Rockstar._CoreGame;
+using Rockstar._MouseButton;
+using Rockstar._Game;
 using Rockstar._Nodes;
 using Rockstar._Types;
 
@@ -31,7 +31,7 @@ using Rockstar._Types;
 
 namespace Rockstar._GameClockDDP
 {
-    public class RSGameClockDDP : RSCoreGame
+    public class RSGameClockDDP : RSGame
     {
         // ********************************************************************************************
         // RSGameClock implements a simple clock, capable of simulating three different watch types
@@ -63,7 +63,7 @@ namespace Rockstar._GameClockDDP
             // _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/ZenithElPrimero.json");
             _setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/SeikoSpringDrive.json");
 
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, OnLeftMouseHandler);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnAll, OnLeftMouseHandler);
         }
 
         // ********************************************************************************************

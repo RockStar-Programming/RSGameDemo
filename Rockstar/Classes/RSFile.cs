@@ -20,9 +20,9 @@
 
 using SkiaSharp;
 
-namespace Rockstar._CoreFile
+namespace Rockstar._File
 {
-    public static class RSCoreFile
+    public static class RSFile
     {
         // ********************************************************************************************
         // File encapsulates normal file handling, and removes exception handling

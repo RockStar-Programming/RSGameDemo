@@ -1,7 +1,7 @@
 ﻿using Rockstar._Actions;
 using Rockstar._CodecJson;
-using Rockstar._CoreGame;
-using Rockstar._CoreMouseButton;
+using Rockstar._Game;
+using Rockstar._MouseButton;
 using Rockstar._Dictionary;
 using Rockstar._Event;
 using Rockstar._NodeFactory;
@@ -41,7 +41,7 @@ using System.Threading.Tasks;
 
 namespace RSGameDemo._GameSnowGlobe
 {
-    public class RSGameSnowGlobe : RSCoreGame
+    public class RSGameSnowGlobe : RSGame
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -109,9 +109,9 @@ namespace RSGameDemo._GameSnowGlobe
         {
             LoadScene(size);
 
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnPressed, OnLeftMouseClick);
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnMoved, OnLeftMouseAddForce);
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnReleased, OnLeftMouseAddForce);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnPressed, OnLeftMouseClick);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnMoved, OnLeftMouseAddForce);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnReleased, OnLeftMouseAddForce);
         }
 
         public override void Resize(SKSize size)

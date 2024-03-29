@@ -22,9 +22,9 @@ using Rockstar._Event;
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // ****************************************************************************************************
 
-namespace Rockstar._CoreMouseButton
+namespace Rockstar._MouseButton
 {
-    public enum RSMouseButton
+    public enum RSMouseButtonType
     {
         Left,
         Middle,
@@ -39,7 +39,7 @@ namespace Rockstar._CoreMouseButton
         OnAll            
     }
 
-    public class RSCoreMouseButton
+    public class RSMouseButton
     {
         // ********************************************************************************************
         // RSUWPMouseButton handles event data for a single mouse button
@@ -50,12 +50,12 @@ namespace Rockstar._CoreMouseButton
         // ********************************************************************************************
         // Constructors
 
-        public static RSCoreMouseButton Create()
+        public static RSMouseButton Create()
         {
-            return new RSCoreMouseButton();
+            return new RSMouseButton();
         }
 
-        private RSCoreMouseButton()
+        private RSMouseButton()
         {
             // create a dictionary holding an RSEvent for each available button event
             _eventList = new Dictionary<RSMouseEvent, RSEvent>

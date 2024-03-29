@@ -1,7 +1,7 @@
 ﻿using Rockstar._Actions;
 using Rockstar._CodecJson;
-using Rockstar._CoreGame;
-using Rockstar._CoreMouseButton;
+using Rockstar._Game;
+using Rockstar._MouseButton;
 using Rockstar._Event;
 using Rockstar._GameClockDDP;
 using Rockstar._Nodes;
@@ -36,7 +36,7 @@ using System.Threading.Tasks;
 
 namespace Rockstar._GameSpeedMaster
 {
-    public class RSGameSpeedMaster : RSCoreGame
+    public class RSGameSpeedMaster : RSGame
     {
         // ********************************************************************************************
         // Brief Class Description
@@ -55,11 +55,7 @@ namespace Rockstar._GameSpeedMaster
         {
             // left mouse button simulates single touches
             //
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, RSTouchManager.MouseEvent);
-
-            // Load Omega SpeedMaster
-            //
-
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnAll, RSTouchManager.MouseEvent);
         }
 
         // ********************************************************************************************

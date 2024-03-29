@@ -1,4 +1,4 @@
-﻿using Rockstar._CoreFile;
+﻿using Rockstar._File;
 using Rockstar._Dictionary;
 using SkiaSharp;
 using System;
@@ -58,7 +58,7 @@ namespace Rockstar._SpriteSHeetManager
         { 
             if (_imageList.ContainsKey(filePath)) return _imageList[filePath];
 
-            SKBitmap bitmap = RSCoreFile.ReadAsBitmap(filePath);
+            SKBitmap bitmap = RSFile.ReadAsBitmap(filePath);
             SKImage newImage = SKImage.FromBitmap(bitmap);
             _imageList[filePath] = newImage;
             return newImage;

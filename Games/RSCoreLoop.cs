@@ -38,15 +38,15 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Constructors
 
-        // RSGame _game;
+        // RSGamePhysics _game;
         // RSGameClock _game;
         // RSGameClockDDP _game;
-        RSGameSpeedMaster _game;
-        // RSGameSnowGlobe _game;
+        // RSGameSpeedMaster _game;
+        RSGameSnowGlobe _game;
 
         public RSCoreLoop()
         {
-            _game = RSGameSpeedMaster.Create();
+            _game = RSGameSnowGlobe.Create();
         }
 
         // ********************************************************************************************

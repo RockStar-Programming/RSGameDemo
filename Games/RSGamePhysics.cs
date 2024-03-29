@@ -1,9 +1,9 @@
 ﻿using SkiaSharp;
 
-using Rockstar._CoreGame;
+using Rockstar._Game;
 using Rockstar._Event;
 using Rockstar._Nodes;
-using Rockstar._CoreMouseButton;
+using Rockstar._MouseButton;
 using Rockstar._Types;
 using Rockstar._Actions;
 using Rockstar._Physics;
@@ -37,7 +37,7 @@ using Rockstar._PhysicsDef;
 
 namespace Rockstar._Game
 {
-    internal class RSGame : RSCoreGame
+    internal class RSGamePhysics : RSGame
     {
         // ********************************************************************************************
         // Game template
@@ -45,19 +45,18 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Constructors
 
-        public static RSGame Create()
+        public static RSGamePhysics Create()
         {
-            return new RSGame();
+            return new RSGamePhysics();
         }
 
         // ********************************************************************************************
 
-        private RSGame()
+        private RSGamePhysics()
         {
             // Adding a bit of X gravity, prevents perfect stacking of objects
             //
             _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
-            //_physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -0.9f), 0.2f);
         }
 
         // ********************************************************************************************
@@ -85,13 +84,13 @@ namespace Rockstar._Game
         {
             LoadScene(size);
 
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnPressed, OnLeftMouseEvent);
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnReleased, OnLeftMouseEvent);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnPressed, OnLeftMouseEvent);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnReleased, OnLeftMouseEvent);
 
-            _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseEvent);
+            _mouse.AddHandler(RSMouseButtonType.Right, RSMouseEvent.OnAll, OnRightMouseEvent);
 
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, OnLeftMouseAddPhysics);
-            _mouse.AddHandler(RSMouseButton.Right, RSMouseEvent.OnAll, OnRightMouseAddPhysics);
+            _mouse.AddHandler(RSMouseButtonType.Left, RSMouseEvent.OnAll, OnLeftMouseAddPhysics);
+            _mouse.AddHandler(RSMouseButtonType.Right, RSMouseEvent.OnAll, OnRightMouseAddPhysics);
         }
 
         public override void Resize(SKSize size)

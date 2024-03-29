@@ -1,7 +1,7 @@
 ﻿
 using SkiaSharp;
 
-using Rockstar._CoreGame;
+using Rockstar._Game;
 using Rockstar._Nodes;
 using Rockstar._Types;
 
@@ -26,7 +26,7 @@ using Rockstar._Types;
 
 namespace Rockstar._GameClock
 {
-    public class RSGameClock : RSCoreGame
+    public class RSGameClock : RSGame
     {
         // ********************************************************************************************
         // RSGameClock implements a simple clock, capable of simulating three different watch types

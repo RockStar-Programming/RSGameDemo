@@ -2,7 +2,7 @@
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 
-using Rockstar._CoreFile;
+using Rockstar._File;
 using Rockstar._Dictionary;
 using Rockstar._Array;
 
@@ -46,7 +46,7 @@ namespace Rockstar._CodecJson
         { 
             try
             {
-                string jsonString = RSCoreFile.ReadAsString(filePath);
+                string jsonString = RSFile.ReadAsString(filePath);
                 object? jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
 
                 if (Deserialize(jsonObject) is RSDictionary result) return result;
@@ -62,7 +62,7 @@ namespace Rockstar._CodecJson
         {
             try
             {
-                string jsonString = RSCoreFile.ReadAsString(filePath);
+                string jsonString = RSFile.ReadAsString(filePath);
                 object? jsonObject = JsonConvert.DeserializeObject<dynamic>(jsonString);
 
                 if (Deserialize(jsonObject) is RSArray result) return result;
