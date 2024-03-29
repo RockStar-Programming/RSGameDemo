@@ -41,12 +41,12 @@ namespace Rockstar._CoreLoop
         // RSGame _game;
         // RSGameClock _game;
         // RSGameClockDDP _game;
-        // RSGameSpeedMaster _game;
-        RSGameSnowGlobe _game;
+        RSGameSpeedMaster _game;
+        // RSGameSnowGlobe _game;
 
         public RSCoreLoop()
         {
-            _game = RSGameSnowGlobe.Create();
+            _game = RSGameSpeedMaster.Create();
         }
 
         // ********************************************************************************************
@@ -61,9 +61,9 @@ namespace Rockstar._CoreLoop
         // ********************************************************************************************
         // Methods
 
-        public void Initialise(SKSize size)
+        public void Initialize(SKSize size)
         {
-            _game.Initialise(size);
+            _game.Initialize(size);
         }
 
         public void Resize(SKSize size)

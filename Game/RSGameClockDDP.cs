@@ -170,7 +170,7 @@ namespace Rockstar._GameClockDDP
 
         // Builds the clock
         //
-        public override void Initialise(SKSize size)
+        public override void Initialize(SKSize size)
         {
             // load watch base "mechanics"
             _clockType = _setup.GetObject(KEY_CLOCK_TYPE, DEFAULT_CLOCK_TYPE).ToEnum<ClockType>();
@@ -357,7 +357,7 @@ namespace Rockstar._GameClockDDP
         {
             // load label setup data
             string text = setup.GetString(KEY_TEXT, "");
-            SKPoint position = setup.GetArray(KEY_POSITION).ToVector2();
+            SKPoint position = setup.GetArray(KEY_POSITION).ToPoint();
             RSFont font = setup.GetArray(KEY_FONT).ToFont();
             SKColor color = setup.GetArray(KEY_COLOR).ToColor();
 

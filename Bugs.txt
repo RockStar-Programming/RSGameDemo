@@ -1,4 +1,5 @@
-﻿Z for node surfaces doesnt seem to work
-
+﻿
 ClearColor for node surfaces is not used when AlphaDecay is used
 Size for node surfaces doesnt affect the actual size after creation
+
+Lerp has to be refactored. Most functionality should be moved to operation

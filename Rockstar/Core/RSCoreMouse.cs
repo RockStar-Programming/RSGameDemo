@@ -1,6 +1,10 @@
 ﻿
 using SkiaSharp;
+#if WINDOWS
 using Platform._Windows;
+#elif OSX
+using Platform._OSX;
+#endif
 
 using Rockstar._CoreMouseButton;
 using Rockstar._Event;
@@ -26,7 +30,11 @@ using Rockstar._Event;
 
 namespace Rockstar._CoreMouse
 {
-    public class RSCoreMouse : RSWinMouse
+#if WINDOWS
+    public class RSCoreMouse : RSMouseWindows
+#elif OSX
+    public class RSCoreMouse : RSMouseOSX
+#endif
     {
         // ********************************************************************************************
         // RSCoreMouse supports basic mouse handling 

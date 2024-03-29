@@ -5,6 +5,8 @@ using Rockstar._RenderSurface;
 using Rockstar._SpriteSheet;
 using Rockstar._SpriteFrame;
 using Rockstar._Types;
+using Rockstar._Array;
+using Box2D.NetStandard.Dynamics.World;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -52,6 +54,24 @@ namespace Rockstar._Nodes
         public static RSNodeSprite CreateWithFileAndJson(string filePath, string? jsonPath = null)
         {
             return new RSNodeSprite(filePath, jsonPath);
+        }
+
+        public static RSNodeSprite CreateWithParams(params object[] data)
+        {
+            if ((data.Length >= 1) && (data[0] is string fileName_0))
+            {
+                return CreateWithFileAndJson(fileName_0);
+            }
+            else if ((data.Length >= 2) && (data[0] is RSArray position) && (data[1] is string fileName_1))
+            { 
+                return CreateWithFileAndSize(position.ToSize(), fileName_1);
+            }
+            else if ((data.Length >= 2) && (data[0] is string fileName_2) && (data[1] is string filename_3))
+            {
+                return CreateWithFileAndJson(fileName_2, filename_3);
+            }
+            // oops
+            return CreateWithFile("");
         }
 
         // ********************************************************************************************

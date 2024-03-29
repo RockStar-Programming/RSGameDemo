@@ -8,7 +8,6 @@ clipping
 inserting, removing, replacing nodes
 part 9 sprite
 parallax node
-actions
 shaders
 blending
 add (int)levels to nodes

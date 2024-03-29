@@ -1,4 +1,4 @@
-namespace Rockstar._Game.Windows
+namespace Platform._Windows
 {
     internal static class Program
     {

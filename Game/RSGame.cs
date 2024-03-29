@@ -51,6 +51,16 @@ namespace Rockstar._Game
         }
 
         // ********************************************************************************************
+
+        private RSGame()
+        {
+            // Adding a bit of X gravity, prevents perfect stacking of objects
+            //
+            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
+            //_physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -0.9f), 0.2f);
+        }
+
+        // ********************************************************************************************
         // Class Properties
 
         // ********************************************************************************************
@@ -71,7 +81,7 @@ namespace Rockstar._Game
         // ********************************************************************************************
         // Methods
 
-        public override void Initialise(SKSize size)
+        public override void Initialize(SKSize size)
         {
             LoadScene(size);
 

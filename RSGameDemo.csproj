@@ -50,9 +50,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Assets\default.png">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\RSRockstar\RSRockstar.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,6 +3,7 @@ using SkiaSharp;
 
 using Rockstar._RenderSurface;
 using Rockstar._Types;
+using Rockstar._Array;
 
 // ****************************************************************************************************
 // Copyright(c) 2024 Lars B. Amundsen
@@ -41,6 +42,21 @@ namespace Rockstar._Nodes
             return new RSNodeString(text, font);
         }
 
+        public static RSNodeString CreateWithParams(params object[] data)
+        {
+            if ((data.Length >= 1) && (data[0] is string text))
+            {
+                RSFont font = RSFont.Create();
+                if ((data.Length >= 2) && (data[1] is RSArray array))
+                {
+                    font = array.ToFont();
+                }
+                return CreateString(text, font);
+            }
+            // oops
+            return CreateString(INVALID, RSFont.Create());
+        }
+
         // ********************************************************************************************
 
         protected RSNodeString(string text, RSFont font)
@@ -56,7 +72,8 @@ namespace Rockstar._Nodes
         // ********************************************************************************************
         // Properties
 
-        public string Text { get { return _text; } }
+        public const string INVALID = "Invalid String";
+        public string Text { get { return _text; } set { SetText(value); } }
         public RSFont Font { get { return _font; } }
 
         // ********************************************************************************************
@@ -96,6 +113,11 @@ namespace Rockstar._Nodes
 
         // ********************************************************************************************
         // Internal Methods
+
+        private void SetText(string text)
+        {
+            _text = text;
+        }
 
         // ********************************************************************************************
     }

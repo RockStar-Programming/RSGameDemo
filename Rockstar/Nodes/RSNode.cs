@@ -342,7 +342,7 @@ namespace Rockstar._Nodes
 
         private void SetName(string name)
         {
-            if (name != null) _name = name;
+            if ((name != null) && (name.Length > 0)) _name = name;
         }
 
         private void SetTouchMode(RSNodeTouchMode mode)

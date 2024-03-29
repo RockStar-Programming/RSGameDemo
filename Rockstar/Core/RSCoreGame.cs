@@ -55,14 +55,11 @@ namespace Rockstar._CoreGame
             RSActionManager.Initialize();
             RSTouchManager.Initialize();
 
-            // left mouse button simulates single touches
-            //
-            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, RSTouchManager.MouseEvent);
 
             // Adding a bit of X gravity, prevents perfect stacking of objects
             //
-            //_physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
-            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -0.9f), 0.2f);
+            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -9.8f), 0.01f);
+            //_physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -0.9f), 0.2f);
         }
 
         // ********************************************************************************************
@@ -86,7 +83,7 @@ namespace Rockstar._CoreGame
         // ********************************************************************************************
         // Methods to implement / override
 
-        public abstract void Initialise(SKSize size);
+        public abstract void Initialize(SKSize size);
 
         public abstract void Resize(SKSize size);
 

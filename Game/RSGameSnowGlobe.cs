@@ -1,7 +1,10 @@
 ﻿using Rockstar._Actions;
+using Rockstar._CodecJson;
 using Rockstar._CoreGame;
 using Rockstar._CoreMouseButton;
+using Rockstar._Dictionary;
 using Rockstar._Event;
+using Rockstar._NodeFactory;
 using Rockstar._Nodes;
 using Rockstar._Physics;
 using Rockstar._PhysicsDef;
@@ -54,6 +57,13 @@ namespace RSGameDemo._GameSnowGlobe
         }
 
         // ********************************************************************************************
+
+        private RSGameSnowGlobe() 
+        {
+            _physics = RSPhysics.CreateWithScene(new SKPoint(0.001f, -0.9f), 0.2f);
+        }
+
+        // ********************************************************************************************
         // Class Properties
 
         // ********************************************************************************************
@@ -95,7 +105,7 @@ namespace RSGameDemo._GameSnowGlobe
         // ********************************************************************************************
         // Methods
 
-        public override void Initialise(SKSize size)
+        public override void Initialize(SKSize size)
         {
             LoadScene(size);
 
@@ -193,29 +203,16 @@ namespace RSGameDemo._GameSnowGlobe
         private void LoadScene(SKSize size)
         {
             RSNode.RemoveChildren(_scene);
+            _physics.Reset(_scene);
 
-            CreateMermain(size);
+            RSDictionary setup = RSCodecJson.CreateDictionaryWithFilePath("Assets/snowglobe.json");
+            _scene.InitializeNode(setup.GetDictionary("little_mermaid"));
+
             CreateGlobe();
             CreatePlatforms();
             CreateGlobeDisrupters();
             CreateSnowFlakes();
             CreateText();
-        }
-
-        private void CreateMermain(SKSize size)
-        {
-            _scene.Transformation.Size = size;
-            _scene.Transformation.Color = SKColors.DarkBlue;
-            _physics.Reset(_scene);
-
-            RSNodeSprite mermaid = RSNodeSprite.CreateWithFileAndJson("Assets/snowglobe.png/mermaid").SetPosition(SCREEN_POSITION);
-            _scene.AddChild(mermaid);
-
-            RSNodeSprite globe = RSNodeSprite.CreateWithFileAndJson("Assets/snowglobe.png/globe").SetPosition(SCREEN_POSITION);
-            _scene.AddChild(globe);
-
-            //RSNodeSprite platform = RSNodeSprite.CreateWithFileAndJson("Assets/snowglobe.png/platform").SetPosition(SCREEN_POSITION);
-            //_scene.AddChild(platform);
         }
 
         private void CreateGlobe()
@@ -318,7 +315,7 @@ namespace RSGameDemo._GameSnowGlobe
 
                 float size = RSRandom.RandomRange(0.8f, 1.2f);
 
-                RSNodeSprite flake = RSNodeSprite.CreateWithFileAndJson("Assets/snowglobe.png/flake")
+                RSNodeSprite flake = RSNodeSprite.CreateWithFileAndJson("Assets/mermaid.png/flake")
                     .SetPosition(position)
                     .SetScale(size * 0.3f, size * 0.1f)
                     .SetAlpha(0.85f);
@@ -371,7 +368,7 @@ namespace RSGameDemo._GameSnowGlobe
                 .SetScale(0.8f);
             _scene.AddChild(drag);
 
-            _easyNow = RSNodeSprite.CreateWithFileAndJson("Assets/snowglobe.png/easy_now")
+            _easyNow = RSNodeSprite.CreateWithFileAndJson("Assets/mermaid.png/easy_now")
                 .SetPosition(SCREEN_POSITION)
                 .SetScale(0)
                 .SetAltitude(10);

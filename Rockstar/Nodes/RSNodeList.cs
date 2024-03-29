@@ -54,10 +54,10 @@ namespace Rockstar._Nodes
 
         public new void Sort()
         {
-            // this.OrderBy(item => item.Level).ThenBy(item => item.Transformation.Altitude).ToList();
-            var sorted = this.OrderBy(item => item.Transformation.Altitude).ToList();
-            this.Clear();
-            this.AddRange(sorted);
+            var sorted = this.OrderBy(item => item.Level).ThenBy(item => item.Transformation.Altitude).ToList();
+            // var sorted = this.OrderBy(item => item.Transformation.Altitude).ToList();
+            Clear();
+            AddRange(sorted);
         }
 
         // ********************************************************************************************

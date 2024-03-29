@@ -53,6 +53,10 @@ namespace Rockstar._GameSpeedMaster
 
         private RSGameSpeedMaster()
         {
+            // left mouse button simulates single touches
+            //
+            _mouse.AddHandler(RSMouseButton.Left, RSMouseEvent.OnAll, RSTouchManager.MouseEvent);
+
             // Load Omega SpeedMaster
             //
 
@@ -130,7 +134,7 @@ namespace Rockstar._GameSpeedMaster
         // ********************************************************************************************
         // Methods
 
-        public override void Initialise(SKSize size)
+        public override void Initialize(SKSize size)
         {
             _scene.Transformation.Color = SKColors.LightGray;
 

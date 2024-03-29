@@ -1,116 +1,44 @@
-{"frames": [
+// DDP setup for snow globe
+// 
 
 {
-	"filename": "easy_now.png",
-	"frame": {"x":1101,"y":375,"w":350,"h":49},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":350,"h":49},
-	"sourceSize": {"w":350,"h":49}
-},
-{
-	"filename": "flake_1.png",
-	"frame": {"x":1101,"y":426,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_2.png",
-	"frame": {"x":1101,"y":460,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_3.png",
-	"frame": {"x":1101,"y":494,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_4.png",
-	"frame": {"x":1101,"y":528,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_5.png",
-	"frame": {"x":1101,"y":562,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_6.png",
-	"frame": {"x":1135,"y":426,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_7.png",
-	"frame": {"x":1135,"y":528,"w":32,"h":31},
-	"rotated": true,
-	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":31},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_8.png",
-	"frame": {"x":1135,"y":460,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "flake_9.png",
-	"frame": {"x":1135,"y":494,"w":32,"h":32},
-	"rotated": false,
-	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
-	"sourceSize": {"w":32,"h":32}
-},
-{
-	"filename": "globe.png",
-	"frame": {"x":1,"y":1,"w":600,"h":512},
-	"rotated": true,
-	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":17,"w":600,"h":512},
-	"sourceSize": {"w":600,"h":600}
-},
-{
-	"filename": "mermaid.png",
-	"frame": {"x":1101,"y":1,"w":372,"h":368},
-	"rotated": true,
-	"trimmed": true,
-	"spriteSourceSize": {"x":110,"y":156,"w":372,"h":368},
-	"sourceSize": {"w":600,"h":600}
-},
-{
-	"filename": "platform.png",
-	"frame": {"x":515,"y":1,"w":584,"h":587},
-	"rotated": false,
-	"trimmed": true,
-	"spriteSourceSize": {"x":8,"y":8,"w":584,"h":587},
-	"sourceSize": {"w":600,"h":600}
-}],
-"meta": {
-	"app": "https://www.codeandweb.com/texturepacker",
-	"version": "1.0",
-	"image": "snowglobe.png",
-	"format": "RGBA8888",
-	"size": {"w":1470,"h":602},
-	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:6010cdde3bae8936150b0ca263a1ceb3:75d61d58918d5baf899ba79c4cf79517:d4db829d98ba81ba84cde884a9dbd508$"
+  "little_mermaid": {
+    "Transformation.Size": [ 800, 600 ],
+    "Transformation.Color": [ 0 ],
+    "Children": [
+      {
+        "Class": [ "RSNode" ],
+        "Name": "base",
+        "Transformation.Position": [ 400, 300 ],
+        "Children": [
+          {
+            "Class": [ "RSNodeSprite", "Assets/mermaid.png/globe" ]
+          },
+          {
+            "Class": [ "RSNodeSprite", "Assets/mermaid.png/statue" ]
+          },
+          {
+            "Class": [ "RSNode" ],
+            "Name": "geometry"
+          }
+        ]
+      },
+      {
+        "Class": [ "RSNodeString", "Give Me More Snow", [ "Arial", 18 ] ],
+        "Name": "more_snow",
+        "Transformation.Position": [ 100, 90]
+      },
+      {
+        "Class": [ "RSNodeString", "Reload", [ "Arial", 12 ] ],
+        "Name": "reload",
+        "Transformation.Position": [ 100, 60]
+      },
+      {
+        "Class": [ "RSNodeString", "Show Geometry", [ "Arial", 12 ] ],
+        "Name": "show_geometry",
+        "Transformation.Position": [ 100, 30]
+      }
+    ]
+  }
 }
-}
+

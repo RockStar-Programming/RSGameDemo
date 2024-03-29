@@ -54,7 +54,7 @@ namespace Rockstar._LerpProperty
         {
             if ((_target == null) || (_info == null))
             {
-                _invalid = true;
+                _valid = false;
             }
         }
 
@@ -91,7 +91,7 @@ namespace Rockstar._LerpProperty
         public override void Update(float interval)
         {
             base.Update(interval);
-            if ((_invalid == false) && (_info != null))
+            if ((_valid == true) && (_info != null))
             {
                 _info.SetValue(_target, _value);
             }
@@ -99,7 +99,7 @@ namespace Rockstar._LerpProperty
 
         public override void Stop()
         {
-            if ((_invalid == false) && (_info != null))
+            if ((_valid == true) && (_info != null))
             {
                 base.Stop();
                 _info.SetValue(_target, _value);

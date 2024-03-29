@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 using Rockstar._CoreLoop;
 
-namespace Rockstar
+namespace Platform._Windows
 {
     public partial class MainForm : Form
     {
@@ -30,7 +30,7 @@ namespace Rockstar
             Controls.Add(_controller);
 
             _gameLoop = new RSCoreLoop();
-            _gameLoop.Initialise(new SKSize(800, 600));
+            _gameLoop.Initialize(new SKSize(800, 600));
 
             _gameRunning = true;
             _gameThread = new Thread(() =>

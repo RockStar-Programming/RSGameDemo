@@ -74,7 +74,7 @@ namespace Rockstar._Lerp
             _lerpFrom = 0;
             _lerpTo = 0;
 
-            _invalid = true;
+            _valid = false;
 
             _type = type;
             _duration = duration;
@@ -87,7 +87,7 @@ namespace Rockstar._Lerp
         {
             _lerpFrom = 0;
             _lerpTo = 0;
-            _invalid = true;
+            _valid = false;
         }
 
         // ********************************************************************************************
@@ -112,7 +112,7 @@ namespace Rockstar._Lerp
         protected float _duration;
         protected float _time;
         protected bool _completed;
-        protected bool _invalid;
+        protected bool _valid;
         protected RSLerpState _state;
  
         // ********************************************************************************************
@@ -120,7 +120,7 @@ namespace Rockstar._Lerp
 
         public virtual void Update(float interval)
         { 
-            if ((_state == RSLerpState.Running) && (_completed == false) && (_invalid == false)) 
+            if ((_state == RSLerpState.Running) && (_completed == false) && (_valid == true)) 
             {
                 // calculate lerp progress
                 float linearProgress = (_time / _duration).ClampNormalised();
@@ -138,17 +138,17 @@ namespace Rockstar._Lerp
 
         public virtual void Start(object lerpFrom, object lerpTo, bool relative)
         {
-            _invalid = true;
+            _valid = false;
             _lerpFrom = lerpFrom;
             _lerpTo = lerpTo;
             _completed = false;
 
-            if ((_lerpFrom is float) && (_lerpTo is float)) _invalid = false;
-            if ((_lerpFrom is SKPoint) && (_lerpTo is SKPoint)) _invalid = false;
-            if ((_lerpFrom is SKSize) && (_lerpTo is SKSize)) _invalid = false;
-            if ((_lerpFrom is SKColor) && (_lerpTo is SKColor)) _invalid = false;
+            if ((_lerpFrom is float) && (_lerpTo is float)) _valid = true;
+            if ((_lerpFrom is SKPoint) && (_lerpTo is SKPoint)) _valid = true;
+            if ((_lerpFrom is SKSize) && (_lerpTo is SKSize)) _valid = true;
+            if ((_lerpFrom is SKColor) && (_lerpTo is SKColor)) _valid = true;
 
-            if ((_invalid == false) && (relative == true))
+            if ((_valid == true) && (relative == true))
             {
                 if (_lerpFrom is float)
                 {

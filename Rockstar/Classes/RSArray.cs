@@ -187,7 +187,7 @@ namespace Rockstar._Array
             return new SKSize(x, y);
         }
 
-        public SKPoint ToVector2()
+        public SKPoint ToPoint()
         {
             float x = 0, y;
 

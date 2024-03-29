@@ -1,4 +1,4 @@
-﻿namespace Rockstar
+﻿namespace Platform._Windows
 {
     partial class MainForm
     {

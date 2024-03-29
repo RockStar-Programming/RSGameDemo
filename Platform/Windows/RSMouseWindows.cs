@@ -25,7 +25,7 @@ using Rockstar._Event;
 
 namespace Platform._Windows
 {
-    public class RSWinMouse : IMessageFilter
+    public class RSMouseWindows : IMessageFilter
     {
         // ********************************************************************************************
         // RSBaseMouse supports basic mouse handling 
@@ -37,7 +37,7 @@ namespace Platform._Windows
         // ********************************************************************************************
         // Constructors
 
-        public RSWinMouse()
+        public RSMouseWindows()
         {
             Application.AddMessageFilter(this);
 

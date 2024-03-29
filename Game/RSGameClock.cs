@@ -285,7 +285,7 @@ namespace Rockstar._GameClock
 
         // Builds the clock
         //
-        public override void Initialise(SKSize size)
+        public override void Initialize(SKSize size)
         {
             // base node
             _clock = RSNode.Create().SetPosition(400, 300);
